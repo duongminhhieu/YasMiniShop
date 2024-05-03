@@ -4,6 +4,7 @@ package com.learning.springsecurity.auth;
 import com.learning.springsecurity.auth.dto.request.AuthenticationRequest;
 import com.learning.springsecurity.auth.dto.request.RegisterRequest;
 import com.learning.springsecurity.auth.dto.response.AuthenticationResponse;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest registerRequest
+            @Valid @RequestBody RegisterRequest registerRequest
     ) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }

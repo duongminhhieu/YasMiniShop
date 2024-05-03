@@ -1,10 +1,12 @@
 package com.learning.springsecurity.configs;
 
+import com.learning.springsecurity.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,14 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a";
+    @Value("${application.jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${application.jwt.access-token.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${application.jwt.refresh-token.expiration}")
+    private long refreshTokenExpiration;
 
     // extract user email from jwt token
     public String extractUserEmail(String jwtToken) {
@@ -40,20 +49,24 @@ public class JwtService {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, accessTokenExpiration);
+    }
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, refreshTokenExpiration);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            long expirationTime
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -64,14 +77,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    /**
-     * This method is used to extract all claims from a given JWT token.
-     * It uses the JWT parser builder to parse the token and retrieve the body of the token which contains the claims.
-     * The signing key used for parsing is retrieved from the getSignInKey() method.
-     *
-     * @param jwtToken The JWT token from which the claims are to be extracted.
-     * @return The claims present in the JWT token.
-     */
     private Claims extractAllClaims(String jwtToken) {
 
         return Jwts.parserBuilder()
@@ -82,8 +87,9 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 
 }
