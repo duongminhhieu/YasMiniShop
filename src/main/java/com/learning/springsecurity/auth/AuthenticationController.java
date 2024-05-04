@@ -2,11 +2,11 @@ package com.learning.springsecurity.auth;
 
 
 import com.learning.springsecurity.auth.dto.request.AuthenticationRequest;
+import com.learning.springsecurity.auth.dto.request.LogoutRequest;
 import com.learning.springsecurity.auth.dto.request.RefreshRequest;
 import com.learning.springsecurity.auth.dto.request.RegisterRequest;
 import com.learning.springsecurity.auth.dto.response.AuthenticationResponse;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +38,14 @@ public class AuthenticationController {
             @RequestBody @Valid RefreshRequest request
     ) {
         return ResponseEntity.ok(authenticationService.refresh(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @RequestBody @Valid LogoutRequest request
+    ) {
+        authenticationService.logout(request);
+        return ResponseEntity.status(HttpStatus.OK).body("Logout successful");
     }
 
 }

@@ -17,10 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -1,6 +1,6 @@
 package com.learning.springsecurity.configs.security;
 
-import com.learning.springsecurity.token.TokenRepository;
+import com.learning.springsecurity.token.InvalidTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -31,7 +31,7 @@ public class JwtService {
     @Value("${application.jwt.refresh-token.expiration}")
     private long refreshTokenExpiration;
 
-    private final TokenRepository tokenRepository;
+    private final InvalidTokenRepository invalidTokenRepository;
 
     public String extractUserEmail(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
@@ -41,24 +41,21 @@ public class JwtService {
         return extractClaim(jwtToken, claims -> claims.get("type", String.class));
     }
 
-    public boolean isTokenValid(String jwtToken, UserDetails userDetails) {
-
-        final String userEmail = extractUserEmail(jwtToken);
-        return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken);
+    public String extractIdToken(String refreshToken) {
+        return extractClaim(refreshToken, Claims::getId);
     }
 
-    public boolean isRevokeToken(String jwtToken) {
-        var isTokenValid = tokenRepository.findByToken(jwtToken)
-                .map(t -> !t.isExpired() && !t.isRevoked())
-                .orElse(false);
-        return !isTokenValid;
+    public boolean isTokenValid(String jwtToken) {
+        String idToken = extractIdToken(jwtToken);
+        return !invalidTokenRepository.existsByIdToken(idToken) && !isTokenExpired(jwtToken);
     }
+
 
     private boolean isTokenExpired(String jwtToken) {
         return extractExpiration(jwtToken).before(new Date());
     }
 
-    private Date extractExpiration(String jwtToken) {
+    public Date extractExpiration(String jwtToken) {
         return extractClaim(jwtToken, Claims::getExpiration);
     }
 
@@ -109,6 +106,4 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 }
