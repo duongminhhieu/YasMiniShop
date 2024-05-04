@@ -1,11 +1,12 @@
-package com.learning.springsecurity.configs;
+package com.learning.springsecurity.configs.security;
 
-import com.learning.springsecurity.user.User;
+import com.learning.springsecurity.token.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,11 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${application.jwt.secret-key}")
@@ -29,15 +31,27 @@ public class JwtService {
     @Value("${application.jwt.refresh-token.expiration}")
     private long refreshTokenExpiration;
 
-    // extract user email from jwt token
+    private final TokenRepository tokenRepository;
+
     public String extractUserEmail(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
     }
 
-    // check token validity
+    public String extractTokenType(String jwtToken) {
+        return extractClaim(jwtToken, claims -> claims.get("type", String.class));
+    }
+
     public boolean isTokenValid(String jwtToken, UserDetails userDetails) {
+
         final String userEmail = extractUserEmail(jwtToken);
         return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken);
+    }
+
+    public boolean isRevokeToken(String jwtToken) {
+        var isTokenValid = tokenRepository.findByToken(jwtToken)
+                .map(t -> !t.isExpired() && !t.isRevoked())
+                .orElse(false);
+        return !isTokenValid;
     }
 
     private boolean isTokenExpired(String jwtToken) {
@@ -50,10 +64,14 @@ public class JwtService {
 
 
     public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, accessTokenExpiration);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "access");
+        return generateToken(claims, userDetails, accessTokenExpiration);
     }
     public String generateRefreshToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, refreshTokenExpiration);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        return generateToken(claims, userDetails, refreshTokenExpiration);
     }
 
     public String generateToken(
@@ -68,6 +86,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setId(UUID.randomUUID().toString())
                 .compact();
     }
 

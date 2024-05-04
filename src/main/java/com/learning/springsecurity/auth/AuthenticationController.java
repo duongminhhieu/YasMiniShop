@@ -2,6 +2,7 @@ package com.learning.springsecurity.auth;
 
 
 import com.learning.springsecurity.auth.dto.request.AuthenticationRequest;
+import com.learning.springsecurity.auth.dto.request.RefreshRequest;
 import com.learning.springsecurity.auth.dto.request.RegisterRequest;
 import com.learning.springsecurity.auth.dto.response.AuthenticationResponse;
 import jakarta.validation.Valid;
@@ -25,12 +26,18 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
-    @PostMapping("authenticate")
+    @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest authenticationRequest
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refresh(
+            @RequestBody @Valid RefreshRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.refresh(request));
+    }
 
 }

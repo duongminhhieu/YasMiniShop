@@ -1,4 +1,4 @@
-package com.learning.springsecurity.configs;
+package com.learning.springsecurity.configs.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,13 +40,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwtToken = authorizationHeader.replace(tokenPrefix, "");
         final String userEmail = jwtService.extractUserEmail(jwtToken);
+        final String tokenType = jwtService.extractTokenType(jwtToken);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        if (userEmail != null && tokenType.equals("access") && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            boolean isTokenValid = jwtService.isTokenValid(jwtToken, userDetails);
+            boolean isRevokeToken = jwtService.isRevokeToken(jwtToken);
+
+            if (isTokenValid && !isRevokeToken){
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                        userDetails,
+                                        null,
+                                        userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
@@ -54,7 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
 
     }
 }

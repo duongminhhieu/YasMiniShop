@@ -1,4 +1,4 @@
-package com.learning.springsecurity.configs;
+package com.learning.springsecurity.configs.security;
 
 
 import lombok.RequiredArgsConstructor;
