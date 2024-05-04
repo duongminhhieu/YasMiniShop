@@ -5,9 +5,8 @@ import com.learning.springsecurity.auth.dto.request.LogoutRequest;
 import com.learning.springsecurity.auth.dto.request.RefreshRequest;
 import com.learning.springsecurity.auth.dto.request.RegisterRequest;
 import com.learning.springsecurity.auth.dto.response.AuthenticationResponse;
-import com.learning.springsecurity.auth.exception.EmailAlreadyExistsException;
-import com.learning.springsecurity.auth.exception.EmailNotFoundException;
-import com.learning.springsecurity.auth.exception.InvalidTokenException;
+import com.learning.springsecurity.configs.exception.AppException;
+import com.learning.springsecurity.configs.exception.ErrorCode;
 import com.learning.springsecurity.configs.security.JwtService;
 import com.learning.springsecurity.token.InvalidToken;
 import com.learning.springsecurity.token.InvalidTokenRepository;
@@ -35,9 +34,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
 
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new EmailAlreadyExistsException(String.format("Email %s is already taken", registerRequest.getEmail()));
-        }
+        if (userRepository.existsByEmail(registerRequest.getEmail())) throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
 
         var user = User.builder()
                 .firstName(registerRequest.getFirstName())
@@ -69,7 +66,7 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new EmailNotFoundException(String.format("Email %s is not found", request.getEmail())));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -87,7 +84,7 @@ public class AuthenticationService {
 
             String userEmail = jwtService.extractUserEmail(refreshToken);
             var user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new InvalidTokenException("Invalid refresh token"));
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_TOKEN));
 
             // Add the refresh token to the invalid token list
             InvalidToken invalidToken = InvalidToken.builder()
@@ -106,7 +103,7 @@ public class AuthenticationService {
                     .refreshToken(newRefreshToken)
                     .build();
         } else {
-            throw new InvalidTokenException("Invalid refresh token");
+            throw new AppException(ErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -118,7 +115,7 @@ public class AuthenticationService {
                     .expiryDate(jwtService.extractExpiration(request.getToken()))
                     .build());
         } else {
-            throw new InvalidTokenException("Invalid access token");
+            throw new AppException(ErrorCode.INVALID_TOKEN);
         }
 
 
