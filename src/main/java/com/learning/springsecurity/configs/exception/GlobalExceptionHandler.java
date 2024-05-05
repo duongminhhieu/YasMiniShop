@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,16 +42,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
-        ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
-        var apiResponse = APIResponse.builder()
-                .internalCode(errorCode.getInternalCode())
-                .message(errorCode.getMessage())
-                .build();
-        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
-    }
-
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleJwtException(JwtException exception) {
         ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
@@ -60,6 +51,18 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
+
+    @ExceptionHandler(value = AuthenticationException.class)
+    ResponseEntity<Object> handlingAuthenticationException(AuthenticationException exception) {
+        ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
+
+        var apiResponse = APIResponse.builder()
+                .internalCode(errorCode.getInternalCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
 
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<Object> handlingAccessDeniedException(AccessDeniedException exception) {
