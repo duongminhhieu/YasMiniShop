@@ -3,20 +3,18 @@ package com.learning.springsecurity.configs.exception;
 import com.learning.springsecurity.auth.dto.response.APIResponse;
 
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.SignatureException;
+import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 @Slf4j
@@ -76,15 +74,55 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException exception) {
+        String enumKey = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
+        ErrorCode errorCode;
+        Map<String, Object> attributes = null;
+
+        try {
+            errorCode = ErrorCode.valueOf(enumKey);
+            var constraintViolation = exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            log.info("Error message: " + enumKey);
+            log.info(attributes.toString());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid error code: " + enumKey, e);
+            errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
+        }
+
+        String message = Objects.nonNull(attributes) ? mapAttributes(errorCode.getMessage(), attributes) : errorCode.getMessage();
+        var apiResponse = APIResponse.builder()
+                .internalCode(errorCode.getInternalCode())
+                .message(message)
+                .build();
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    private String mapAttributes(String message, Map<String, Object> attributes) {
+        List<String> keys = extractKeyFromMessage(message);
+
+        // replace attributes by key
+        for (String key : keys) {
+            String value = String.valueOf(attributes.get(key));
+            message = message.replace("{" + key + "}", value);
+        }
+
+        return message;
+    }
+
+    private List<String> extractKeyFromMessage(String message) {
+        Pattern pattern = Pattern.compile("\\{([^{}]*)}");
+        Matcher matcher = pattern.matcher(message);
+
+        List<String> keys = new ArrayList<>();
+
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            keys.add(key);
+        }
+
+        return keys;
     }
 
 }
