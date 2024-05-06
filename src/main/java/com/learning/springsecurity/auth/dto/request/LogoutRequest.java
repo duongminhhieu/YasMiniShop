@@ -1,6 +1,8 @@
 package com.learning.springsecurity.auth.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.learning.springsecurity.auth.validator.FieldNotEmpty.FieldNotEmptyConstraint;
+import com.learning.springsecurity.auth.validator.FieldNotNull.FieldNotNullConstraint;
+
 import lombok.*;
 
 @Data
@@ -10,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogoutRequest {
-    @NotEmpty(message = "Token is required")
+    @FieldNotNullConstraint(field = "token", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "token", message = "FIELD_NOT_EMPTY")
     private String token;
 }

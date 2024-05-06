@@ -28,21 +28,21 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest authenticationRequest
+            @Valid @RequestBody AuthenticationRequest authenticationRequest
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refresh(
-            @RequestBody @Valid RefreshRequest request
+            @Valid @RequestBody RefreshRequest request
     ) {
         return ResponseEntity.ok(authenticationService.refresh(request));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
-            @RequestBody @Valid LogoutRequest request
+            @Valid @RequestBody LogoutRequest request
     ) {
         authenticationService.logout(request);
         return ResponseEntity.status(HttpStatus.OK).body("Logout successful");
