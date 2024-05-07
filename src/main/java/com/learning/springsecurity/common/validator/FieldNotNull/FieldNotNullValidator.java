@@ -1,4 +1,4 @@
-package com.learning.springsecurity.auth.validator.FieldNotNull;
+package com.learning.springsecurity.common.validator.FieldNotNull;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

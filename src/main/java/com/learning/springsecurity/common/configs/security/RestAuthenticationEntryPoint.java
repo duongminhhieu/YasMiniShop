@@ -1,8 +1,8 @@
-package com.learning.springsecurity.configs.security;
+package com.learning.springsecurity.common.configs.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.springsecurity.auth.dto.response.APIResponse;
-import com.learning.springsecurity.configs.exception.ErrorCode;
+import com.learning.springsecurity.common.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

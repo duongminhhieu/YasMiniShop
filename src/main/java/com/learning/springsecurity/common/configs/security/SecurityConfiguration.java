@@ -1,4 +1,4 @@
-package com.learning.springsecurity.configs.security;
+package com.learning.springsecurity.common.configs.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
@@ -42,7 +41,6 @@ public class SecurityConfiguration {
                         exceptionHandling
                                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 )
-                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 

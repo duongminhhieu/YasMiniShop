@@ -1,4 +1,4 @@
-package com.learning.springsecurity.configs.exception;
+package com.learning.springsecurity.common.exception;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -5,44 +5,52 @@ import com.learning.springsecurity.auth.dto.request.LogoutRequest;
 import com.learning.springsecurity.auth.dto.request.RefreshRequest;
 import com.learning.springsecurity.auth.dto.request.RegisterRequest;
 import com.learning.springsecurity.auth.dto.response.AuthenticationResponse;
-import com.learning.springsecurity.configs.exception.AppException;
-import com.learning.springsecurity.configs.exception.ErrorCode;
-import com.learning.springsecurity.configs.security.JwtService;
+import com.learning.springsecurity.common.exception.AppException;
+import com.learning.springsecurity.common.exception.ErrorCode;
+import com.learning.springsecurity.common.configs.security.JwtService;
+import com.learning.springsecurity.common.constant.PredefinedRole;
 import com.learning.springsecurity.token.InvalidToken;
 import com.learning.springsecurity.token.InvalidTokenRepository;
+import com.learning.springsecurity.role.Role;
+import com.learning.springsecurity.role.RoleRepository;
 import com.learning.springsecurity.user.User;
 import com.learning.springsecurity.user.UserRepository;
+import com.learning.springsecurity.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-    private final InvalidTokenRepository invalidTokenRepository;
 
+    private final UserRepository userRepository;
+    private final InvalidTokenRepository invalidTokenRepository;
+    private final RoleRepository roleRepository;
+
+    private final UserMapper userMapper;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
 
-        var user = User.builder()
-                .firstName(registerRequest.getFirstName())
-                .lastName(registerRequest.getLastName())
-                .email(registerRequest.getEmail())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(registerRequest.getRole())
-                .build();
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(PredefinedRole.USER_ROLE)
+                .ifPresent(roles::add);
+
+        User user = userMapper.toUser(registerRequest);
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRoles(roles);
 
         userRepository.save(user);
         var accessToken = jwtService.generateAccessToken(user);
@@ -58,15 +66,12 @@ public class AuthenticationService {
             AuthenticationRequest request
     ) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

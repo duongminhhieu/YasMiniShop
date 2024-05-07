@@ -1,7 +1,7 @@
 package com.learning.springsecurity.auth.dto.request;
 
-import com.learning.springsecurity.auth.validator.FieldNotEmpty.FieldNotEmptyConstraint;
-import com.learning.springsecurity.auth.validator.FieldNotNull.FieldNotNullConstraint;
+import com.learning.springsecurity.common.validator.FieldNotEmpty.FieldNotEmptyConstraint;
+import com.learning.springsecurity.common.validator.FieldNotNull.FieldNotNullConstraint;
 import lombok.*;
 
 @Data

@@ -1,4 +1,4 @@
-package com.learning.springsecurity.auth.validator.FieldNotEmpty;
+package com.learning.springsecurity.common.validator.FieldNotEmpty;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

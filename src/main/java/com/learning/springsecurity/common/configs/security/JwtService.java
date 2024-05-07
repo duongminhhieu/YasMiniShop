@@ -1,6 +1,7 @@
-package com.learning.springsecurity.configs.security;
+package com.learning.springsecurity.common.configs.security;
 
 import com.learning.springsecurity.token.InvalidTokenRepository;
+import com.learning.springsecurity.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -62,26 +63,26 @@ public class JwtService {
     }
 
 
-    public String generateAccessToken(UserDetails userDetails) {
+    public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        return generateToken(claims, userDetails, accessTokenExpiration);
+        return generateToken(claims, user, accessTokenExpiration);
     }
-    public String generateRefreshToken(UserDetails userDetails) {
+    public String generateRefreshToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "refresh");
-        return generateToken(claims, userDetails, refreshTokenExpiration);
+        return generateToken(claims, user, refreshTokenExpiration);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            User user,
             long expirationTime
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(Instant.now().plus(expirationTime, ChronoUnit.SECONDS).toEpochMilli()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
