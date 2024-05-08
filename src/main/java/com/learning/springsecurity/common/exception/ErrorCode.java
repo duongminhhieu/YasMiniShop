@@ -17,6 +17,7 @@ public enum ErrorCode {
     EMAIL_NOT_FOUND(1003, "Email not found", HttpStatus.NOT_FOUND),
     UNAUTHORIZED(1004, "You do not have permission", HttpStatus.FORBIDDEN),
     UNAUTHENTICATED(1005, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    USER_NOT_FOUND(1006, "User not found", HttpStatus.NOT_FOUND),
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),

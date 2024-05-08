@@ -11,12 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Component
@@ -44,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken = authorizationHeader.replace(tokenPrefix, "");
         final String userEmail = jwtService.extractUserEmail(jwtToken);
         final String tokenType = jwtService.extractTokenType(jwtToken);
+        final List<String> scope = jwtService.extractScope(jwtToken);
 
         if (userEmail != null && tokenType.equals("access") && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -57,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         user.getEmail(),
                         null,
-                        null);
+                        AuthorityUtils.createAuthorityList(scope));
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

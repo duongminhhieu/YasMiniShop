@@ -17,8 +17,7 @@ import com.learning.springsecurity.user.User;
 import com.learning.springsecurity.user.UserRepository;
 import com.learning.springsecurity.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +118,7 @@ public class AuthenticationService {
                     .idToken(idToken)
                     .expiryDate(jwtService.extractExpiration(request.getToken()))
                     .build());
+            SecurityContextHolder.clearContext();
         } else {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }

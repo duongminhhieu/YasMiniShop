@@ -9,16 +9,13 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -44,8 +41,12 @@ public class JwtService {
         return extractClaim(jwtToken, claims -> claims.get("type", String.class));
     }
 
-    public String extractIdToken(String refreshToken) {
-        return extractClaim(refreshToken, Claims::getId);
+    public List<String> extractScope(String jwtToken) {
+        return Arrays.asList(extractClaim(jwtToken, claims -> claims.get("scope", String.class)).split(" "));
+    }
+
+    public String extractIdToken(String token) {
+        return extractClaim(token, Claims::getId);
     }
 
     public boolean isTokenValid(String jwtToken) {
@@ -66,8 +67,10 @@ public class JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
+        claims.put("scope", buildScope(user));
         return generateToken(claims, user, accessTokenExpiration);
     }
+
     public String generateRefreshToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "refresh");
@@ -108,5 +111,19 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String buildScope(User user) {
+        StringJoiner joiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(role -> {
+                joiner.add("ROLE_" + role.getName());
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions()
+                            .forEach(permission -> joiner.add(permission.getName()));
+
+            });
+        }
+        return joiner.toString(); // "ROLE_USER READ WRITE"
     }
 }
