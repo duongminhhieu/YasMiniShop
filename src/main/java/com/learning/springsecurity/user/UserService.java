@@ -22,7 +22,6 @@ public class UserService {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
 
-        log.warn("email: {}", email);
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
         return userMapper.toUserResponse(user);
     }
