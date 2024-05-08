@@ -14,11 +14,9 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
 
-    @FieldNotNullConstraint(field = "firstName", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "firstName", message = "FIELD_NOT_EMPTY")
     String firstName;
 
-    @FieldNotNullConstraint(field = "lastName", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "lastName", message = "FIELD_NOT_EMPTY")
     String lastName;
 

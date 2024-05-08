@@ -5,6 +5,7 @@ import com.learning.springsecurity.role.dto.request.RoleRequest;
 import com.learning.springsecurity.role.dto.response.RoleResponse;
 import com.learning.springsecurity.role.mapper.RoleMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class RoleService {
     private final RoleRepository roleRepository;
 

@@ -1,7 +1,9 @@
 package com.learning.springsecurity.user;
 
 import com.learning.springsecurity.auth.dto.response.APIResponse;
+import com.learning.springsecurity.user.dto.request.UserUpdateRequest;
 import com.learning.springsecurity.user.dto.response.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +49,15 @@ public class UserController {
 
         return APIResponse.<String>builder()
                 .result("User deleted successfully")
+                .build();
+    }
+
+    @PutMapping("{userId}")
+    public APIResponse<UserResponse> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest userUpdateRequest){
+        UserResponse userResponse = userService.updateUser(userId, userUpdateRequest);
+
+        return APIResponse.<UserResponse>builder()
+                .result(userResponse)
                 .build();
     }
 

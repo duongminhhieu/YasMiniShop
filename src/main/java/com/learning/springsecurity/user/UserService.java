@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,7 @@ public class UserService {
     private final RoleRepository roleRepository;
 
 
-    public UserResponse getMyInfo(){
+    public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
 
@@ -37,15 +38,16 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getAllUsers(){
+    public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
     }
 
-    // @PreAuthorize("hasAuthority('UPDATE_DATA')")
-    @PostAuthorize("returnObject.email == authentication.name")
-    public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest){
+    // @PreAuthorize("hasAuthority('UPDATE_DATA') and hasRole('ADMIN')")
+    // @PostAuthorize("returnObject.email == authentication.name")
+    @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
+    public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
@@ -59,15 +61,15 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUser(String userId){
-        userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
+    public void deleteUser(String userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
         userRepository.deleteById(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public UserResponse getUserById(String userId){
+    public UserResponse getUserById(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toUserResponse(user);
