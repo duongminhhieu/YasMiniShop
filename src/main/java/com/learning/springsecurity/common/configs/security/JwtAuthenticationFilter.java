@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        user,
+                        user.getEmail(),
                         null,
                         null);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
