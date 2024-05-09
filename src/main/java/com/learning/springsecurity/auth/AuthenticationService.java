@@ -26,7 +26,7 @@ import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AuthenticationService {
 
 
@@ -39,6 +39,7 @@ public class AuthenticationService {
 
     private final UserMapper userMapper;
 
+    @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
@@ -81,7 +82,7 @@ public class AuthenticationService {
                 .build();
     }
 
-
+    @Transactional
     public AuthenticationResponse refresh(RefreshRequest request) {
         String refreshToken = request.getRefreshToken();
         if (jwtService.isTokenValid(refreshToken)) {
@@ -111,6 +112,7 @@ public class AuthenticationService {
         }
     }
 
+    @Transactional
     public void logout(LogoutRequest request) {
         if (jwtService.isTokenValid(request.getToken())) {
             String idToken = jwtService.extractIdToken(request.getToken());

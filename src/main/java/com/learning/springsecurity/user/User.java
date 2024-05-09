@@ -3,6 +3,7 @@ package com.learning.springsecurity.user;
 import com.learning.springsecurity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,15 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(
+        name = "User.roles",
+        attributeNodes = {
+                @NamedAttributeNode(value = "roles", subgraph = "roles.permissions"),
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "roles.permissions",
+                        attributeNodes = @NamedAttributeNode("permissions"))
+        })
 public class User {
 
     @Id
@@ -22,7 +32,7 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
 }

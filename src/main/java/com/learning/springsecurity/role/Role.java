@@ -2,10 +2,7 @@ package com.learning.springsecurity.role;
 
 
 import com.learning.springsecurity.permission.Permission;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
@@ -17,6 +14,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(name = "Role.permissions", attributeNodes = @NamedAttributeNode("permissions"))
 public class Role {
 
     @Id
@@ -24,7 +22,7 @@ public class Role {
 
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Permission> permissions;
 
 

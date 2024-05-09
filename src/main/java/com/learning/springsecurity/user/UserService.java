@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -44,7 +45,6 @@ public class UserService {
                 .toList();
     }
 
-    // @PreAuthorize("hasAuthority('UPDATE_DATA') and hasRole('ADMIN')")
     // @PostAuthorize("returnObject.email == authentication.name")
     @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
     public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest) {

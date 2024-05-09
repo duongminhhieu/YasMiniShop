@@ -41,9 +41,6 @@ public class JwtService {
         return extractClaim(jwtToken, claims -> claims.get("type", String.class));
     }
 
-    public List<String> extractScope(String jwtToken) {
-        return Arrays.asList(extractClaim(jwtToken, claims -> claims.get("scope", String.class)).split(" "));
-    }
 
     public String extractIdToken(String token) {
         return extractClaim(token, Claims::getId);
@@ -67,7 +64,6 @@ public class JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        claims.put("scope", buildScope(user));
         return generateToken(claims, user, accessTokenExpiration);
     }
 
@@ -113,17 +109,17 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String buildScope(User user) {
-        StringJoiner joiner = new StringJoiner(" ");
+    public List<String> getAuthorities(User user) {
+        List<String> authorities = new ArrayList<>();
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             user.getRoles().forEach(role -> {
-                joiner.add("ROLE_" + role.getName());
+                authorities.add("ROLE_" + role.getName());
                 if (!CollectionUtils.isEmpty(role.getPermissions()))
                     role.getPermissions()
-                            .forEach(permission -> joiner.add(permission.getName()));
+                            .forEach(permission -> authorities.add(permission.getName()));
 
             });
         }
-        return joiner.toString(); // "ROLE_USER READ WRITE"
+        return authorities; // "ROLE_USER READ WRITE"
     }
 }

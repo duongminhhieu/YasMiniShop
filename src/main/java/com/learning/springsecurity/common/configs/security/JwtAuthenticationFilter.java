@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwtToken = authorizationHeader.replace(tokenPrefix, "");
         final String userEmail = jwtService.extractUserEmail(jwtToken);
         final String tokenType = jwtService.extractTokenType(jwtToken);
-        final List<String> scope = jwtService.extractScope(jwtToken);
 
         if (userEmail != null && tokenType.equals("access") && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -56,11 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 var user = userRepository.findByEmail(userEmail)
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                List<String> scopes = jwtService.getAuthorities(user);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         user.getEmail(),
                         null,
-                        AuthorityUtils.createAuthorityList(scope));
+                        AuthorityUtils.createAuthorityList(scopes));
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
