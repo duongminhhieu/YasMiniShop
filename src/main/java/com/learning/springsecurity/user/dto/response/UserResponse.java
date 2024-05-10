@@ -1,6 +1,6 @@
 package com.learning.springsecurity.user.dto.response;
 
-import com.learning.springsecurity.role.Role;
+import com.learning.springsecurity.role.dto.response.RoleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,5 +18,5 @@ public class UserResponse {
     String firstName;
     String lastName;
     String email;
-    Set<Role> roles;
+    Set<RoleResponse> roles;
 }

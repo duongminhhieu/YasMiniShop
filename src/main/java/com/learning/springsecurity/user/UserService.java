@@ -8,7 +8,6 @@ import com.learning.springsecurity.user.dto.response.UserResponse;
 import com.learning.springsecurity.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +46,7 @@ public class UserService {
 
     // @PostAuthorize("returnObject.email == authentication.name")
     @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
+    @Transactional
     public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
