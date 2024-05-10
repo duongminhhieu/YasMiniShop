@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,10 +33,7 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    @NonFinal
     static final String ADMIN_USER_NAME = "admin@spring.com";
-
-    @NonFinal
     static final String ADMIN_PASSWORD = "admin1234";
 
     @Bean
@@ -48,6 +47,11 @@ public class ApplicationConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(
+            prefix = "spring",
+            value = "datasource.driver-class-name",
+            havingValue = "com.mysql.cj.jdbc.Driver"
+    )
     ApplicationRunner applicationRunner() {
         log.info("Initializing application.....");
         return args -> {
@@ -72,7 +76,7 @@ public class ApplicationConfig {
                         .roles(roles)
                         .build();
                 userRepository.save(user);
-                log.warn("admin user has been created with default password: admin, please change it");
+                log.warn("admin user has been created with default password: admin1234, please change it");
 
             }
             log.info("Application initialization completed .....");
