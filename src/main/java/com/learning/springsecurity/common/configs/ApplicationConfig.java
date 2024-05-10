@@ -1,25 +1,18 @@
 package com.learning.springsecurity.common.configs;
 
-import com.learning.springsecurity.common.exception.AppException;
 import com.learning.springsecurity.common.constant.PredefinedRole;
-import com.learning.springsecurity.common.exception.ErrorCode;
-import com.learning.springsecurity.role.Role;
+import com.learning.springsecurity.common.entity.Role;
 import com.learning.springsecurity.role.RoleRepository;
-import com.learning.springsecurity.user.User;
+import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

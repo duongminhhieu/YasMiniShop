@@ -1,6 +1,5 @@
-package com.learning.springsecurity.user;
+package com.learning.springsecurity.common.entity;
 
-import com.learning.springsecurity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

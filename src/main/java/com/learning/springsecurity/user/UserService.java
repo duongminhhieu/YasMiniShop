@@ -1,5 +1,6 @@
 package com.learning.springsecurity.user;
 
+import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.common.exception.AppException;
 import com.learning.springsecurity.common.exception.ErrorCode;
 import com.learning.springsecurity.role.RoleRepository;

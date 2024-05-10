@@ -1,4 +1,4 @@
-package com.learning.springsecurity.permission;
+package com.learning.springsecurity.common.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

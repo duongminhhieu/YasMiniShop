@@ -1,6 +1,6 @@
 package com.learning.springsecurity.role.mapper;
 
-import com.learning.springsecurity.role.Role;
+import com.learning.springsecurity.common.entity.Role;
 import com.learning.springsecurity.role.dto.request.RoleRequest;
 import com.learning.springsecurity.role.dto.response.RoleResponse;
 import org.mapstruct.Mapper;

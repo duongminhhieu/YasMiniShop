@@ -1,4 +1,4 @@
-package com.learning.springsecurity.token;
+package com.learning.springsecurity.common.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -158,7 +158,10 @@
                 </executions>
                 <configuration>
                     <excludes>
-
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/entity/**</exclude>
+                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/configs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
