@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_user")
+@Table(name = "t_user", indexes = {
+        @Index(name = "idx_user_id", columnList = "id")
+})
 @Getter
 @Setter
 @Builder
@@ -22,7 +24,7 @@ import java.util.Set;
                 @NamedSubgraph(name = "roles.permissions",
                         attributeNodes = @NamedAttributeNode("permissions"))
         })
-public class User {
+public class User extends AuditEntity<String>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
