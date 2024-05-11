@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Permission {
+public class Permission extends AuditEntity<String> {
     @Id
     private String name;
     private String description;

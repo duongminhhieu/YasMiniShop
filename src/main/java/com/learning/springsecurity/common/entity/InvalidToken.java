@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvalidToken {
+public class InvalidToken extends AuditEntity<String> {
     @Id
     private String idToken;
     private Date expiryDate;

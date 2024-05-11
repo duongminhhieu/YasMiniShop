@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedEntityGraph(name = "Role.permissions", attributeNodes = @NamedAttributeNode("permissions"))
-public class Role {
+public class Role extends AuditEntity<String> {
 
     @Id
     private String name;
