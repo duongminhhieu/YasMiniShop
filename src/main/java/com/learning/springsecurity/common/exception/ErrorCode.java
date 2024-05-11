@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_EMAIL(2002, "Invalid email", HttpStatus.BAD_REQUEST),
     FIELD_NOT_EMPTY(2003, "\"{field}\" must not be empty", HttpStatus.BAD_REQUEST),
     FIELD_NOT_NULL(2004, "\"{field}\" must not be null", HttpStatus.BAD_REQUEST),
+    INVALID_DOB(2005, "Your age must be at least {minAge}", HttpStatus.BAD_REQUEST),
 
     ;
 

@@ -1,6 +1,7 @@
 package com.learning.springsecurity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.learning.springsecurity.permission.dto.response.PermissionResponse;
 import com.learning.springsecurity.role.dto.response.RoleResponse;
 import com.learning.springsecurity.user.UserService;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -256,6 +258,26 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("internalCode").value(2001))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Password must be at least 6 characters"))
+        ;
+    }
+
+    @Test
+    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})
+    void updateUser_dobInvalid_fail() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        userUpdateRequest.setDob(LocalDate.now());
+        objectMapper.registerModule(new JavaTimeModule());
+        String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
+
+        // WHEN THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userUpdateRequestJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("internalCode").value(2005))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Your age must be at least 18"))
         ;
     }
 

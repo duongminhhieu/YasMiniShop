@@ -1,10 +1,12 @@
 package com.learning.springsecurity.user.dto.request;
 
+import com.learning.springsecurity.common.validator.DobConstraint.DobConstraint;
 import com.learning.springsecurity.common.validator.FieldNotEmpty.FieldNotEmptyConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -19,6 +21,9 @@ public class UserUpdateRequest {
 
     @FieldNotEmptyConstraint(field = "lastName", message = "FIELD_NOT_EMPTY")
     String lastName;
+
+    @DobConstraint(minAge = 18, message = "INVALID_DOB")
+    LocalDate dob;
 
     @FieldNotEmptyConstraint(field = "password", message = "FIELD_NOT_EMPTY")
     @Size(min = 6, message = "INVALID_PASSWORD")
