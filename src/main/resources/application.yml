@@ -3,10 +3,10 @@ spring:
     name: SpringSecurity
 
   datasource:
-    url: jdbc:mysql://localhost:3306/jwt_security
-    username: root
+    url: jdbc:postgresql://localhost:5432/rookie_phase1_db
+    username: postgres
     password: minhhieu
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,8 +14,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 server:
   port: 8081
