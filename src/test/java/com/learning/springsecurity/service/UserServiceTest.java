@@ -3,7 +3,6 @@ package com.learning.springsecurity.service;
 import com.learning.springsecurity.common.entity.Role;
 import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.common.exception.AppException;
-import com.learning.springsecurity.common.exception.GlobalExceptionHandler;
 import com.learning.springsecurity.role.RoleRepository;
 import com.learning.springsecurity.role.dto.response.RoleResponse;
 import com.learning.springsecurity.user.UserRepository;
@@ -18,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -37,8 +35,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Slf4j
-@AutoConfigureMockMvc
-@Import(GlobalExceptionHandler.class)
 @TestPropertySource("/test.properties")
 class UserServiceTest {
 
