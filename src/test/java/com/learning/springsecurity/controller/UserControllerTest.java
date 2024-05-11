@@ -184,7 +184,7 @@ class UserControllerTest {
                 .thenReturn(userResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123" )
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -197,6 +197,68 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("result.roles[*].name", hasItem("USER")))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.roles[*].name", hasItem("ADMIN")));
     }
+
+
+    @Test
+    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})
+    void updateUser_emptyFirstName_fail() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        userUpdateRequest.setFirstName("");
+
+        String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
+
+        // WHEN THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userUpdateRequestJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("internalCode").value(2003))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("\"firstName\" must not be empty"))
+        ;
+    }
+
+    @Test
+    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})
+    void updateUser_emptyRole_fail() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        userUpdateRequest.setRoles(Set.of());
+
+        String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
+
+        // WHEN THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userUpdateRequestJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("internalCode").value(2003))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("\"roles\" must not be empty"))
+        ;
+    }
+
+    @Test
+    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})
+    void updateUser_passwordInvalid_fail() throws Exception {
+        // GIVEN
+        ObjectMapper objectMapper = new ObjectMapper();
+        userUpdateRequest.setPassword("12345");
+
+        String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
+
+        // WHEN THEN
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userUpdateRequestJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("internalCode").value(2001))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("Password must be at least 6 characters"))
+        ;
+    }
+
 
     @Test
     @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})

@@ -1,7 +1,7 @@
 package com.learning.springsecurity.user.dto.request;
 
 import com.learning.springsecurity.common.validator.FieldNotEmpty.FieldNotEmptyConstraint;
-import com.learning.springsecurity.common.validator.FieldNotNull.FieldNotNullConstraint;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,9 +20,10 @@ public class UserUpdateRequest {
     @FieldNotEmptyConstraint(field = "lastName", message = "FIELD_NOT_EMPTY")
     String lastName;
 
-    @FieldNotNullConstraint(field = "password", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "password", message = "FIELD_NOT_EMPTY")
+    @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 
-    @FieldNotNullConstraint(field = "roles", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "roles", message = "FIELD_NOT_EMPTY")
     Set<String> roles;
 }
