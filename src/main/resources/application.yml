@@ -1,7 +1,33 @@
 spring:
   application:
     name: SpringSecurity
+  profiles:
+    active: @profileActive@
 
+server:
+  port: 8081
+
+application:
+  jwt:
+    secret-key: 39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a
+    access-token:
+      expiration: 3600 # seconds
+    refresh-token:
+      expiration: 3600 # 1 hour
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /api-docs
+
+# Development profile
+---
+spring:
+  config:
+    activate:
+      on-profile: development
   datasource:
     url: jdbc:postgresql://localhost:5432/rookie_phase1_db
     username: postgres
@@ -17,21 +43,29 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-server:
-  port: 8081
 
-
-application:
-    jwt:
-        secret-key: 39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a
-        access-token:
-            expiration: 3600 # seconds
-        refresh-token:
-            expiration: 3600 # 1 hour
+# Production profile
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rookie_phase1_prod_db
+    username: postgres
+    password: minhhieu
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 springdoc:
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
   api-docs:
-    enabled: true
-    path: /api-docs
+    enabled: false
+  swagger-ui:
+    enabled: false

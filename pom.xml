@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.learning</groupId>
     <artifactId>SpringSecurity</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>SpringSecurity</name>
     <description>SpringSecurity</description>
     <properties>
@@ -167,6 +167,35 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+             <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
+    <profiles>
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>development</build.profile.id>
+                <profileActive>development</profileActive>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>production</build.profile.id>
+                <profileActive>production</profileActive>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
