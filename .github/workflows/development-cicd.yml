@@ -12,6 +12,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -29,6 +34,6 @@ jobs:
       if: success() || failure()
       with:
         name: Development-Unit-Test-Results
-        path: ${{ github.workspace }}/target/surefire-reports/*.xml
+        path: target/surefire-reports/*.xml
         reporter: java-junit
 
