@@ -1,7 +1,7 @@
 package com.learning.springsecurity.common.configs.security;
 
-import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.token.InvalidTokenRepository;
+import com.learning.springsecurity.common.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -2,8 +2,8 @@ package com.learning.springsecurity.common.configs;
 
 import com.learning.springsecurity.common.constant.PredefinedRole;
 import com.learning.springsecurity.common.entity.Role;
-import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.role.RoleRepository;
+import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
