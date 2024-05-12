@@ -173,6 +173,7 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <finalName>app</finalName>
     </build>
 
     <profiles>
