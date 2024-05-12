@@ -1,5 +1,5 @@
 
-name: Production CI-CD
+name: Development CI-CD
 
 on:
   push:
