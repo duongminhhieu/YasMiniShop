@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/auth")
+@RequestMapping(path = "/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
