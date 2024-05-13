@@ -25,10 +25,20 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
     - name: Run Maven Build Command
       run: mvn clean install -DskipTests -Pdevelopment
+
     - name: Run Maven Test
       run: mvn test -Pdevelopment
+
     - name: Unit Test Results
       uses: dorny/test-reporter@v1
       if: success() || failure()
@@ -36,16 +46,27 @@ jobs:
         name: Development-Unit-Test-Results
         path: target/surefire-reports/*.xml
         reporter: java-junit
+
+    - name: Publish test coverage results
+      uses: PavanMudigonda/jacoco-reporter@v4.8
+      with:
+        coverage_results_path: 'target/site/jacoco/jacoco.xml'
+        coverage_report_title: 'Test coverage results'
+        coverage_report_name: 'Test coverage results'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Log in to the Container registry
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
         images: duongminhhieu008/rookie-phase1-development
+
     - name: Build and push Docker images
       uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
       with:
