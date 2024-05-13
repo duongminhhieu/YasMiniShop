@@ -1,33 +1,23 @@
 spring:
   application:
     name: SpringSecurity
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/jwt_security
-    username: root
-    password: minhhieu
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+  profiles:
+    active: @profileActive@
 
 server:
   port: 8081
 
-
 application:
-    jwt:
-        secret-key: 39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a
-        access-token:
-            expiration: 3600 # seconds
-        refresh-token:
-            expiration: 3600 # 1 hour
+  jwt:
+    secret-key: 39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a
+    access-token:
+      expiration: 3600 # seconds
+    refresh-token:
+      expiration: 86400 # seconds
+  admin:
+    default:
+      username: admin@test.com
+      password: test1234
 springdoc:
   swagger-ui:
     enabled: true
@@ -35,3 +25,100 @@ springdoc:
   api-docs:
     enabled: true
     path: /api-docs
+
+#Local profile
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rookie_phase1_db
+    username: postgres
+    password: minhhieu
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# Development profile
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: ${DATABASE_DEV_URL}
+    username: ${DATABASE_DEV_USERNAME}
+    password: ${DATABASE_DEV_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+application:
+  jwt:
+    secret-key: ${JWT_SECRET_DEV_KEY}
+    access-token:
+      expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token:
+      expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  admin:
+    default:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /api-docs
+
+# Production profile
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  datasource:
+    url: ${DATABASE_PROD_URL}
+    username: ${DATABASE_PROD_USERNAME}
+    password: ${DATABASE_PROD_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+application:
+  jwt:
+    secret-key: ${JWT_SECRET_PROD_KEY}
+    access-token:
+      expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token:
+      expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  admin:
+    default:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}

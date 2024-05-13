@@ -7,6 +7,7 @@ import com.learning.springsecurity.common.entity.User;
 import com.learning.springsecurity.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +27,11 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    static final String ADMIN_USER_NAME = "admin@spring.com";
-    static final String ADMIN_PASSWORD = "admin1234";
+    @Value("${application.admin.default.username}")
+    private String adminUsername;
+
+    @Value("${application.admin.default.password}")
+    private String adminPassword;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -43,13 +47,13 @@ public class ApplicationConfig {
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driver-class-name",
-            havingValue = "com.mysql.cj.jdbc.Driver"
+            havingValue = "org.postgresql.Driver"
     )
     ApplicationRunner applicationRunner() {
         log.info("Initializing application.....");
         return args -> {
 
-            if (!userRepository.existsByEmail(ADMIN_USER_NAME)) {
+            if (!userRepository.existsByEmail(adminUsername)) {
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER_ROLE)
                         .description("User role")
@@ -64,12 +68,12 @@ public class ApplicationConfig {
                 roles.add(adminRole);
 
                 User user = User.builder()
-                        .email(ADMIN_USER_NAME)
-                        .password(passwordEncoder().encode(ADMIN_PASSWORD))
+                        .email(adminUsername)
+                        .password(passwordEncoder().encode(adminPassword))
                         .roles(roles)
                         .build();
                 userRepository.save(user);
-                log.warn("admin user has been created with default password: admin1234, please change it");
+                log.warn("admin user has been created, please change it");
 
             }
             log.info("Application initialization completed .....");
