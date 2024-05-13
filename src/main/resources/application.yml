@@ -13,7 +13,7 @@ application:
     access-token:
       expiration: 3600 # seconds
     refresh-token:
-      expiration: 3600 # 1 hour
+      expiration: 86400 # seconds
   admin:
     default:
       username: admin@test.com
