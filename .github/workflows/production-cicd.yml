@@ -1,11 +1,11 @@
 
-name: Development CI-CD
+name: Production CI-CD
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "master" ]
   
   workflow_dispatch:
 
@@ -34,10 +34,10 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Run Maven Build Command
-      run: mvn clean install -DskipTests -Pdevelopment
+      run: mvn clean install -DskipTests -Pproduction
 
     - name: Run Maven Test
-      run: mvn test -Pdevelopment
+      run: mvn test -Pproduction
 
     - name: Unit Test Results
       uses: dorny/test-reporter@v1
@@ -74,7 +74,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
-        images: duongminhhieu008/rookie-phase1-development
+        images: duongminhhieu008/rookie-phase1-production
 
     - name: Build and push Docker images
       uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
