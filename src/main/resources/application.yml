@@ -14,6 +14,10 @@ application:
       expiration: 3600 # seconds
     refresh-token:
       expiration: 3600 # 1 hour
+  admin:
+    default:
+      username: admin@test.com
+      password: test1234
 springdoc:
   swagger-ui:
     enabled: true
@@ -22,12 +26,12 @@ springdoc:
     enabled: true
     path: /api-docs
 
-# Development profile
+#Local profile
 ---
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: local
   datasource:
     url: jdbc:postgresql://localhost:5432/rookie_phase1_db
     username: postgres
@@ -43,6 +47,44 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+# Development profile
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: ${DATABASE_DEV_URL}
+    username: ${DATABASE_DEV_USERNAME}
+    password: ${DATABASE_DEV_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+application:
+  jwt:
+    secret-key: ${JWT_SECRET_DEV_KEY}
+    access-token:
+      expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token:
+      expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  admin:
+    default:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /api-docs
 
 # Production profile
 ---
@@ -51,9 +93,9 @@ spring:
     activate:
       on-profile: production
   datasource:
-    url: jdbc:postgresql://localhost:5432/rookie_phase1_prod_db
-    username: postgres
-    password: minhhieu
+    url: ${DATABASE_PROD_URL}
+    username: ${DATABASE_PROD_USERNAME}
+    password: ${DATABASE_PROD_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -69,3 +111,14 @@ springdoc:
     enabled: false
   swagger-ui:
     enabled: false
+application:
+  jwt:
+    secret-key: ${JWT_SECRET_PROD_KEY}
+    access-token:
+      expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token:
+      expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  admin:
+    default:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}

@@ -178,9 +178,19 @@
 
     <profiles>
         <profile>
-            <id>development</id>
+            <id>local</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>local</build.profile.id>
+                <profileActive>local</profileActive>
+            </properties>
+        </profile>
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <build.profile.id>development</build.profile.id>
