@@ -31,15 +31,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: mvn test
-      - run: mvn jacoco:report
+        
+      # Run tests
+      - name: Run tests
+        run: mvn test -Pproduction
+
+      # Generate Jacoco report
+      - name: Generate Jacoco report
+        run: mvn jacoco:report
+
+      # Setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      # Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: './target/site/jacoco/index.html'
+          # Upload Jacoco report
+          path: './target/site/jacoco'
+
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
