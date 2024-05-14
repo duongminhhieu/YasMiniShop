@@ -82,7 +82,7 @@ class AuthenticationControllerTest {
                 .thenReturn(authenticationResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerRequestJson))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ class AuthenticationControllerTest {
         String registerRequestJson = objectMapper.writeValueAsString(registerRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerRequestJson))
                 .andExpect(status().isBadRequest())
@@ -119,7 +119,7 @@ class AuthenticationControllerTest {
                 .thenReturn(authenticationResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authenticationRequestJson))
                 .andExpect(status().isOk())
@@ -137,7 +137,7 @@ class AuthenticationControllerTest {
         String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authenticationRequestJson))
                 .andExpect(status().isBadRequest())
@@ -153,7 +153,7 @@ class AuthenticationControllerTest {
         String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authenticationRequestJson))
                 .andExpect(status().isBadRequest())
@@ -169,7 +169,7 @@ class AuthenticationControllerTest {
         String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authenticationRequestJson))
                 .andExpect(status().isBadRequest())
@@ -185,7 +185,7 @@ class AuthenticationControllerTest {
         String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authenticationRequestJson))
                 .andExpect(status().isBadRequest())
@@ -203,7 +203,7 @@ class AuthenticationControllerTest {
                 .thenReturn(authenticationResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/refresh")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(refreshRequestJson))
                 .andExpect(status().isOk())
@@ -221,7 +221,7 @@ class AuthenticationControllerTest {
         String refreshRequestJson = objectMapper.writeValueAsString(refreshRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/refresh")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(refreshRequestJson))
                 .andExpect(status().isBadRequest())
@@ -236,7 +236,7 @@ class AuthenticationControllerTest {
         String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(logoutRequestJson))
                 .andExpect(status().isOk())
@@ -252,7 +252,7 @@ class AuthenticationControllerTest {
         String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(logoutRequestJson))
                 .andExpect(status().isBadRequest())

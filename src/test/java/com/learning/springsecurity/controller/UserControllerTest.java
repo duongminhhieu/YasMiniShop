@@ -121,7 +121,7 @@ class UserControllerTest {
         when(userService.getMyInfo()).thenReturn(userResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/me")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -132,7 +132,7 @@ class UserControllerTest {
     @Test
     void getMyInfo_unauthenticatedRequest_failure() throws Exception {
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/me")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()
@@ -150,7 +150,7 @@ class UserControllerTest {
         when(userService.getAllUsers()).thenReturn(userResponseList);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
+        mockMvc.perform(MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -162,12 +162,12 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"ADMIN"})
+    @WithMockUser(username = "duongminhhieu@gmail.com", roles = {"ADMIN"})
     void deleteUser_validRequest_success() throws Exception {
         // GIVEN
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -186,7 +186,7 @@ class UserControllerTest {
                 .thenReturn(userResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -211,7 +211,7 @@ class UserControllerTest {
         String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -231,7 +231,7 @@ class UserControllerTest {
         String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -251,7 +251,7 @@ class UserControllerTest {
         String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -271,7 +271,7 @@ class UserControllerTest {
         String userUpdateRequestJson = objectMapper.writeValueAsString(userUpdateRequest);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userUpdateRequestJson)
                 )
@@ -289,7 +289,7 @@ class UserControllerTest {
         when(userService.getUserById("abc-123")).thenReturn(userResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/abc-123")
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/abc-123")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())

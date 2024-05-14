@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/roles")
+@RequestMapping("/roles")
 @RequiredArgsConstructor
 @Slf4j
 public class RoleController {
@@ -31,9 +31,11 @@ public class RoleController {
     }
 
     @DeleteMapping("/{role}")
-    APIResponse<Void> delete(@PathVariable String role) {
+    APIResponse<String> delete(@PathVariable String role) {
         roleService.delete(role);
-        return APIResponse.<Void>builder().build();
+        return APIResponse.<String>builder()
+                .result("Role deleted successfully")
+                .build();
     }
 
 }
