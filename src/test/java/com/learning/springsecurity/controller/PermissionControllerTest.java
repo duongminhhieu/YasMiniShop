@@ -1,10 +1,9 @@
 package com.learning.springsecurity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learning.springsecurity.permission.PermissionService;
+import com.learning.springsecurity.permission.dto.request.PermissionRequest;
 import com.learning.springsecurity.permission.dto.response.PermissionResponse;
-import com.learning.springsecurity.role.RoleService;
-import com.learning.springsecurity.role.dto.request.RoleRequest;
-import com.learning.springsecurity.role.dto.response.RoleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,12 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
-import java.util.Set;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,98 +26,83 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Slf4j
 @AutoConfigureMockMvc
-@TestPropertySource("/test.properties")
-class RoleControllerTest {
+class PermissionControllerTest {
+
+    @MockBean
+    private PermissionService permissionService;
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private RoleService roleService;
-
-    private RoleResponse roleResponse;
-    private RoleRequest roleRequest;
-    private List<RoleResponse> roleResponseList;
+    private PermissionResponse permissionResponse;
+    private PermissionRequest permissionRequest;
+    private List<PermissionResponse> permissionResponseList;
 
     @BeforeEach
     void setUp() {
-
-        roleRequest = RoleRequest.builder()
-                .name("USER")
-                .description("User role")
-                .permissions(Set.of("READ"))
-                .build();
-
-        PermissionResponse permissionResponse = PermissionResponse.builder()
+        permissionResponse = PermissionResponse.builder()
                 .name("READ")
                 .description("Read permission")
                 .build();
 
-        roleResponse = RoleResponse.builder()
-                .name("USER")
-                .description("User role")
-                .permissions(Set.of(permissionResponse))
+        permissionRequest = PermissionRequest.builder()
+                .name("READ")
+                .description("Read permission")
                 .build();
 
-        roleResponseList = List.of(roleResponse);
-
+        permissionResponseList = List.of(permissionResponse);
     }
+
 
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void createRole_validRequest_success() throws Exception{
-        // GIVEN
+    void create_validRequest_success() throws Exception {
 
+        // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
-        String roleRequestJson = objectMapper.writeValueAsString(roleRequest);
-        when(roleService.create(any(RoleRequest.class))).thenReturn(roleResponse);
+        String permissionRequestJson = objectMapper.writeValueAsString(permissionRequest);
+
+        when(permissionService.createPermission(any()))
+                .thenReturn(permissionResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/roles")
+        mockMvc.perform(MockMvcRequestBuilders.post("/permissions")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(roleRequestJson))
+                .content(permissionRequestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.name").value("USER"))
-                .andExpect(jsonPath("result.description").value("User role"))
-                .andExpect(jsonPath("result.permissions").isArray());
-
+                .andExpect(jsonPath("result.name").value("READ"))
+                .andExpect(jsonPath("result.description").value("Read permission"));
     }
 
 
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void getAll_validRequest_success() throws Exception {
-        // GIVEN
 
-        when(roleService.getAll()).thenReturn(roleResponseList);
+        // GIVEN
+        when(permissionService.getALlPermissions())
+                .thenReturn(permissionResponseList);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/roles")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.get("/permissions"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000))
                 .andExpect(jsonPath("result").isArray())
                 .andExpect(jsonPath("result").isNotEmpty());
-
     }
 
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void deleteRole_validRequest_success() throws Exception {
+    void delete_validRequest_success() throws Exception {
+
         // GIVEN
+        String permission = "READ";
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.delete("/roles/USER")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/permissions/" + permission))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result").value("Role deleted successfully"));
-
-        verify(roleService, times(1)).delete("USER");
-
+                .andExpect(jsonPath("internalCode").value(1000));
+        verify(permissionService, times(1)).deletePermission(permission);
     }
-
-
-
 }

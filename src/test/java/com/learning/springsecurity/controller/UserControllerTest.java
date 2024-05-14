@@ -162,7 +162,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"ADMIN"})
+    @WithMockUser(username = "duongminhhieu@gmail.com", roles = {"ADMIN"})
     void deleteUser_validRequest_success() throws Exception {
         // GIVEN
 
