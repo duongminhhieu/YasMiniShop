@@ -71,7 +71,7 @@ class PermissionControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/permissions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(permissionRequestJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("internalCode").value(1000))
                 .andExpect(jsonPath("result.name").value("READ"))
                 .andExpect(jsonPath("result.description").value("Read permission"));

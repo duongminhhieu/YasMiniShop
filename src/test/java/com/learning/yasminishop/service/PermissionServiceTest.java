@@ -38,6 +38,11 @@ class PermissionServiceTest {
     @BeforeEach
     void setUp() {
 
+        permission = Permission.builder()
+                .name("READ")
+                .description("Read permission")
+                .build();
+
         permissionRequest = PermissionRequest.builder()
                 .name("READ")
                 .description("Read permission")

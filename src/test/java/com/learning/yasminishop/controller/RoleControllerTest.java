@@ -78,7 +78,7 @@ class RoleControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/roles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(roleRequestJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("internalCode").value(1000))
                 .andExpect(jsonPath("result.name").value("USER"))
                 .andExpect(jsonPath("result.description").value("User role"))

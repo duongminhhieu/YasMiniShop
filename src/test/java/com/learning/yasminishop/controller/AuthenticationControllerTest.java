@@ -85,7 +85,7 @@ class AuthenticationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerRequestJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("internalCode").value(1000))
                 .andExpect(jsonPath("result.access_token").value("accessToken"))
                 .andExpect(jsonPath("result.refresh_token").value("refreshToken"));
