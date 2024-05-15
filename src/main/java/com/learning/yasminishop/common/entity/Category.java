@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_product")
+@Table(name = "t_category")
 @Getter
 @Setter
 @Builder
