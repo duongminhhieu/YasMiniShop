@@ -21,6 +21,7 @@ public class Product extends AuditEntity<String>{
     private String name;
 
     private String description;
+
     private BigDecimal price;
 
     @Column(unique = true)

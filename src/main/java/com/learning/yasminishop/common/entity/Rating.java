@@ -1,6 +1,7 @@
 package com.learning.yasminishop.common.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -12,6 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rating extends AuditEntity<String> {
+
+        @Id
+        private String id;
 
         private int rating;
         private String productId;
