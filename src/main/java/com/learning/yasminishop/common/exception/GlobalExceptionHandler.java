@@ -4,6 +4,7 @@ import com.learning.yasminishop.auth.dto.response.APIResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;

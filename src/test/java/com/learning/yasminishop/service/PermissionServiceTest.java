@@ -32,28 +32,17 @@ class PermissionServiceTest {
     @Autowired
     private PermissionService permissionService;
 
-    private PermissionResponse permissionResponse;
     private PermissionRequest permissionRequest;
-    private List<PermissionResponse> permissionResponseList;
     private Permission permission;
 
     @BeforeEach
     void setUp() {
-        permissionResponse = PermissionResponse.builder()
-                .name("READ")
-                .description("Read permission")
-                .build();
 
         permissionRequest = PermissionRequest.builder()
                 .name("READ")
                 .description("Read permission")
                 .build();
 
-        permissionResponseList = List.of(permissionResponse);
-        permission = Permission.builder()
-                .name("READ")
-                .description("Read permission")
-                .build();
     }
 
     @Test

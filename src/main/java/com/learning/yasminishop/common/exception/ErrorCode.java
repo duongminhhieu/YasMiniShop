@@ -19,15 +19,17 @@ public enum ErrorCode {
     UNAUTHENTICATED(1005, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND(1006, "User not found", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_FOUND(1007, "Category not found", HttpStatus.NOT_FOUND),
+    SLUG_ALREADY_EXISTS(1008, "Slug already exists", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_FOUND(1009, "Product not found", HttpStatus.NOT_FOUND),
+
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(2002, "Invalid email", HttpStatus.BAD_REQUEST),
     FIELD_NOT_EMPTY(2003, "\"{field}\" must not be empty", HttpStatus.BAD_REQUEST),
     FIELD_NOT_NULL(2004, "\"{field}\" must not be null", HttpStatus.BAD_REQUEST),
-    INVALID_DOB(2005, "Your age must be at least {minAge}", HttpStatus.BAD_REQUEST),
+    INVALID_DOB(2005, "Your age must be at least {minAge}", HttpStatus.BAD_REQUEST);
 
-    ;
 
 
     private final int internalCode;

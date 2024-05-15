@@ -30,6 +30,10 @@ public class ProductCreation {
     @FieldNotEmptyConstraint(field = "slug", message = "FIELD_NOT_EMPTY")
     String slug;
 
+    @FieldNotNullConstraint(field = "sku", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "sku", message = "FIELD_NOT_EMPTY")
+    String sku;
+
     @FieldNotNullConstraint(field = "quantity", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
     Long quantity;

@@ -2,28 +2,47 @@ package com.learning.yasminishop.product;
 
 import com.learning.yasminishop.auth.dto.response.APIResponse;
 import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
+
     private final ProductService productService;
 
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreation productCreation){
         log.info("Creating product: {}", productCreation);
         ProductResponse productResponse = productService.create(productCreation);
         return APIResponse.<ProductResponse>builder()
+                .result(productResponse)
+                .build();
+    }
+
+    @GetMapping("/{slug}")
+    public APIResponse<ProductResponse> getBySlug(@PathVariable String slug) {
+        log.info("Getting product by slug: {}", slug);
+        ProductResponse productResponse = productService.getBySlug(slug);
+        return APIResponse.<ProductResponse>builder()
+                .result(productResponse)
+                .build();
+    }
+
+    @GetMapping("/id/{id}")
+    public APIResponse<ProductAdminResponse> getById(@PathVariable String id) {
+        log.info("Getting product by id: {}", id);
+        ProductAdminResponse productResponse = productService.getById(id);
+        return APIResponse.<ProductAdminResponse>builder()
                 .result(productResponse)
                 .build();
     }

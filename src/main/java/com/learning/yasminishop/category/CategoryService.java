@@ -4,6 +4,8 @@ import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.category.mapper.CategoryMapper;
 import com.learning.yasminishop.common.entity.Category;
+import com.learning.yasminishop.common.exception.AppException;
+import com.learning.yasminishop.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +22,15 @@ public class CategoryService {
     @Transactional
     public CategoryResponse create(CategoryCreation categoryCreation) {
 
+        if (categoryRepository.existsBySlug(categoryCreation.getSlug())) {
+            throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
+        }
+
         Category category = categoryMapper.toCategory(categoryCreation);
         category = categoryRepository.save(category);
 
         return categoryMapper.toCategoryResponse(category);
     }
-
 
 
 }
