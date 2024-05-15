@@ -1,6 +1,6 @@
 package com.learning.yasminishop.permission;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.permission.dto.request.PermissionRequest;
 import com.learning.yasminishop.permission.dto.response.PermissionResponse;
 import jakarta.validation.Valid;

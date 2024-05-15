@@ -1,6 +1,8 @@
 package com.learning.yasminishop.product;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
+import com.learning.yasminishop.common.dto.PaginationResponse;
+import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
 import com.learning.yasminishop.product.dto.request.ProductCreation;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/products")
@@ -19,9 +22,9 @@ public class ProductController {
     private final ProductService productService;
 
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreation productCreation){
+    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreation productCreation) {
         log.info("Creating product: {}", productCreation);
         ProductResponse productResponse = productService.create(productCreation);
         return APIResponse.<ProductResponse>builder()
@@ -44,6 +47,16 @@ public class ProductController {
         ProductAdminResponse productResponse = productService.getById(id);
         return APIResponse.<ProductAdminResponse>builder()
                 .result(productResponse)
+                .build();
+    }
+
+    @GetMapping
+    public APIResponse<PaginationResponse<ProductAdminResponse>> getAll(@Valid @RequestBody FilterProductPayload filterProductPayload) {
+
+        var paginationResponse = productService.getAllProductsPagination(filterProductPayload);
+
+        return APIResponse.<PaginationResponse<ProductAdminResponse>>builder()
+                .result(paginationResponse)
                 .build();
     }
 

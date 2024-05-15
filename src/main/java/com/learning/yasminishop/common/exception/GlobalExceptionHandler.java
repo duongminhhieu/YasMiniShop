@@ -1,10 +1,9 @@
 package com.learning.yasminishop.common.exception;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -44,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<Object> handleJwtException(JwtException exception) {
+    public ResponseEntity<Object> handleJwtException() {
         ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
         var apiResponse = APIResponse.builder()
                 .internalCode(errorCode.getInternalCode())
@@ -54,7 +53,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
-    ResponseEntity<Object> handlingAuthenticationException(AuthenticationException exception) {
+    ResponseEntity<Object> handlingAuthenticationException() {
         ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
 
         var apiResponse = APIResponse.builder()
@@ -66,7 +65,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<Object> handlingAccessDeniedException(AccessDeniedException exception) {
+    ResponseEntity<Object> handlingAccessDeniedException() {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
         var apiResponse = APIResponse.builder()

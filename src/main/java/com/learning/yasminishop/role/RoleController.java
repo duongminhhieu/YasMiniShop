@@ -1,6 +1,6 @@
 package com.learning.yasminishop.role;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.role.dto.request.RoleRequest;
 import com.learning.yasminishop.role.dto.response.RoleResponse;
 import lombok.RequiredArgsConstructor;

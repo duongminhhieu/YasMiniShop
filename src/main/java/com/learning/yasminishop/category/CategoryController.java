@@ -1,6 +1,6 @@
 package com.learning.yasminishop.category;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import jakarta.validation.Valid;

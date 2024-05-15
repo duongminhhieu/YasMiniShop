@@ -4,7 +4,7 @@ import com.learning.yasminishop.auth.dto.request.AuthenticationRequest;
 import com.learning.yasminishop.auth.dto.request.LogoutRequest;
 import com.learning.yasminishop.auth.dto.request.RefreshRequest;
 import com.learning.yasminishop.auth.dto.request.RegisterRequest;
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.auth.dto.response.AuthenticationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
