@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
@@ -17,12 +19,21 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public APIResponse<CategoryResponse> createCategory(@Valid @RequestBody CategoryCreation categoryCreation){
         CategoryResponse categoryResponse = categoryService.create(categoryCreation);
         return APIResponse.<CategoryResponse>builder()
                 .result(categoryResponse)
+                .build();
+    }
+
+    @GetMapping
+    public APIResponse<List<CategoryResponse>> getAllCategories(){
+        List<CategoryResponse> categoryResponses = categoryService.getAllCategories();
+
+        return APIResponse.<List<CategoryResponse>>builder()
+                .result(categoryResponses)
                 .build();
     }
 

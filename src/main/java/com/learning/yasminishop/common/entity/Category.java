@@ -18,7 +18,6 @@ public class Category extends AuditEntity<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true)
     private String name;
 
     @Column(unique = true)
