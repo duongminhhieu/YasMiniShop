@@ -1,10 +1,11 @@
 package com.learning.yasminishop.role;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.role.dto.request.RoleRequest;
 import com.learning.yasminishop.role.dto.response.RoleResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     APIResponse<RoleResponse> create(@RequestBody RoleRequest request) {
         return APIResponse.<RoleResponse>builder()
                 .result(roleService.create(request))

@@ -1,11 +1,12 @@
 package com.learning.yasminishop.permission;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.permission.dto.request.PermissionRequest;
 import com.learning.yasminishop.permission.dto.response.PermissionResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class PermissionController {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public APIResponse<PermissionResponse> create(@Valid @RequestBody PermissionRequest request) {
         PermissionResponse permissionResponse = permissionService.createPermission(request);
 

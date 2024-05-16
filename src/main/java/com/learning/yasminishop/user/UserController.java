@@ -1,6 +1,6 @@
 package com.learning.yasminishop.user;
 
-import com.learning.yasminishop.auth.dto.response.APIResponse;
+import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.user.dto.request.UserUpdateRequest;
 import com.learning.yasminishop.user.dto.response.UserResponse;
 import jakarta.validation.Valid;
@@ -69,6 +69,8 @@ public class UserController {
                 .result(userResponse)
                 .build();
     }
+
+
 
 
 

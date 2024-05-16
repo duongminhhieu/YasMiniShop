@@ -1,4 +1,4 @@
-package com.learning.yasminishop.auth.dto.response;
+package com.learning.yasminishop.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
