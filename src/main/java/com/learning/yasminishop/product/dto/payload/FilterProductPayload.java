@@ -14,6 +14,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FilterProductPayload {
 
+
+    @FieldNotEmptyConstraint(field = "categorySlug", message = "FIELD_NOT_EMPTY")
+    String categorySlug;
+
+
     @FieldNotNullConstraint(field = "page", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "page", message = "FIELD_NOT_EMPTY")
     @Positive( message = "PAGE_MUST_BE_POSITIVE")

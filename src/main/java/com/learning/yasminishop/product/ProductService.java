@@ -34,6 +34,7 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse create(ProductCreation productCreation) {
 
         if (productRepository.existsBySlug(productCreation.getSlug())) {
@@ -43,7 +44,6 @@ public class ProductService {
         if (productRepository.existsBySku(productCreation.getSku())) {
             throw new AppException(ErrorCode.SKU_ALREADY_EXISTS);
         }
-
 
         Set<String> categoryIds = productCreation.getCategoryIds();
         List<Category> categories = categoryRepository.findAllById(categoryIds);
@@ -75,7 +75,7 @@ public class ProductService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public PaginationResponse<ProductAdminResponse> getAllProductsPagination(FilterProductPayload filterProductPayload) {
+    public PaginationResponse<ProductAdminResponse> getAllProductsPaginationForAdmin(FilterProductPayload filterProductPayload) {
 
         PaginationResponse<ProductAdminResponse> paginationResponse = new PaginationResponse<>();
         paginationResponse.setPage(filterProductPayload.getPage());
@@ -94,5 +94,25 @@ public class ProductService {
         return paginationResponse;
     }
 
+
+    public PaginationResponse<ProductResponse> getFeaturedProducts(FilterProductPayload filterProductPayload) {
+
+        PaginationResponse<ProductResponse> paginationResponse = new PaginationResponse<>();
+        paginationResponse.setPage(filterProductPayload.getPage());
+        paginationResponse.setTotal(productRepository.countByIsFeatured(true));
+        paginationResponse.setItemsPerPage(filterProductPayload.getItemsPerPage());
+
+
+        Pageable pageable = PageRequest.of(filterProductPayload.getPage() - 1, filterProductPayload.getItemsPerPage());
+        var products = productRepository.findByIsFeatured(true, pageable);
+
+        List<ProductResponse> productResponses = products.stream()
+                .map(productMapper::toProductResponse)
+                .toList();
+
+        paginationResponse.setData(productResponses);
+
+        return paginationResponse;
+    }
 
 }

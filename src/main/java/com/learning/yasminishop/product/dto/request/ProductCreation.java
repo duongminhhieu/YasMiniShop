@@ -38,6 +38,9 @@ public class ProductCreation {
     @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
     Long quantity;
 
+    @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
+    Boolean isFeatured;
+
     @FieldNotNullConstraint(field = "categoryIds", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "categoryIds", message = "FIELD_NOT_EMPTY")
     Set<String> categoryIds;

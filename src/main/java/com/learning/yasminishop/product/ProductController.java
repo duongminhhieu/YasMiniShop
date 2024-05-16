@@ -51,11 +51,20 @@ public class ProductController {
     }
 
     @GetMapping
-    public APIResponse<PaginationResponse<ProductAdminResponse>> getAll(@Valid @RequestBody FilterProductPayload filterProductPayload) {
+    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(@Valid @RequestBody FilterProductPayload filterProductPayload) {
 
-        var paginationResponse = productService.getAllProductsPagination(filterProductPayload);
+        var paginationResponse = productService.getAllProductsPaginationForAdmin(filterProductPayload);
 
         return APIResponse.<PaginationResponse<ProductAdminResponse>>builder()
+                .result(paginationResponse)
+                .build();
+    }
+
+    @GetMapping("/featured")
+    public APIResponse<PaginationResponse<ProductResponse>> getFeaturedProducts(@Valid @RequestBody FilterProductPayload filterProductPayload) {
+        log.info("Getting featured products with filter: {}", filterProductPayload);
+        var paginationResponse = productService.getFeaturedProducts(filterProductPayload);
+        return APIResponse.<PaginationResponse<ProductResponse>>builder()
                 .result(paginationResponse)
                 .build();
     }
