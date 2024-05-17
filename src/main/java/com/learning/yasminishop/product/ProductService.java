@@ -55,6 +55,7 @@ public class ProductService {
 
         Product product = productMapper.toProduct(productCreation);
         product.setCategories(new HashSet<>(categories));
+        product.setIsAvailable(true);
 
         return productMapper.toProductResponse(productRepository.save(product));
     }
@@ -80,12 +81,12 @@ public class ProductService {
 
         PaginationResponse<ProductAdminResponse> paginationResponse = new PaginationResponse<>();
         paginationResponse.setPage(filterProductPayload.getPage());
-        paginationResponse.setTotal(productRepository.count());
+        paginationResponse.setTotal(productRepository.countByIsAvailable(true));
         paginationResponse.setItemsPerPage(filterProductPayload.getItemsPerPage());
 
         Pageable pageable = PageRequest.of(filterProductPayload.getPage() - 1, filterProductPayload.getItemsPerPage());
 
-        var products = productRepository.findAll(pageable);
+        var products = productRepository.findProductByIsAvailable(true, pageable);
         List<ProductAdminResponse> productResponses = products.stream()
                 .map(productMapper::toProductAdminResponse)
                 .toList();
@@ -142,6 +143,17 @@ public class ProductService {
         product.setCategories(new HashSet<>(categories));
 
         return productMapper.toProductResponse(productRepository.save(product));
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void softDelete(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        product.setIsAvailable(false);
+
+        productRepository.save(product);
     }
 
 }

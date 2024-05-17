@@ -79,4 +79,13 @@ public class ProductController {
                 .build();
     }
 
+    @DeleteMapping("/{id}")
+    public APIResponse<String> deleteProduct(@PathVariable String id) {
+        log.info("Deleting product with id: {}", id);
+        productService.softDelete(id);
+        return APIResponse.<String>builder()
+                .result("Product deleted successfully")
+                .build();
+    }
+
 }

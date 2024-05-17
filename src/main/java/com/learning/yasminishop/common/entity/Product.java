@@ -39,6 +39,9 @@ public class Product extends AuditEntity<String>{
 
     private Float averageRating;
 
+    @ColumnDefault("false")
+    private Boolean isAvailable;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttribute> attributes;
 

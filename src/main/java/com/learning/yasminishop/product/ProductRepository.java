@@ -20,4 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     List<Product> findByIsFeatured(Boolean isFeatured, Pageable pageable);
 
+    long countByIsAvailable(Boolean isAvailable);
+
+    List<Product> findProductByIsAvailable(Boolean isAvailable, Pageable pageable);
 }
