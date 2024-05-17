@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,17 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Object> handleNoResourceFoundException() {
+        ErrorCode errorCode = ErrorCode.RESOURCE_NOT_FOUND;
+        var apiResponse = APIResponse.builder()
+                .internalCode(errorCode.getInternalCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleJwtException() {

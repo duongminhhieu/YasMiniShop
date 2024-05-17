@@ -5,7 +5,7 @@ spring:
     active: @profileActive@
 
 server:
-  port: 8081
+  port: 8080
   servlet:
     context-path: /api/v1
 
@@ -20,6 +20,10 @@ application:
     default:
       username: admin@local.com
       password: test1234
+  firebase:
+    json-file: /Users/mac/Workspace/yasmini-firebase.json
+    storage-bucket: yasmini.appspot.com
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -80,6 +84,10 @@ application:
     default:
       username: ${ADMIN_USERNAME}
       password: ${ADMIN_PASSWORD}
+  firebase:
+    json-file: ${FIREBASE_JSON_FILE}
+    storage-bucket: ${FIREBASE_STORAGE_BUCKET}
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -108,11 +116,7 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-springdoc:
-  api-docs:
-    enabled: false
-  swagger-ui:
-    enabled: false
+
 application:
   jwt:
     secret-key: ${JWT_SECRET_PROD_KEY}
@@ -124,3 +128,12 @@ application:
     default:
       username: ${ADMIN_USERNAME}
       password: ${ADMIN_PASSWORD}
+  firebase:
+    json-file: ${FIREBASE_JSON_FILE}
+    storage-bucket: ${FIREBASE_STORAGE_BUCKET}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

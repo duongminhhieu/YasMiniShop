@@ -21,7 +21,9 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(1007, "Category not found", HttpStatus.NOT_FOUND),
     SLUG_ALREADY_EXISTS(1008, "Slug already exists", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(1009, "Product not found", HttpStatus.NOT_FOUND),
-   SKU_ALREADY_EXISTS(1010, "SKU already exists", HttpStatus.BAD_REQUEST),
+    SKU_ALREADY_EXISTS(1010, "SKU already exists", HttpStatus.BAD_REQUEST),
+    FILE_UPLOAD_FAILED(1011, "File upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    RESOURCE_NOT_FOUND(1012, "Resource not found", HttpStatus.NOT_FOUND),
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
@@ -32,7 +34,6 @@ public enum ErrorCode {
     PAGE_MUST_BE_POSITIVE(2006, "Page must be positive", HttpStatus.BAD_REQUEST),
     ITEMS_PER_PAGE_MUST_BE_POSITIVE(2007, "Items per page must be positive", HttpStatus.BAD_REQUEST),
     ;
-
 
 
     private final int internalCode;
