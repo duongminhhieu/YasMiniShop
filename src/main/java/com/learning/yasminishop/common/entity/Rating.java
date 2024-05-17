@@ -1,8 +1,6 @@
 package com.learning.yasminishop.common.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,10 +13,18 @@ import lombok.*;
 public class Rating extends AuditEntity<String> {
 
         @Id
+        @GeneratedValue
         private String id;
 
-        private int rating;
-        private String productId;
-        private String userId;
+        @Column(nullable = false)
+        private Integer star;
 
+        @Column(columnDefinition = "TEXT")
+        private String comment;
+
+        @ManyToOne
+        private Product product;
+
+        @ManyToOne
+        private User user;
 }

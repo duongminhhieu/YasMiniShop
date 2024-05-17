@@ -24,7 +24,7 @@ import java.util.Set;
                 @NamedSubgraph(name = "roles.permissions",
                         attributeNodes = @NamedAttributeNode("permissions"))
         })
-public class User extends AuditEntity<String>{
+public class User extends AuditEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,9 +1,12 @@
 package com.learning.yasminishop.category;
 
+import com.learning.yasminishop.category.dto.request.CategoryUpdate;
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,22 @@ public class CategoryController {
 
         return APIResponse.<List<CategoryResponse>>builder()
                 .result(categoryResponses)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public APIResponse<String> softDeleteCategory(@NotNull @NotEmpty @PathVariable String id){
+        categoryService.softDelete(id);
+        return APIResponse.<String>builder()
+                .result("Category deleted successfully")
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public APIResponse<CategoryResponse> updateCategory(@NotNull @NotEmpty @PathVariable String id, @Valid @RequestBody CategoryUpdate categoryUpdate){
+        CategoryResponse categoryResponse = categoryService.update(id, categoryUpdate);
+        return APIResponse.<CategoryResponse>builder()
+                .result(categoryResponse)
                 .build();
     }
 
