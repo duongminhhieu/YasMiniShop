@@ -8,6 +8,7 @@ import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
 import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.product.dto.request.ProductUpdate;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import com.learning.yasminishop.product.mapper.ProductMapper;
@@ -94,7 +95,6 @@ public class ProductService {
         return paginationResponse;
     }
 
-
     public PaginationResponse<ProductResponse> getFeaturedProducts(FilterProductPayload filterProductPayload) {
 
         PaginationResponse<ProductResponse> paginationResponse = new PaginationResponse<>();
@@ -113,6 +113,35 @@ public class ProductService {
         paginationResponse.setData(productResponses);
 
         return paginationResponse;
+    }
+
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public ProductResponse update(String id, ProductUpdate productUpdate) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if (!product.getSlug().equals(productUpdate.getSlug()) && categoryRepository.existsBySlug(productUpdate.getSlug())) {
+            throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
+        }
+
+        if (!product.getSku().equals(productUpdate.getSku()) && categoryRepository.existsBySlug(productUpdate.getSku())) {
+            throw new AppException(ErrorCode.SKU_ALREADY_EXISTS);
+        }
+
+        Set<String> categoryIds = productUpdate.getCategoryIds();
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+
+        if (categories.size() != categoryIds.size()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        productMapper.updateProduct(product, productUpdate);
+        product.setCategories(new HashSet<>(categories));
+
+        return productMapper.toProductResponse(productRepository.save(product));
     }
 
 }

@@ -82,11 +82,9 @@ public class CategoryService {
             throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
         }
 
-        category.setName(categoryUpdate.getName());
-        category.setSlug(categoryUpdate.getSlug());
-        category.setDescription(categoryUpdate.getDescription());
-
+        categoryMapper.updateCategory(category, categoryUpdate);
         category = categoryRepository.save(category);
+
         return categoryMapper.toCategoryResponse(category);
     }
 

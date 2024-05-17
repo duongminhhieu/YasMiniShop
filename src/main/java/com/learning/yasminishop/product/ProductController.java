@@ -4,6 +4,7 @@ import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
 import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.product.dto.request.ProductUpdate;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import jakarta.validation.Valid;
@@ -66,6 +67,15 @@ public class ProductController {
         var paginationResponse = productService.getFeaturedProducts(filterProductPayload);
         return APIResponse.<PaginationResponse<ProductResponse>>builder()
                 .result(paginationResponse)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public APIResponse<ProductResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductUpdate productUpdate) {
+        log.info("Updating product with id: {}", id);
+        ProductResponse productResponse = productService.update(id, productUpdate);
+        return APIResponse.<ProductResponse>builder()
+                .result(productResponse)
                 .build();
     }
 
