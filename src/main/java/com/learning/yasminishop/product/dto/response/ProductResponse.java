@@ -18,6 +18,7 @@ public class ProductResponse {
     String name;
     String description;
     String slug;
+    String sku;
     BigDecimal price;
     Long quantity;
     Boolean isFeatured;

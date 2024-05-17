@@ -38,10 +38,7 @@ class RoleServiceTest {
     @MockBean
     private PermissionRepository permissionRepository;
 
-    private RoleResponse roleResponse;
     private RoleRequest roleRequest;
-    private PermissionResponse permissionResponse;
-    private List<RoleResponse> roleResponseList;
 
     private List<Permission> permissionList;
 
@@ -53,18 +50,18 @@ class RoleServiceTest {
                 .permissions(Set.of("READ"))
                 .build();
 
-        permissionResponse = PermissionResponse.builder()
+        PermissionResponse permissionResponse = PermissionResponse.builder()
                 .name("READ")
                 .description("Read permission")
                 .build();
 
-        roleResponse = RoleResponse.builder()
+        RoleResponse roleResponse = RoleResponse.builder()
                 .name("USER")
                 .description("User role")
                 .permissions(Set.of(permissionResponse))
                 .build();
 
-        roleResponseList = List.of(roleResponse);
+        List<RoleResponse> roleResponseList = List.of(roleResponse);
 
         permissionList = List.of(Permission.builder()
                 .name("READ")
