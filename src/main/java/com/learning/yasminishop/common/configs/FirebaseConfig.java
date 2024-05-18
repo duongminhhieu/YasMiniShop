@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,11 @@ public class FirebaseConfig {
     private String storageBucket;
 
     @Bean
+    @ConditionalOnProperty(
+            prefix = "spring",
+            value = "datasource.driver-class-name",
+            havingValue = "org.postgresql.Driver"
+    )
     public FirebaseApp firebaseInitialization() throws IOException {
         FileInputStream serviceAccount =
                 new FileInputStream(serviceAccountKeyPath);

@@ -7,8 +7,7 @@ import com.learning.yasminishop.common.entity.Product;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
-import com.learning.yasminishop.product.dto.request.ProductCreation;
-import com.learning.yasminishop.product.dto.request.ProductUpdate;
+import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import com.learning.yasminishop.product.mapper.ProductMapper;
@@ -36,7 +35,7 @@ public class ProductService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse create(ProductCreation productCreation) {
+    public ProductResponse create(ProductRequest productCreation) {
 
         if (productRepository.existsBySlug(productCreation.getSlug())) {
             throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
@@ -119,7 +118,7 @@ public class ProductService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse update(String id, ProductUpdate productUpdate) {
+    public ProductResponse update(String id, ProductRequest productUpdate) {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));

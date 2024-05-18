@@ -5,8 +5,7 @@ import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.product.ProductService;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
-import com.learning.yasminishop.product.dto.request.ProductCreation;
-import com.learning.yasminishop.product.dto.request.ProductUpdate;
+import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -43,19 +42,19 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private ProductCreation productCreation;
+    private ProductRequest productCreation;
     private ProductResponse productResponse;
     private ProductAdminResponse productAdminResponse;
     private PaginationResponse<ProductAdminResponse> productAdminResponsePaginationResponse;
     private PaginationResponse<ProductResponse> productResponsePaginationResponse;
     private FilterProductPayload filterProductPayload;
-    private ProductUpdate productUpdate;
+    private ProductRequest productUpdate;
 
 
     @BeforeEach
     void setUp() {
 
-        productCreation = ProductCreation.builder()
+        productCreation = ProductRequest.builder()
                 .name("Product 1")
                 .description("Product 1 description")
                 .price(BigDecimal.valueOf(1_000_000))
@@ -120,7 +119,7 @@ class ProductControllerTest {
                 .page(1)
                 .itemsPerPage(10)
                 .build();
-        productUpdate = ProductUpdate.builder()
+        productUpdate = ProductRequest.builder()
                 .name("Product 1")
                 .description("Product 1 description")
                 .price(BigDecimal.valueOf(1_000_000))
@@ -140,7 +139,7 @@ class ProductControllerTest {
         // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         String productCreationJson = objectMapper.writeValueAsString(productCreation);
-        when(productService.create(any(ProductCreation.class))).thenReturn(productResponse);
+        when(productService.create(any(ProductRequest.class))).thenReturn(productResponse);
 
         // WHEN THEN
         mockMvc.perform(MockMvcRequestBuilders.post("/products")

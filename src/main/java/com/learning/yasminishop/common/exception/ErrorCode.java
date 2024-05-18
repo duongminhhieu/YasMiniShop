@@ -33,6 +33,7 @@ public enum ErrorCode {
     INVALID_DOB(2005, "Your age must be at least {minAge}", HttpStatus.BAD_REQUEST),
     PAGE_MUST_BE_POSITIVE(2006, "Page must be positive", HttpStatus.BAD_REQUEST),
     ITEMS_PER_PAGE_MUST_BE_POSITIVE(2007, "Items per page must be positive", HttpStatus.BAD_REQUEST),
+    FILE_TOO_LARGE(2008, "File size must be less than 5MB", HttpStatus.BAD_REQUEST),
     ;
 
 

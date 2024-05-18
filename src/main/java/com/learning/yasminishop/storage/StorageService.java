@@ -7,6 +7,7 @@ import com.google.firebase.cloud.StorageClient;
 import com.learning.yasminishop.common.entity.Storage;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
+import com.learning.yasminishop.common.utility.FirebaseUtility;
 import com.learning.yasminishop.storage.dto.response.StorageResponse;
 import com.learning.yasminishop.storage.mapper.StorageMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,16 +29,19 @@ public class StorageService {
     private final StorageRepository storageRepository;
     private final StorageMapper storageMapper;
 
+    private final FirebaseUtility firebaseUtility;
+
 
     @Transactional
     public StorageResponse saveFile(MultipartFile file, String folder) {
         try {
-            String name = file.getOriginalFilename();
+            String name = UUID.randomUUID().toString().concat(firebaseUtility.getExtension(Objects.requireNonNull(file.getOriginalFilename())));
             String url = saveFileToFirebase(file, folder + "/" + name);
             Storage storage = Storage.builder()
                     .name(name)
                     .type(file.getContentType())
                     .url(url)
+                    .size(file.getSize())
                     .build();
 
             return storageMapper.toStorageResponse(storageRepository.save(storage));
@@ -50,8 +56,9 @@ public class StorageService {
         Blob blob = bucket.create(name, file.getBytes(), file.getContentType());
         blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
 
-        return blob.getMediaLink();
+        return firebaseUtility.generatePublicUrl(bucket.getName(), name);
     }
+
 
 
 }

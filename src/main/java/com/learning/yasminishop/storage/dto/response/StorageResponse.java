@@ -14,6 +14,6 @@ public class StorageResponse {
     String name;
     String url;
     String type;
-    long size;
+    Long size;
 
 }

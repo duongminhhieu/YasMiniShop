@@ -18,5 +18,6 @@ public class Storage {
 
     private String name;
     private String type;
+    private Long size;
     private String url;
 }
