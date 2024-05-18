@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, String>{
+public interface ProductRepository extends JpaRepository<Product, String> {
     boolean existsBySlug(String slug);
+
     boolean existsBySku(String sku);
 
     Optional<Product> findBySlug(String slug);
@@ -18,4 +19,8 @@ public interface ProductRepository extends JpaRepository<Product, String>{
     long countByIsFeatured(Boolean isFeatured);
 
     List<Product> findByIsFeatured(Boolean isFeatured, Pageable pageable);
+
+    long countByIsAvailable(Boolean isAvailable);
+
+    List<Product> findProductByIsAvailable(Boolean isAvailable, Pageable pageable);
 }

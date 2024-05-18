@@ -3,7 +3,7 @@ package com.learning.yasminishop.product;
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
-import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreation productCreation) {
+    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productCreation) {
         log.info("Creating product: {}", productCreation);
         ProductResponse productResponse = productService.create(productCreation);
         return APIResponse.<ProductResponse>builder()
@@ -66,6 +66,24 @@ public class ProductController {
         var paginationResponse = productService.getFeaturedProducts(filterProductPayload);
         return APIResponse.<PaginationResponse<ProductResponse>>builder()
                 .result(paginationResponse)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public APIResponse<ProductResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest productUpdate) {
+        log.info("Updating product with id: {}", id);
+        ProductResponse productResponse = productService.update(id, productUpdate);
+        return APIResponse.<ProductResponse>builder()
+                .result(productResponse)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public APIResponse<String> deleteProduct(@PathVariable String id) {
+        log.info("Deleting product with id: {}", id);
+        productService.softDelete(id);
+        return APIResponse.<String>builder()
+                .result("Product deleted successfully")
                 .build();
     }
 

@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCreation {
+public class ProductRequest {
     @FieldNotNullConstraint(field = "name", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "name", message = "FIELD_NOT_EMPTY")
     String name;

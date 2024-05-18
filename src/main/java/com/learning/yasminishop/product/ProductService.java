@@ -7,7 +7,7 @@ import com.learning.yasminishop.common.entity.Product;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
-import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import com.learning.yasminishop.product.mapper.ProductMapper;
@@ -35,7 +35,7 @@ public class ProductService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse create(ProductCreation productCreation) {
+    public ProductResponse create(ProductRequest productCreation) {
 
         if (productRepository.existsBySlug(productCreation.getSlug())) {
             throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
@@ -54,6 +54,7 @@ public class ProductService {
 
         Product product = productMapper.toProduct(productCreation);
         product.setCategories(new HashSet<>(categories));
+        product.setIsAvailable(true);
 
         return productMapper.toProductResponse(productRepository.save(product));
     }
@@ -79,12 +80,12 @@ public class ProductService {
 
         PaginationResponse<ProductAdminResponse> paginationResponse = new PaginationResponse<>();
         paginationResponse.setPage(filterProductPayload.getPage());
-        paginationResponse.setTotal(productRepository.count());
+        paginationResponse.setTotal(productRepository.countByIsAvailable(true));
         paginationResponse.setItemsPerPage(filterProductPayload.getItemsPerPage());
 
         Pageable pageable = PageRequest.of(filterProductPayload.getPage() - 1, filterProductPayload.getItemsPerPage());
 
-        var products = productRepository.findAll(pageable);
+        var products = productRepository.findProductByIsAvailable(true, pageable);
         List<ProductAdminResponse> productResponses = products.stream()
                 .map(productMapper::toProductAdminResponse)
                 .toList();
@@ -93,7 +94,6 @@ public class ProductService {
 
         return paginationResponse;
     }
-
 
     public PaginationResponse<ProductResponse> getFeaturedProducts(FilterProductPayload filterProductPayload) {
 
@@ -113,6 +113,46 @@ public class ProductService {
         paginationResponse.setData(productResponses);
 
         return paginationResponse;
+    }
+
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public ProductResponse update(String id, ProductRequest productUpdate) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if (!product.getSlug().equals(productUpdate.getSlug()) && categoryRepository.existsBySlug(productUpdate.getSlug())) {
+            throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
+        }
+
+        if (!product.getSku().equals(productUpdate.getSku()) && categoryRepository.existsBySlug(productUpdate.getSku())) {
+            throw new AppException(ErrorCode.SKU_ALREADY_EXISTS);
+        }
+
+        Set<String> categoryIds = productUpdate.getCategoryIds();
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+
+        if (categories.size() != categoryIds.size()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        productMapper.updateProduct(product, productUpdate);
+        product.setCategories(new HashSet<>(categories));
+
+        return productMapper.toProductResponse(productRepository.save(product));
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void softDelete(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        product.setIsAvailable(false);
+
+        productRepository.save(product);
     }
 
 }

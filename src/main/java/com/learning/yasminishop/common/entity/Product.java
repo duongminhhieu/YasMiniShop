@@ -21,6 +21,7 @@ public class Product extends AuditEntity<String>{
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private BigDecimal price;
@@ -36,7 +37,18 @@ public class Product extends AuditEntity<String>{
 
     private Long quantity;
 
+    private Float averageRating;
+
+    @ColumnDefault("false")
+    private Boolean isAvailable;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductAttribute> attributes;
+
     @ManyToMany
     private Set<Category> categories;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Storage> images;
 
 }
