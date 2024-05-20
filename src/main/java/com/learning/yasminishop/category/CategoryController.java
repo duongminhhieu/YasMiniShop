@@ -5,11 +5,14 @@ import com.learning.yasminishop.category.dto.response.CategoryAdminResponse;
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
+import com.learning.yasminishop.common.dto.PaginationResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,13 +60,20 @@ public class CategoryController {
                 .build();
     }
 
-    // get all categories for admin
     @GetMapping("/admin")
-    public APIResponse<List<CategoryAdminResponse>> getAllCategoriesForAdmin(){
-        List<CategoryAdminResponse> categoryResponses = categoryService.getAllCategoriesAdmin();
+    public APIResponse<PaginationResponse<CategoryAdminResponse>> getAllCategoriesForAdmin(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean isAvailable,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer itemsPerPage
+    ){
 
-        return APIResponse.<List<CategoryAdminResponse>>builder()
-                .result(categoryResponses)
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage); // (0, 10) for page 1
+
+        PaginationResponse<CategoryAdminResponse> paginationResponse = categoryService.getAllCategoriesAdmin(name, isAvailable, pageable);
+
+        return APIResponse.<PaginationResponse<CategoryAdminResponse>>builder()
+                .result(paginationResponse)
                 .build();
     }
 
