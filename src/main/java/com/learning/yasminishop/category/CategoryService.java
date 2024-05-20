@@ -2,6 +2,7 @@ package com.learning.yasminishop.category;
 
 import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.request.CategoryUpdate;
+import com.learning.yasminishop.category.dto.response.CategoryAdminResponse;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.category.mapper.CategoryMapper;
 import com.learning.yasminishop.common.entity.Category;
@@ -89,4 +90,12 @@ public class CategoryService {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<CategoryAdminResponse> getAllCategoriesAdmin() {
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream()
+                .map(categoryMapper::toCategoryAdminResponse)
+                .toList();
+    }
 }

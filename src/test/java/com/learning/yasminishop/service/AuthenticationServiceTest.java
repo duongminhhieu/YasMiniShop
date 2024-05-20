@@ -108,8 +108,8 @@ class AuthenticationServiceTest {
 
         // THEN
         verify(userRepository, times(1)).save(any());
-        assertThat(response.getAccessToken()).isEqualTo("accessToken");
-        assertThat(response.getRefreshToken()).isEqualTo("refreshToken");
+        assertThat(response.getTokens().getAccessToken()).isEqualTo("accessToken");
+        assertThat(response.getTokens().getRefreshToken()).isEqualTo("refreshToken");
     }
 
     @Test
@@ -151,8 +151,8 @@ class AuthenticationServiceTest {
         var response = authenticationService.authenticate(authenticationRequest);
 
         // THEN
-        assertThat(response.getAccessToken()).isEqualTo("accessToken");
-        assertThat(response.getRefreshToken()).isEqualTo("refreshToken");
+        assertThat(response.getTokens().getAccessToken()).isEqualTo("accessToken");
+        assertThat(response.getTokens().getRefreshToken()).isEqualTo("refreshToken");
     }
 
     @Test
@@ -174,8 +174,8 @@ class AuthenticationServiceTest {
         );
 
         // THEN
-        assertThat(exception.getErrorCode().getInternalCode()).isEqualTo(1005);
-        assertThat(exception.getErrorCode().getMessage()).isEqualTo("Unauthenticated");
+        assertThat(exception.getErrorCode().getInternalCode()).isEqualTo(1013);
+        assertThat(exception.getErrorCode().getMessage()).isEqualTo("Email or password is incorrect");
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
         verify(jwtService, never()).generateAccessToken(any());
         verify(jwtService, never()).generateRefreshToken(any());
@@ -194,8 +194,8 @@ class AuthenticationServiceTest {
         );
 
         // THEN
-        assertThat(exception.getErrorCode().getInternalCode()).isEqualTo(1005);
-        assertThat(exception.getErrorCode().getMessage()).isEqualTo("Unauthenticated");
+        assertThat(exception.getErrorCode().getInternalCode()).isEqualTo(1013);
+        assertThat(exception.getErrorCode().getMessage()).isEqualTo("Email or password is incorrect");
         verify(passwordEncoder, never()).matches(anyString(), anyString());
         verify(jwtService, never()).generateAccessToken(any());
         verify(jwtService, never()).generateRefreshToken(any());
@@ -224,8 +224,8 @@ class AuthenticationServiceTest {
         var response = authenticationService.refresh(refreshRequest);
 
         // THEN
-        assertThat(response.getAccessToken()).isEqualTo("accessToken");
-        assertThat(response.getRefreshToken()).isEqualTo("refreshToken");
+        assertThat(response.getTokens().getAccessToken()).isEqualTo("accessToken");
+        assertThat(response.getTokens().getRefreshToken()).isEqualTo("refreshToken");
         verify(invalidTokenRepository, times(1)).save(any());
     }
 

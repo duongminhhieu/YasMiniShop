@@ -1,6 +1,7 @@
 package com.learning.yasminishop.category;
 
 import com.learning.yasminishop.category.dto.request.CategoryUpdate;
+import com.learning.yasminishop.category.dto.response.CategoryAdminResponse;
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.category.dto.request.CategoryCreation;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
@@ -53,6 +54,16 @@ public class CategoryController {
         CategoryResponse categoryResponse = categoryService.update(id, categoryUpdate);
         return APIResponse.<CategoryResponse>builder()
                 .result(categoryResponse)
+                .build();
+    }
+
+    // get all categories for admin
+    @GetMapping("/admin")
+    public APIResponse<List<CategoryAdminResponse>> getAllCategoriesForAdmin(){
+        List<CategoryAdminResponse> categoryResponses = categoryService.getAllCategoriesAdmin();
+
+        return APIResponse.<List<CategoryAdminResponse>>builder()
+                .result(categoryResponses)
                 .build();
     }
 

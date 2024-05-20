@@ -31,4 +31,8 @@ public class Category extends AuditEntity<String> {
 
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products;
+
+    public Integer getProductCount() {
+        return products.size();
+    }
 }
