@@ -231,7 +231,7 @@ class AuthenticationControllerTest {
                         .content(refreshRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"token\" must not be null"));
+                .andExpect(jsonPath("message").value("\"refreshToken\" must not be null"));
     }
 
     @Test
