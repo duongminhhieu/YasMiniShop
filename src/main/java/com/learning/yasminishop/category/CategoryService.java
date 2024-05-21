@@ -71,12 +71,24 @@ public class CategoryService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void softDelete(String id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+    public void toggleAvailability(List<String> ids) {
+        List<Category> categories = categoryRepository.findAllById(ids);
 
-        category.setIsAvailable(false);
-        categoryRepository.save(category);
+        for (Category category : categories) {
+            category.setIsAvailable(!category.getIsAvailable());
+        }
+        categoryRepository.saveAll(categories);
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void restore(List<String> ids) {
+        List<Category> categories = categoryRepository.findAllById(ids);
+
+        for (Category category : categories) {
+            category.setIsAvailable(true);
+        }
+        categoryRepository.saveAll(categories);
     }
 
     @Transactional

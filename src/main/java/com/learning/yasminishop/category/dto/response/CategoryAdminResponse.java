@@ -2,6 +2,8 @@ package com.learning.yasminishop.category.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,4 +17,9 @@ public class CategoryAdminResponse {
     private String description;
     private Boolean isAvailable;
     private Integer productCount;
+
+    String createdBy;
+    LocalDateTime createdDate;
+    String lastModifiedBy;
+    LocalDateTime lastModifiedDate;
 }

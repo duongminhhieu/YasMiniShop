@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RefreshRequest {
-    @FieldNotNullConstraint(field = "token", message = "FIELD_NOT_NULL")
-    @FieldNotEmptyConstraint(field = "token", message = "FIELD_NOT_EMPTY")
+    @FieldNotNullConstraint(field = "refreshToken", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "refreshToken", message = "FIELD_NOT_EMPTY")
     private String refreshToken;
 }
