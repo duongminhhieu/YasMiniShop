@@ -56,6 +56,14 @@ public class CategoryService {
                 .toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryAdminResponse getCategory(String id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        return categoryMapper.toCategoryAdminResponse(category);
+    }
+
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(String id) {
@@ -80,16 +88,6 @@ public class CategoryService {
         categoryRepository.saveAll(categories);
     }
 
-    @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
-    public void restore(List<String> ids) {
-        List<Category> categories = categoryRepository.findAllById(ids);
-
-        for (Category category : categories) {
-            category.setIsAvailable(true);
-        }
-        categoryRepository.saveAll(categories);
-    }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")

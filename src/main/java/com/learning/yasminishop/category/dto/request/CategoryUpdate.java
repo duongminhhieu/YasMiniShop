@@ -22,4 +22,7 @@ public class CategoryUpdate {
     @FieldNotNullConstraint(field = "description", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "description", message = "FIELD_NOT_EMPTY")
     String description;
+
+    @FieldNotNullConstraint(field = "isAvailable", message = "FIELD_NOT_NULL")
+    Boolean isAvailable;
 }

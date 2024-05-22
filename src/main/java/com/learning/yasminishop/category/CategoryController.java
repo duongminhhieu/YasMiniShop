@@ -45,6 +45,14 @@ public class CategoryController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public APIResponse<CategoryAdminResponse> getCategory(@PathVariable String id) {
+        CategoryAdminResponse categoryAdminResponse = categoryService.getCategory(id);
+        return APIResponse.<CategoryAdminResponse>builder()
+                .result(categoryAdminResponse)
+                .build();
+    }
+
     @PatchMapping("/toggle-availability")
     public APIResponse<String> toggleAvailability(@RequestBody CategoryIds categoryIds) {
         categoryService.toggleAvailability(categoryIds.getIds());
