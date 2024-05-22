@@ -61,6 +61,14 @@ public class CategoryController {
                 .build();
     }
 
+    @DeleteMapping
+    public APIResponse<String> deleteCategories(@RequestBody CategoryIds categoryIds) {
+        categoryService.delete(categoryIds.getIds());
+        return APIResponse.<String>builder()
+                .result("Category deleted successfully")
+                .build();
+    }
+
 
     @PutMapping("/{id}")
     public APIResponse<CategoryResponse> updateCategory(@NotNull @NotEmpty @PathVariable String id, @Valid @RequestBody CategoryUpdate categoryUpdate) {

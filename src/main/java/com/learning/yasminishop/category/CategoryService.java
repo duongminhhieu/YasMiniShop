@@ -7,10 +7,8 @@ import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.category.mapper.CategoryMapper;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.common.entity.Category;
-import com.learning.yasminishop.common.entity.Product;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
-import com.learning.yasminishop.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +28,6 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final ProductRepository productRepository;
 
 
     @Transactional
@@ -66,21 +63,23 @@ public class CategoryService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(String id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+    public void delete(List<String> ids) {
 
-        for (Product product : category.getProducts()) {
-            product.getCategories().remove(category);
-            productRepository.save(product);
+        List<Category> categories = categoryRepository.findAllById(ids);
+        if(categories.isEmpty()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
-        categoryRepository.delete(category);
+        categoryRepository.deleteAll(categories);
     }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public void toggleAvailability(List<String> ids) {
         List<Category> categories = categoryRepository.findAllById(ids);
+
+        if(categories.isEmpty()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
 
         for (Category category : categories) {
             category.setIsAvailable(!category.getIsAvailable());

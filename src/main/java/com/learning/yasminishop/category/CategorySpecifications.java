@@ -9,10 +9,11 @@ import org.springframework.data.jpa.domain.Specification;
 public class CategorySpecifications {
 
     public static Specification<Category> hasName(String name) {
-        if (name == null) {
+        if (name == null || name.trim().isEmpty()) {
             return null;
         }
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"), "%" + name + "%");
+        String lowerCaseName = name.trim().toLowerCase();
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + lowerCaseName + "%");
     }
 
     public static Specification<Category> hasIsAvailable(Boolean isAvailable) {
@@ -22,6 +23,7 @@ public class CategorySpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isAvailable"), isAvailable);
     }
 
-    private CategorySpecifications() {}
+    private CategorySpecifications() {
+    }
 
 }
