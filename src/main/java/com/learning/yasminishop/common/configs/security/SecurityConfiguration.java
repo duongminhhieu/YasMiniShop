@@ -30,6 +30,14 @@ public class SecurityConfiguration {
             "/api-docs/**"
     };
 
+    private static final String[] ALLOWED_METHODS = {
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+    };
+
+    private static final String[] ALLOWED_ORIGINS = {
+            "http://localhost:5173",
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -37,8 +45,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("*")); // Allow any origin
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                    corsConfiguration.setAllowedOrigins(List.of(ALLOWED_ORIGINS)); // Allow any origin
+                    corsConfiguration.setAllowedMethods(List.of(ALLOWED_METHODS));
                     corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                     return corsConfiguration;
                 }))
