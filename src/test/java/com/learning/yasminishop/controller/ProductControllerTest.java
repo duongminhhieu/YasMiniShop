@@ -62,7 +62,10 @@ class ProductControllerTest {
                 .slug("product-1")
                 .quantity(10L)
                 .isFeatured(true)
+                .isAvailable(true)
+                .attributes(Set.of())
                 .categoryIds(Set.of("1", "2"))
+                .imageIds(Set.of("1", "2"))
                 .build();
 
         Set<CategoryResponse> categoryResponseSet = Set.of(CategoryResponse.builder()
@@ -127,7 +130,10 @@ class ProductControllerTest {
                 .slug("product-1")
                 .quantity(10L)
                 .isFeatured(true)
+                .isAvailable(true)
                 .categoryIds(Set.of("1", "2"))
+                .imageIds(Set.of("1", "2"))
+                .attributes(Set.of())
                 .build();
     }
 
@@ -139,7 +145,7 @@ class ProductControllerTest {
         // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         String productCreationJson = objectMapper.writeValueAsString(productCreation);
-        when(productService.create(any(ProductRequest.class))).thenReturn(productResponse);
+        when(productService.create(any(ProductRequest.class))).thenReturn(productAdminResponse);
 
         // WHEN THEN
         mockMvc.perform(MockMvcRequestBuilders.post("/products")
