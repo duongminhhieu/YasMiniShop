@@ -66,7 +66,7 @@ public class CategoryService {
     public void delete(List<String> ids) {
 
         List<Category> categories = categoryRepository.findAllById(ids);
-        if(categories.isEmpty()) {
+        if (categories.size() != ids.size()) {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         categoryRepository.deleteAll(categories);
@@ -77,7 +77,7 @@ public class CategoryService {
     public void toggleAvailability(List<String> ids) {
         List<Category> categories = categoryRepository.findAllById(ids);
 
-        if(categories.isEmpty()) {
+        if (categories.size() != ids.size()) {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
@@ -108,18 +108,17 @@ public class CategoryService {
     @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<CategoryAdminResponse> getAllCategoriesAdmin(String name, Boolean isAvailable, Pageable pageable) {
 
-        Page<Category> categories =  categoryRepository.findAll(
+        Page<Category> categories = categoryRepository.findAll(
                 Specification.where(CategorySpecifications.hasName(name))
                         .and(CategorySpecifications.hasIsAvailable(isAvailable)),
                 pageable
         );
 
-        PaginationResponse<CategoryAdminResponse> paginationResponse = new PaginationResponse<>();
-        paginationResponse.setPage(pageable.getPageNumber() + 1);
-        paginationResponse.setTotal(categories.getTotalElements());
-        paginationResponse.setItemsPerPage(pageable.getPageSize());
-        paginationResponse.setData(categories.map(categoryMapper::toCategoryAdminResponse).toList());
-
-        return paginationResponse;
+        return PaginationResponse.<CategoryAdminResponse>builder()
+                .page(pageable.getPageNumber() + 1)
+                .total(categories.getTotalElements())
+                .itemsPerPage(pageable.getPageSize())
+                .data(categories.map(categoryMapper::toCategoryAdminResponse).toList())
+                .build();
     }
 }

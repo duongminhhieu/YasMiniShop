@@ -4,6 +4,7 @@ import com.learning.yasminishop.category.CategoryRepository;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.common.entity.Category;
 import com.learning.yasminishop.common.entity.Product;
+import com.learning.yasminishop.common.entity.Storage;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
@@ -11,6 +12,7 @@ import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import com.learning.yasminishop.product.mapper.ProductMapper;
+import com.learning.yasminishop.storage.StorageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +34,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final StorageRepository storageRepository;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse create(ProductRequest productCreation) {
+    public ProductAdminResponse create(ProductRequest productCreation) {
 
         if (productRepository.existsBySlug(productCreation.getSlug())) {
             throw new AppException(ErrorCode.SLUG_ALREADY_EXISTS);
@@ -52,11 +55,19 @@ public class ProductService {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
+        Set<String> imageIds = productCreation.getImageIds();
+        List<Storage> images = storageRepository.findAllById(imageIds);
+
+        if (images.size() != imageIds.size()) {
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+
         Product product = productMapper.toProduct(productCreation);
         product.setCategories(new HashSet<>(categories));
+        product.setImages(new HashSet<>(images));
         product.setIsAvailable(true);
 
-        return productMapper.toProductResponse(productRepository.save(product));
+        return productMapper.toProductAdminResponse(productRepository.save(product));
     }
 
     public ProductResponse getBySlug(String slug) {

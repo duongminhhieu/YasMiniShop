@@ -20,7 +20,7 @@ public class StorageController {
 
 
     @PostMapping
-    public APIResponse<StorageResponse> saveFile(@RequestParam("file") MultipartFile file) {
+    public APIResponse<StorageResponse> saveProductFile(@RequestParam("file") MultipartFile file) {
         log.info("Saving file: {}", file.getOriginalFilename());
         StorageResponse storageResponse = storageService.saveFile(file, StorageFolder.PRODUCTS);
         return APIResponse.<StorageResponse>builder()

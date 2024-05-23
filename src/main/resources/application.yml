@@ -17,9 +17,9 @@ application:
   jwt:
     secret-key: 39c658a258a42e6ea83c38b59ed9f78076f2d3cf75ec8eb3d80e3aa433370e4a
     access-token:
-      expiration: 3600 # seconds
-    refresh-token:
       expiration: 86400 # seconds
+    refresh-token:
+      expiration: 604800 # seconds
   admin:
     default:
       username: admin@local.com

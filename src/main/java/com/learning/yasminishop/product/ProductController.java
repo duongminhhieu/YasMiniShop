@@ -24,10 +24,10 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productCreation) {
+    public APIResponse<ProductAdminResponse> createProduct(@Valid @RequestBody ProductRequest productCreation) {
         log.info("Creating product: {}", productCreation);
-        ProductResponse productResponse = productService.create(productCreation);
-        return APIResponse.<ProductResponse>builder()
+        ProductAdminResponse productResponse = productService.create(productCreation);
+        return APIResponse.<ProductAdminResponse>builder()
                 .result(productResponse)
                 .build();
     }
