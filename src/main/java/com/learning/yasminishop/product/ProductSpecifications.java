@@ -56,19 +56,12 @@ public class ProductSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(price), minPrice, maxPrice);
     }
 
-    public static Specification<Product> hasAverageRating(Float minRating, Float maxRating) {
+    public static Specification<Product> hasAverageRating(Float minRating) {
 
-        String averageRating = "averageRating";
-        if (minRating == null && maxRating == null) {
+        if (minRating == null) {
             return null;
         }
-        if (minRating == null) {
-            return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(averageRating), maxRating);
-        }
-        if (maxRating == null) {
-            return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(averageRating), minRating);
-        }
-        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(averageRating), minRating, maxRating);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("averageRating"), minRating);
     }
 
 

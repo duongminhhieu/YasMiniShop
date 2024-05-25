@@ -2,8 +2,8 @@ package com.learning.yasminishop.product;
 
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
-import com.learning.yasminishop.common.exception.AppException;
-import com.learning.yasminishop.common.exception.ErrorCode;
+import com.learning.yasminishop.common.utility.PageSortUtility;
+import com.learning.yasminishop.product.dto.payload.ProductFilter;
 import com.learning.yasminishop.product.dto.request.ProductIds;
 import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
@@ -11,14 +11,9 @@ import com.learning.yasminishop.product.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @RestController
@@ -28,6 +23,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final PageSortUtility pageSortUtility;
 
 
     @PostMapping
@@ -58,41 +54,35 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
-    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Boolean isAvailable,
-            @RequestParam(required = false) Boolean isFeatured,
-            @RequestParam(required = false, defaultValue = "") String[] categoryIds,
-            @RequestParam(defaultValue = "price") String[] orderBy,
-            @RequestParam(defaultValue = "asc") String sortBy,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer itemsPerPage
-    ) {
+    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(@ModelAttribute ProductFilter productFilter) {
 
-
-        List<Sort.Order> orders = new ArrayList<>();
-
-        Sort.Direction direction;
-        try {
-            direction = Sort.Direction.fromString(sortBy);
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_SORT_DIRECTION);
-        }
-        if (orderBy != null) {
-            for (String order : orderBy) {
-                orders.add(new Sort.Order(direction, order));
-            }
-        }
-
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.by(orders)); // (0, 10) for page 1
-
-        PaginationResponse<ProductAdminResponse> products = productService.getAllProductsForAdmin(name, isAvailable, isFeatured, categoryIds, pageable);
+        Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),
+                productFilter.getItemsPerPage(),
+                productFilter.getSortBy(),
+                productFilter.getOrderBy());
+        PaginationResponse<ProductAdminResponse> products = productService.getAllProductsForAdmin(productFilter, pageable);
 
         return APIResponse.<PaginationResponse<ProductAdminResponse>>builder()
                 .result(products)
                 .build();
     }
 
+    @GetMapping
+    public APIResponse<PaginationResponse<ProductResponse>> getAll(
+            @ModelAttribute ProductFilter productFilter
+    ) {
+
+        Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),
+                productFilter.getItemsPerPage(),
+                productFilter.getSortBy(),
+                productFilter.getOrderBy());
+
+        PaginationResponse<ProductResponse> products = productService.getAllProducts(productFilter, pageable);
+
+        return APIResponse.<PaginationResponse<ProductResponse>>builder()
+                .result(products)
+                .build();
+    }
 
     @PutMapping("/{id}")
     public APIResponse<ProductAdminResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest productUpdate) {

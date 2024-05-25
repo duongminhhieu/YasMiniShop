@@ -214,7 +214,7 @@ class ProductControllerTest {
     void getAllForAdmin_validRequest_success() throws Exception {
 
         // GIVEN
-        when(productService.getAllProductsForAdmin(any(), any(), any(), any(), any())).thenReturn(productAdminResponsePaginationResponse);
+        when(productService.getAllProductsForAdmin(any(), any())).thenReturn(productAdminResponsePaginationResponse);
 
         // WHEN THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/products/admin")

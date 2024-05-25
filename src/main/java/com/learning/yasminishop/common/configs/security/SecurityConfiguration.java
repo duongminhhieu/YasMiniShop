@@ -27,7 +27,9 @@ public class SecurityConfiguration {
             "/auth/**",
             "/demo/**",
             "/swagger-ui/**",
-            "/api-docs/**"
+            "/api-docs/**",
+            "/categories",
+            "/products",
     };
 
     private static final String[] ALLOWED_METHODS = {

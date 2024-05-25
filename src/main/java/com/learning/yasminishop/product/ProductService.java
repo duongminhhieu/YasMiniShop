@@ -8,6 +8,7 @@ import com.learning.yasminishop.common.entity.Product;
 import com.learning.yasminishop.common.entity.Storage;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
+import com.learning.yasminishop.product.dto.payload.ProductFilter;
 import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
@@ -90,23 +91,20 @@ public class ProductService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<ProductAdminResponse> getAllProductsForAdmin(
-            String name,
-            Boolean isAvailable,
-            Boolean isFeatured,
-            String[] categoryIds,
+            ProductFilter productFilter,
             Pageable pageable)
     {
 
         // check if the categoryIds are valid
-        List<Category> categories = categoryRepository.findAllById(List.of(categoryIds));
-        if (categories.size() != categoryIds.length) {
+        List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
+        if (categories.size() != productFilter.getCategoryIds().length) {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
         Page<Product> products = productRepository.findAll(
-                Specification.where(ProductSpecifications.hasName(name))
-                        .and(ProductSpecifications.hasIsAvailable(isAvailable))
-                        .and(ProductSpecifications.hasIsFeatured(isFeatured))
+                Specification.where(ProductSpecifications.hasName(productFilter.getName()))
+                        .and(ProductSpecifications.hasIsAvailable(productFilter.getIsAvailable()))
+                        .and(ProductSpecifications.hasIsFeatured(productFilter.getIsFeatured()))
                         .and(ProductSpecifications.hasCategory(categories))
                 , pageable);
 
@@ -119,6 +117,34 @@ public class ProductService {
                 .build();
     }
 
+    public PaginationResponse<ProductResponse> getAllProducts(
+            ProductFilter productFilter,
+            Pageable pageable)
+    {
+
+        // check if the categoryIds are valid
+        List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
+        if (categories.size() != productFilter.getCategoryIds().length) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        Page<Product> products = productRepository.findAll(
+                Specification.where(ProductSpecifications.hasName(productFilter.getName()))
+                        .and(ProductSpecifications.hasIsAvailable(productFilter.getIsAvailable()))
+                        .and(ProductSpecifications.hasIsFeatured(productFilter.getIsFeatured()))
+                        .and(ProductSpecifications.hasCategory(categories))
+                        .and(ProductSpecifications.hasPrice(productFilter.getMinPrice(), productFilter.getMaxPrice()))
+                        .and(ProductSpecifications.hasAverageRating(productFilter.getMinRating()))
+                , pageable);
+
+
+        return PaginationResponse.<ProductResponse>builder()
+                .page(pageable.getPageNumber() + 1)
+                .total(products.getTotalElements())
+                .itemsPerPage(pageable.getPageSize())
+                .data(products.map(productMapper::toProductResponse).toList())
+                .build();
+    }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
