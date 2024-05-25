@@ -42,7 +42,7 @@ public class Product extends AuditEntity<String>{
     @ColumnDefault("false")
     private Boolean isAvailable;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttribute> attributes;
 
     @ManyToMany

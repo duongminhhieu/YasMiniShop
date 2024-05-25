@@ -2,11 +2,11 @@ package com.learning.yasminishop.product.dto.request;
 
 import com.learning.yasminishop.common.validator.FieldNotEmpty.FieldNotEmptyConstraint;
 import com.learning.yasminishop.common.validator.FieldNotNull.FieldNotNullConstraint;
-import com.learning.yasminishop.product.dto.response.ProductAttributeResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -46,7 +46,7 @@ public class ProductRequest {
     Boolean isAvailable;
 
     @FieldNotNullConstraint(field = "attributes", message = "FIELD_NOT_NULL")
-    Set<ProductAttributeResponse> attributes;
+    List<ProductAttributeRequest> attributes;
 
     @FieldNotNullConstraint(field = "categoryIds", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "categoryIds", message = "FIELD_NOT_EMPTY")

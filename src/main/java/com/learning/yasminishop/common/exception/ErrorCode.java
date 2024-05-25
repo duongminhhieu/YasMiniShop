@@ -26,6 +26,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(1012, "Resource not found", HttpStatus.NOT_FOUND),
     EMAIL_OR_PASSWORD_INCORRECT(1013, "Email or password is incorrect", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_FOUND(1014, "Image not found", HttpStatus.NOT_FOUND),
+    INVALID_SORT_DIRECTION(1015, "Invalid sort direction", HttpStatus.BAD_REQUEST),
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),

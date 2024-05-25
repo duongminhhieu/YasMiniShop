@@ -20,9 +20,6 @@ public class ProductAttribute {
 
     private String name;
 
-    @ManyToOne
-    private Product product;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttributeValue> values;
 }

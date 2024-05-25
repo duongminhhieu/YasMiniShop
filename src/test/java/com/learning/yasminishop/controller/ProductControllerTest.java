@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.product.ProductService;
-import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
+import com.learning.yasminishop.product.dto.request.ProductAttributeRequest;
+import com.learning.yasminishop.product.dto.request.ProductAttributeValueRequest;
+import com.learning.yasminishop.product.dto.request.ProductIds;
 import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
@@ -46,13 +48,21 @@ class ProductControllerTest {
     private ProductResponse productResponse;
     private ProductAdminResponse productAdminResponse;
     private PaginationResponse<ProductAdminResponse> productAdminResponsePaginationResponse;
-    private PaginationResponse<ProductResponse> productResponsePaginationResponse;
-    private FilterProductPayload filterProductPayload;
     private ProductRequest productUpdate;
+    private ProductIds productIds;
 
 
     @BeforeEach
     void setUp() {
+
+        productIds = ProductIds.builder()
+                .ids(List.of("1", "2"))
+                .build();
+
+        ProductAttributeRequest productAttributeRequest = ProductAttributeRequest.builder()
+                .name("Attribute 1")
+                .values(List.of(new ProductAttributeValueRequest("Value 1"), new ProductAttributeValueRequest("Value 1")))
+                .build();
 
         productCreation = ProductRequest.builder()
                 .name("Product 1")
@@ -63,9 +73,9 @@ class ProductControllerTest {
                 .quantity(10L)
                 .isFeatured(true)
                 .isAvailable(true)
-                .attributes(Set.of())
                 .categoryIds(Set.of("1", "2"))
                 .imageIds(Set.of("1", "2"))
+                .attributes(List.of(productAttributeRequest))
                 .build();
 
         Set<CategoryResponse> categoryResponseSet = Set.of(CategoryResponse.builder()
@@ -111,17 +121,6 @@ class ProductControllerTest {
                 .itemsPerPage(10)
                 .build();
 
-        filterProductPayload = FilterProductPayload.builder()
-                .page(1)
-                .itemsPerPage(10)
-                .build();
-
-        productResponsePaginationResponse = PaginationResponse.<ProductResponse>builder()
-                .data(List.of(productResponse))
-                .total(1L)
-                .page(1)
-                .itemsPerPage(10)
-                .build();
         productUpdate = ProductRequest.builder()
                 .name("Product 1")
                 .description("Product 1 description")
@@ -131,9 +130,9 @@ class ProductControllerTest {
                 .quantity(10L)
                 .isFeatured(true)
                 .isAvailable(true)
+                .attributes(List.of(productAttributeRequest))
                 .categoryIds(Set.of("1", "2"))
                 .imageIds(Set.of("1", "2"))
-                .attributes(Set.of())
                 .build();
     }
 
@@ -215,14 +214,15 @@ class ProductControllerTest {
     void getAllForAdmin_validRequest_success() throws Exception {
 
         // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String filterPayloadJson = objectMapper.writeValueAsString(filterProductPayload);
-        when(productService.getAllProductsPaginationForAdmin(any())).thenReturn(productAdminResponsePaginationResponse);
+        when(productService.getAllProductsForAdmin(any(), any(), any(), any(), any())).thenReturn(productAdminResponsePaginationResponse);
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/products")
+        mockMvc.perform(MockMvcRequestBuilders.get("/products/admin")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(filterPayloadJson))
+                        .param("name", "Product 1")
+                        .param("page", "1")
+                        .param("itemsPerPage", "10"))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000))
                 .andExpect(jsonPath("result.data").isArray())
@@ -233,27 +233,7 @@ class ProductControllerTest {
     }
 
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void getFeaturedProducts_validRequest_success() throws Exception {
 
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String filterPayloadJson = objectMapper.writeValueAsString(filterProductPayload);
-        when(productService.getFeaturedProducts(any())).thenReturn(productResponsePaginationResponse);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.get("/products/featured")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(filterPayloadJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.data").isArray())
-                .andExpect(jsonPath("result.data").isNotEmpty())
-                .andExpect(jsonPath("result.total").value(1))
-                .andExpect(jsonPath("result.page").value(1))
-                .andExpect(jsonPath("result.itemsPerPage").value(10));
-    }
 
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
@@ -263,7 +243,7 @@ class ProductControllerTest {
         String id = "1";
         ObjectMapper objectMapper = new ObjectMapper();
         String productUpdateJson = objectMapper.writeValueAsString(productUpdate);
-        when(productService.update(id, productUpdate)).thenReturn(productResponse);
+        when(productService.update(id, productUpdate)).thenReturn(productAdminResponse);
 
         // WHEN THEN
         mockMvc.perform(MockMvcRequestBuilders.put("/products/" + id)
@@ -288,10 +268,15 @@ class ProductControllerTest {
     void deleteProduct_validRequest_success() throws Exception {
 
         // GIVEN
-        String id = "1";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String productIdsJson = objectMapper.writeValueAsString(productIds);
+
 
         // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.delete("/products/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/products" )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productIdsJson))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000));
     }

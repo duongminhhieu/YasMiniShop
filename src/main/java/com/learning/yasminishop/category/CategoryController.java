@@ -57,7 +57,7 @@ public class CategoryController {
     public APIResponse<String> toggleAvailability(@RequestBody CategoryIds categoryIds) {
         categoryService.toggleAvailability(categoryIds.getIds());
         return APIResponse.<String>builder()
-                .result("Categories availability toggled successfully")
+                .message("Categories availability toggled successfully")
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class CategoryController {
     public APIResponse<String> deleteCategories(@RequestBody CategoryIds categoryIds) {
         categoryService.delete(categoryIds.getIds());
         return APIResponse.<String>builder()
-                .result("Category deleted successfully")
+                .message("Category deleted successfully")
                 .build();
     }
 
