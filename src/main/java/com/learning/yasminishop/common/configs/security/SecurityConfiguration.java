@@ -30,6 +30,8 @@ public class SecurityConfiguration {
             "/api-docs/**",
             "/categories",
             "/products",
+            "/products/{slug}",
+
     };
 
     private static final String[] ALLOWED_METHODS = {

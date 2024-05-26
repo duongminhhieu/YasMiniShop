@@ -40,6 +40,36 @@ public class ProductService {
 
     private final ProductMapper productMapper;
 
+    public PaginationResponse<ProductResponse> getAllProducts(
+            ProductFilter productFilter,
+            Pageable pageable)
+    {
+
+        // check if the categoryIds are valid
+        List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
+        if (categories.size() != productFilter.getCategoryIds().length) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        Page<Product> products = productRepository.findAll(
+                Specification.where(ProductSpecifications.hasName(productFilter.getName()))
+                        .and(ProductSpecifications.hasIsAvailable(productFilter.getIsAvailable()))
+                        .and(ProductSpecifications.hasIsFeatured(productFilter.getIsFeatured()))
+                        .and(ProductSpecifications.hasCategory(categories))
+                        .and(ProductSpecifications.hasPrice(productFilter.getMinPrice(), productFilter.getMaxPrice()))
+                        .and(ProductSpecifications.hasAverageRating(productFilter.getMinRating()))
+                , pageable);
+
+
+        return PaginationResponse.<ProductResponse>builder()
+                .page(pageable.getPageNumber() + 1)
+                .total(products.getTotalElements())
+                .itemsPerPage(pageable.getPageSize())
+                .data(products.map(productMapper::toProductResponse).toList())
+                .build();
+    }
+
+
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public ProductAdminResponse create(ProductRequest productCreation) {
@@ -117,34 +147,6 @@ public class ProductService {
                 .build();
     }
 
-    public PaginationResponse<ProductResponse> getAllProducts(
-            ProductFilter productFilter,
-            Pageable pageable)
-    {
-
-        // check if the categoryIds are valid
-        List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
-        if (categories.size() != productFilter.getCategoryIds().length) {
-            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
-        }
-
-        Page<Product> products = productRepository.findAll(
-                Specification.where(ProductSpecifications.hasName(productFilter.getName()))
-                        .and(ProductSpecifications.hasIsAvailable(productFilter.getIsAvailable()))
-                        .and(ProductSpecifications.hasIsFeatured(productFilter.getIsFeatured()))
-                        .and(ProductSpecifications.hasCategory(categories))
-                        .and(ProductSpecifications.hasPrice(productFilter.getMinPrice(), productFilter.getMaxPrice()))
-                        .and(ProductSpecifications.hasAverageRating(productFilter.getMinRating()))
-                , pageable);
-
-
-        return PaginationResponse.<ProductResponse>builder()
-                .page(pageable.getPageNumber() + 1)
-                .total(products.getTotalElements())
-                .itemsPerPage(pageable.getPageSize())
-                .data(products.map(productMapper::toProductResponse).toList())
-                .build();
-    }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
