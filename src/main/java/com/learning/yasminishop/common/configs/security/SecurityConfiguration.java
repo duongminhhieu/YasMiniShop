@@ -31,6 +31,7 @@ public class SecurityConfiguration {
             "/categories",
             "/products",
             "/products/{slug}",
+            "/rating"
     };
 
     private static final String[] ALLOWED_METHODS = {
