@@ -98,6 +98,7 @@ public class ProductService {
         product.setCategories(new HashSet<>(categories));
         product.setImages(new HashSet<>(images));
         product.setIsAvailable(true);
+        product.setThumbnail(images.getFirst().getUrl());
 
 
         return productMapper.toProductAdminResponse(productRepository.save(product));
@@ -196,6 +197,7 @@ public class ProductService {
         product.setCategories(new HashSet<>(categories));
         product.getImages().clear();
         product.getImages().addAll(images); // update images
+        product.setThumbnail(images.getFirst().getUrl());
 
         return productMapper.toProductAdminResponse(productRepository.save(product));
     }

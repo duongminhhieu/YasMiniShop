@@ -27,6 +27,7 @@ public class ProductAdminResponse {
 
     Float averageRating;
     Boolean isAvailable;
+    String thumbnail;
 
     Set<ProductAttributeResponse> attributes;
     Set<CategoryResponse> categories;

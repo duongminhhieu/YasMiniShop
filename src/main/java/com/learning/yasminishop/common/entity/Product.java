@@ -44,6 +44,8 @@ public class Product extends AuditEntity<String>{
     @ColumnDefault("false")
     private Boolean isAvailable;
 
+    private String thumbnail;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttribute> attributes;
 
