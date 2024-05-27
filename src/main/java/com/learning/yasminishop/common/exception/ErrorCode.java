@@ -28,6 +28,7 @@ public enum ErrorCode {
     IMAGE_NOT_FOUND(1014, "Image not found", HttpStatus.NOT_FOUND),
     INVALID_SORT_DIRECTION(1015, "Invalid sort direction", HttpStatus.BAD_REQUEST),
     INVALID_PAGEABLE(1016, "Invalid pageable", HttpStatus.BAD_REQUEST),
+    RATING_ALREADY_EXISTS(1017, "You have already rated this product", HttpStatus.BAD_REQUEST),
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
@@ -38,6 +39,8 @@ public enum ErrorCode {
     PAGE_MUST_BE_POSITIVE(2006, "Page must be positive", HttpStatus.BAD_REQUEST),
     ITEMS_PER_PAGE_MUST_BE_POSITIVE(2007, "Items per page must be positive", HttpStatus.BAD_REQUEST),
     FILE_TOO_LARGE(2008, "File size must be less than 5MB", HttpStatus.BAD_REQUEST),
+    INVALID_RATING(2009, "Rating must be between 1 and 5", HttpStatus.BAD_REQUEST),
+    INVALID_COMMENT(2010, "Comment must be between {min} to {max} characters", HttpStatus.BAD_REQUEST),
     ;
 
 

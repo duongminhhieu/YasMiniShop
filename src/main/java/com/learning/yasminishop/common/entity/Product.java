@@ -47,6 +47,9 @@ public class Product extends AuditEntity<String>{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttribute> attributes;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Rating> ratings;
+
     @ManyToMany
     private Set<Category> categories;
 

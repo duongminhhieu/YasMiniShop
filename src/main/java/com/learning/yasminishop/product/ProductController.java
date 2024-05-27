@@ -54,7 +54,8 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
-    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(@ModelAttribute ProductFilter productFilter) {
+    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(
+            @Valid @ModelAttribute ProductFilter productFilter) {
 
         Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),
                 productFilter.getItemsPerPage(),
@@ -69,7 +70,7 @@ public class ProductController {
 
     @GetMapping
     public APIResponse<PaginationResponse<ProductResponse>> getAll(
-            @ModelAttribute ProductFilter productFilter
+            @Valid @ModelAttribute ProductFilter productFilter
     ) {
 
         Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),

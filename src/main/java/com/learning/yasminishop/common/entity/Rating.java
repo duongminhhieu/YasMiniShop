@@ -13,7 +13,7 @@ import lombok.*;
 public class Rating extends AuditEntity<String> {
 
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.UUID)
         private String id;
 
         @Column(nullable = false)

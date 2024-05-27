@@ -220,6 +220,7 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/products/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("name", "Product 1")
+                        .param("categoryIds", "1", "2")
                         .param("page", "1")
                         .param("itemsPerPage", "10"))
 
