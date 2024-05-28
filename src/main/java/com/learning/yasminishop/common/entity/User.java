@@ -41,6 +41,9 @@ public class User extends AuditEntity<String> {
 
     private String password;
 
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isActive;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 

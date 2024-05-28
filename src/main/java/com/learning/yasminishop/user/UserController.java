@@ -1,15 +1,18 @@
 package com.learning.yasminishop.user;
 
 import com.learning.yasminishop.common.dto.APIResponse;
+import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.user.dto.request.UserUpdateRequest;
+import com.learning.yasminishop.user.dto.response.UserAdminResponse;
 import com.learning.yasminishop.user.dto.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -29,16 +32,28 @@ public class UserController {
     }
 
     @GetMapping
-    public APIResponse<List<UserResponse>> getAllUsers(){
-
+    public APIResponse<PaginationResponse<UserAdminResponse>> getAllUsers(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer itemsPerPage
+    ){
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("User: {} is trying to access all users", authentication.getName());
         authentication.getAuthorities().forEach(authority -> log.info("User has authority: {}", authority.getAuthority()));
 
-        List<UserResponse> userResponses = userService.getAllUsers();
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage); // (0, 10) for page 1
+        PaginationResponse<UserAdminResponse> userResponses = userService.getAllUsers(pageable);
 
-        return APIResponse.<List<UserResponse>>builder()
+        return APIResponse.<PaginationResponse<UserAdminResponse>>builder()
                 .result(userResponses)
+                .build();
+    }
+
+    @PatchMapping("/{userId}/toggle-active")
+    public APIResponse<UserAdminResponse> toggleActive(@PathVariable String userId){
+        UserAdminResponse userResponse = userService.toggleActive(userId);
+
+        return APIResponse.<UserAdminResponse>builder()
+                .result(userResponse)
                 .build();
     }
 
@@ -69,9 +84,6 @@ public class UserController {
                 .result(userResponse)
                 .build();
     }
-
-
-
 
 
 }

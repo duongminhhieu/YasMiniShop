@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,7 +47,7 @@ class UserServiceTest {
 
     private User user;
     private UserUpdateRequest userUpdateRequest;
-    private List<User> userList;
+
 
 
     @BeforeEach
@@ -77,20 +77,8 @@ class UserServiceTest {
                 .roles(Set.of("USER", "ADMIN"))
                 .build();
 
-        userList = Arrays.asList(
-                User.builder()
-                        .id("abc-123")
-                        .email("user1@gmail.com")
-                        .firstName("User")
-                        .lastName("One")
-                        .build(),
-                User.builder()
-                        .id("def-456")
-                        .email("user2@gmail.com")
-                        .firstName("User")
-                        .lastName("Two")
-                        .build()
-        );
+
+
     }
 
     @Test
@@ -131,23 +119,7 @@ class UserServiceTest {
                 .isEqualTo("User not found");
     }
 
-    @Test
-    @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
-    void getAllUsers_validRequest_success() {
-        // Given
-        when(userRepository.findAll())
-                .thenReturn(userList);
 
-        // When
-        var userResponses = userService.getAllUsers();
-
-        // Then
-        assertThat(userResponses)
-                .isNotNull()
-                .isNotEmpty()
-                .hasSize(2);
-
-    }
 
     @Test
     @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})

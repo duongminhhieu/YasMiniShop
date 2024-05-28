@@ -77,6 +77,11 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.EMAIL_OR_PASSWORD_INCORRECT);
         }
 
+        // check if user is active
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+        }
+
         var tokens = TokenResponse.builder()
                 .accessToken(jwtService.generateAccessToken(user))
                 .refreshToken(jwtService.generateRefreshToken(user))

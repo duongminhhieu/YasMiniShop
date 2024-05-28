@@ -69,6 +69,12 @@ public class CategoryService {
         if (categories.size() != ids.size()) {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
+        // check if the categories are not used in any product
+        for (Category category : categories) {
+            if (!category.getProducts().isEmpty()) {
+                throw new AppException(ErrorCode.CATEGORY_USED_IN_PRODUCT);
+            }
+        }
         categoryRepository.deleteAll(categories);
     }
 
@@ -79,6 +85,12 @@ public class CategoryService {
 
         if (categories.size() != ids.size()) {
             throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        for (Category category : categories) {
+            if (!category.getProducts().isEmpty()) {
+                throw new AppException(ErrorCode.CATEGORY_USED_IN_PRODUCT);
+            }
         }
 
         for (Category category : categories) {

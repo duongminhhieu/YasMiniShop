@@ -29,6 +29,9 @@ public enum ErrorCode {
     INVALID_SORT_DIRECTION(1015, "Invalid sort direction", HttpStatus.BAD_REQUEST),
     INVALID_PAGEABLE(1016, "Invalid pageable", HttpStatus.BAD_REQUEST),
     RATING_ALREADY_EXISTS(1017, "You have already rated this product", HttpStatus.BAD_REQUEST),
+    USER_NOT_ACTIVE(1018, "User account is not active", HttpStatus.FORBIDDEN),
+    CATEGORY_USED_IN_PRODUCT(1019, "Category is used in product", HttpStatus.BAD_REQUEST),
+
 
     // Constraint violation
     INVALID_PASSWORD(2001, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),

@@ -119,9 +119,7 @@ class AuthenticationServiceTest {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.register(registerRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.register(registerRequest)
         );
 
         // THEN
@@ -138,6 +136,7 @@ class AuthenticationServiceTest {
                         .id("abc-123")
                         .email("duongminhhieu@gmail.com")
                         .password("123456")
+                        .isActive(true)
                         .build()));
         when(jwtService.generateAccessToken(any()))
                 .thenReturn("accessToken");
@@ -168,9 +167,7 @@ class AuthenticationServiceTest {
                 .thenReturn(false);
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.authenticate(authenticationRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.authenticate(authenticationRequest)
         );
 
         // THEN
@@ -188,9 +185,7 @@ class AuthenticationServiceTest {
                 .thenReturn(Optional.empty());
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.authenticate(authenticationRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.authenticate(authenticationRequest)
         );
 
         // THEN
@@ -235,9 +230,7 @@ class AuthenticationServiceTest {
         when(jwtService.isTokenValid(anyString())).thenReturn(false);
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.refresh(refreshRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.refresh(refreshRequest)
         );
 
         // THEN
@@ -256,9 +249,7 @@ class AuthenticationServiceTest {
         when(jwtService.extractUserEmail(anyString())).thenReturn("hehe@gmail.com");
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.refresh(refreshRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.refresh(refreshRequest)
         );
 
         // THEN
@@ -284,9 +275,7 @@ class AuthenticationServiceTest {
         when(jwtService.isTokenValid(anyString())).thenReturn(false);
 
         // WHEN
-        var exception = assertThrows(AppException.class, () -> {
-                    authenticationService.logout(logoutRequest);
-                }
+        var exception = assertThrows(AppException.class, () -> authenticationService.logout(logoutRequest)
         );
 
         // THEN

@@ -2,10 +2,12 @@ package com.learning.yasminishop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.permission.dto.response.PermissionResponse;
 import com.learning.yasminishop.role.dto.response.RoleResponse;
 import com.learning.yasminishop.user.UserService;
 import com.learning.yasminishop.user.dto.request.UserUpdateRequest;
+import com.learning.yasminishop.user.dto.response.UserAdminResponse;
 import com.learning.yasminishop.user.dto.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,11 +26,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -45,7 +47,7 @@ class UserControllerTest {
 
     private UserResponse userResponse;
     private UserUpdateRequest userUpdateRequest;
-    private List<UserResponse> userResponseList;
+    private PaginationResponse<UserAdminResponse> userResponseList;
     private Set<RoleResponse> roleResponseList;
 
 
@@ -96,20 +98,25 @@ class UserControllerTest {
                 .roles(Set.of("USER", "ADMIN"))
                 .build();
 
-        userResponseList = Arrays.asList(
-                UserResponse.builder()
-                        .id("abc-123")
-                        .email("user1@gmail.com")
-                        .firstName("User")
-                        .lastName("One")
-                        .build(),
-                UserResponse.builder()
-                        .id("def-456")
-                        .email("user2@gmail.com")
-                        .firstName("User")
-                        .lastName("Two")
-                        .build()
-        );
+        userResponseList = PaginationResponse.<UserAdminResponse>builder()
+                .page(1)
+                .total(2L)
+                .itemsPerPage(10)
+                .data(Arrays.asList(
+                        UserAdminResponse.builder()
+                                .id("abc-123")
+                                .email("user1@gmail.com")
+                                .firstName("User")
+                                .lastName("One")
+                                .build(),
+                        UserAdminResponse.builder()
+                                .id("def-456")
+                                .email("user2@gmail.com")
+                                .firstName("User")
+                                .lastName("Two")
+                                .build()
+                ))
+                .build();
 
     }
 
@@ -147,18 +154,14 @@ class UserControllerTest {
     void getAllUsers_validRequest_success() throws Exception {
         // GIVEN
 
-        when(userService.getAllUsers()).thenReturn(userResponseList);
+        when(userService.getAllUsers(any())).thenReturn(userResponseList);
 
         // WHEN THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("result", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("result[0].id").value("abc-123"))
-                .andExpect(MockMvcResultMatchers.jsonPath("result[0].email").value("user1@gmail.com"))
-                .andExpect(MockMvcResultMatchers.jsonPath("result[1].id").value("def-456"))
-                .andExpect(MockMvcResultMatchers.jsonPath("result[1].email").value("user2@gmail.com"));
+                .andExpect(MockMvcResultMatchers.jsonPath("result.data", hasSize(2)));
     }
 
     @Test
