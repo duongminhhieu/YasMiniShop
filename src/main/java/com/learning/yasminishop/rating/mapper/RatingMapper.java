@@ -12,6 +12,4 @@ public interface RatingMapper {
 
     RatingResponse toRatingResponse(Rating rating);
 
-
-
 }

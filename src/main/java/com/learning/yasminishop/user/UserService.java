@@ -60,7 +60,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setIsActive(!user.getIsActive());
+        user.setIsActive(user.getIsActive() == null || !user.getIsActive());
         return userMapper.toUserAdminResponse(userRepository.save(user));
     }
 

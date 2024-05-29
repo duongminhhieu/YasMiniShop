@@ -1,6 +1,7 @@
 package com.learning.yasminishop.category.dto.response;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -8,9 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryResponse {
-    private String id;
-    private String name;
-    private String slug;
-    private String description;
+    String id;
+    String name;
+    String slug;
+    String description;
 }

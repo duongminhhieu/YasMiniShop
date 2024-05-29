@@ -53,6 +53,7 @@ public class AuthenticationService {
         User user = userMapper.toUser(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRoles(roles);
+        user.setIsActive(true);
 
         userRepository.save(user);
 

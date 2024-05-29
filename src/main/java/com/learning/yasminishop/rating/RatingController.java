@@ -30,6 +30,7 @@ public class RatingController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<PaginationResponse<RatingResponse>> getRatings(
             @RequestParam String productId,
             @RequestParam(defaultValue = "1") Integer page,

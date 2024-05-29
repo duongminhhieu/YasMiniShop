@@ -37,6 +37,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categoryResponses = categoryService.getAllCategories();
 
@@ -46,6 +47,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<CategoryAdminResponse> getCategory(@PathVariable String id) {
         CategoryAdminResponse categoryAdminResponse = categoryService.getCategory(id);
         return APIResponse.<CategoryAdminResponse>builder()
@@ -54,6 +56,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/toggle-availability")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<String> toggleAvailability(@RequestBody CategoryIds categoryIds) {
         categoryService.toggleAvailability(categoryIds.getIds());
         return APIResponse.<String>builder()
@@ -62,6 +65,7 @@ public class CategoryController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<String> deleteCategories(@RequestBody CategoryIds categoryIds) {
         categoryService.delete(categoryIds.getIds());
         return APIResponse.<String>builder()
@@ -71,6 +75,7 @@ public class CategoryController {
 
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<CategoryResponse> updateCategory(@NotNull @NotEmpty @PathVariable String id, @Valid @RequestBody CategoryUpdate categoryUpdate) {
         CategoryResponse categoryResponse = categoryService.update(id, categoryUpdate);
         return APIResponse.<CategoryResponse>builder()
@@ -79,6 +84,7 @@ public class CategoryController {
     }
 
     @GetMapping("/admin")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<PaginationResponse<CategoryAdminResponse>> getAllCategoriesForAdmin(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Boolean isAvailable,

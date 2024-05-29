@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<UserResponse> getMyInfo(){
         UserResponse userResponse = userService.getMyInfo();
 
@@ -32,6 +34,7 @@ public class UserController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<PaginationResponse<UserAdminResponse>> getAllUsers(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer itemsPerPage
@@ -49,6 +52,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/toggle-active")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<UserAdminResponse> toggleActive(@PathVariable String userId){
         UserAdminResponse userResponse = userService.toggleActive(userId);
 
@@ -58,6 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<String> deleteUser(@PathVariable String userId){
 
         userService.deleteUser(userId);
@@ -68,6 +73,7 @@ public class UserController {
     }
 
     @PutMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<UserResponse> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest userUpdateRequest){
         UserResponse userResponse = userService.updateUser(userId, userUpdateRequest);
 
@@ -77,6 +83,7 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<UserResponse> getUser(@PathVariable String userId){
         UserResponse userResponse = userService.getUserById(userId);
 

@@ -20,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -38,7 +40,6 @@ public class RatingService {
     @PreAuthorize("hasRole('USER')")
     public RatingResponse create(RatingRequest request) {
 
-        // check if the product exists
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
@@ -59,18 +60,21 @@ public class RatingService {
         rating = ratingRepository.save(rating);
 
         // calculate the average rating
-        calculateAverageRating(product, request.getStar());
+        calculateAverageRating(product);
 
         return ratingMapper.toRatingResponse(rating);
     }
 
-    private void calculateAverageRating(Product product, int ratingValue) {
+    public void calculateAverageRating(Product product) {
+        List<Rating> ratings = ratingRepository.findByProductId(product.getId());
 
-        int totalRating = product.getRatings().size();
-        int totalRatingValue = product.getRatings().stream().mapToInt(Rating::getStar).sum();
+        double averageRating = ratings.stream()
+                .mapToInt(Rating::getStar)
+                .average()
+                .orElse(0.0);
 
-        float avg =  (float) (totalRatingValue + ratingValue) / (totalRating + 1);
-        product.setAverageRating(avg);
+        product.setAverageRating((float) averageRating);
+        productRepository.save(product);
     }
 
 
@@ -79,7 +83,7 @@ public class RatingService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        Page<Rating> ratingResponseList =  ratingRepository.findByProduct(product, pageable);
+        Page<Rating> ratingResponseList = ratingRepository.findByProduct(product, pageable);
 
         return PaginationResponse.<RatingResponse>builder()
                 .page(pageable.getPageNumber() + 1)

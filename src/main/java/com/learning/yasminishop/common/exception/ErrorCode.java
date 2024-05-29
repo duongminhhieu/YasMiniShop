@@ -31,6 +31,8 @@ public enum ErrorCode {
     RATING_ALREADY_EXISTS(1017, "You have already rated this product", HttpStatus.BAD_REQUEST),
     USER_NOT_ACTIVE(1018, "User account is not active", HttpStatus.FORBIDDEN),
     CATEGORY_USED_IN_PRODUCT(1019, "Category is used in product", HttpStatus.BAD_REQUEST),
+    PRODUCT_STOCK_NOT_ENOUGH(1021, "Product stock is not enough", HttpStatus.BAD_REQUEST),
+    CART_ITEM_NOT_FOUND(1022, "Cart item not found", HttpStatus.NOT_FOUND),
 
 
     // Constraint violation
@@ -44,6 +46,7 @@ public enum ErrorCode {
     FILE_TOO_LARGE(2008, "File size must be less than 5MB", HttpStatus.BAD_REQUEST),
     INVALID_RATING(2009, "Rating must be between 1 and 5", HttpStatus.BAD_REQUEST),
     INVALID_COMMENT(2010, "Comment must be between {min} to {max} characters", HttpStatus.BAD_REQUEST),
+    INVALID_QUANTITY(1020, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
     ;
 
 

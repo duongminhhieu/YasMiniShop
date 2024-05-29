@@ -36,6 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/{slug}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<ProductResponse> getBySlug(@PathVariable String slug) {
         log.info("Getting product by slug: {}", slug);
         ProductResponse productResponse = productService.getBySlug(slug);
@@ -45,6 +46,7 @@ public class ProductController {
     }
 
     @GetMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<ProductAdminResponse> getById(@PathVariable String id) {
         log.info("Getting product by id: {}", id);
         ProductAdminResponse productResponse = productService.getById(id);
@@ -54,6 +56,7 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(
             @Valid @ModelAttribute ProductFilter productFilter) {
 
@@ -69,6 +72,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<PaginationResponse<ProductResponse>> getAll(
             @Valid @ModelAttribute ProductFilter productFilter
     ) {
@@ -86,6 +90,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<ProductAdminResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest productUpdate) {
         log.info("Updating product with id: {}", id);
         ProductAdminResponse productResponse = productService.update(id, productUpdate);
@@ -95,6 +100,7 @@ public class ProductController {
     }
 
     @PatchMapping("/toggle-availability")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<String> toggleAvailability(@RequestBody ProductIds productIds) {
         productService.toggleAvailability(productIds.getIds());
 
@@ -104,6 +110,7 @@ public class ProductController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<String> deleteProducts(@RequestBody ProductIds productIds) {
         productService.delete(productIds.getIds());
         return APIResponse.<String>builder()
