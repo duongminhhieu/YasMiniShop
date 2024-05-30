@@ -83,7 +83,7 @@ public class RatingService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        Page<Rating> ratingResponseList = ratingRepository.findByProduct(product, pageable);
+        Page<Rating> ratingResponseList = ratingRepository.findByProductOrderByCreatedDateDesc(product, pageable);
 
         return PaginationResponse.<RatingResponse>builder()
                 .page(pageable.getPageNumber() + 1)

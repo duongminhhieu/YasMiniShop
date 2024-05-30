@@ -60,5 +60,15 @@ public class CartItemController {
                 .build();
     }
 
+    @GetMapping("/get-by-ids")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<List<CartItemResponse>> getCartItemsByIds(@RequestParam List<String> ids) {
+
+        List<CartItemResponse> cartItemResponses = cartItemService.getCartByIds(ids);
+
+        return APIResponse.<List<CartItemResponse>>builder()
+                .result(cartItemResponses)
+                .build();
+    }
 
 }

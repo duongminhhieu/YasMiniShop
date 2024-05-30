@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, String>{
     boolean existsByProductAndUser(Product product, User user);
-    Page<Rating> findByProduct(Product product, Pageable pageable);
+    Page<Rating> findByProductOrderByCreatedDateDesc(Product product, Pageable pageable);
     List<Rating> findByProductId(String productId);
 
 }

@@ -116,6 +116,26 @@ public class CartItemService {
         cartItemRepository.deleteAll(cartItems);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @Transactional
+    public List<CartItemResponse> getCartByIds(List<String> cartIds) {
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartIds);
+
+        if(cartItems.size() != cartIds.size()) {
+            throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
+
+        // verify the user is the owner of the cart
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(cartItems.stream().anyMatch(cartItem -> !cartItem.getUser().getEmail().equals(email))) {
+            throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
+
+        return cartItems.stream()
+                .map(cartItemMapper::toCartResponse)
+                .toList();
+    }
+
 
 
     private CartItemResponse updateExistingCartItem(CartItem existingCartItem, int additionalQuantity, Product product) {
