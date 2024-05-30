@@ -29,7 +29,7 @@ public class PageSortUtility {
 
     public Pageable createPageable(Integer page, Integer itemsPerPage, String sortBy, String[] orderBy) {
 
-        if (page == null || itemsPerPage == null) {
+        if (page == null || itemsPerPage == null || page < 1 || itemsPerPage < 1) {
             throw new AppException(ErrorCode.INVALID_PAGEABLE);
         }
 

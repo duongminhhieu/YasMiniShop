@@ -1,6 +1,7 @@
 package com.learning.yasminishop.cart;
 
 
+import com.learning.yasminishop.cart.dto.request.CartItemIds;
 import com.learning.yasminishop.cart.dto.request.CartItemRequest;
 import com.learning.yasminishop.cart.dto.request.CartItemUpdate;
 import com.learning.yasminishop.cart.dto.response.CartItemResponse;
@@ -42,10 +43,20 @@ public class CartItemController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public APIResponse<CartItemResponse> updateCart(@PathVariable String id, @Valid @RequestBody CartItemUpdate cartItemUpdate) {
-        CartItemResponse cartItemResponses = cartItemService.updateCart(id, cartItemUpdate);
+        CartItemResponse cartItemResponses = cartItemService.update(id, cartItemUpdate);
 
         return APIResponse.<CartItemResponse>builder()
                 .result(cartItemResponses)
+                .build();
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<String> deleteCart(@Valid @RequestBody CartItemIds cartItemIds) {
+        cartItemService.delete(cartItemIds.getIds());
+
+        return APIResponse.<String>builder()
+                .message("Cart items deleted successfully")
                 .build();
     }
 

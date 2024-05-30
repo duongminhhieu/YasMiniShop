@@ -75,7 +75,7 @@ public class CartItemService {
 
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public CartItemResponse updateCart(String cartId, CartItemUpdate cartItemUpdate) {
+    public CartItemResponse update(String cartId, CartItemUpdate cartItemUpdate) {
 
         CartItem cartItem = cartItemRepository.findById(cartId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND));
@@ -95,6 +95,25 @@ public class CartItemService {
         cartItem = cartItemRepository.save(cartItem);
 
         return cartItemMapper.toCartResponse(cartItem);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @Transactional
+    public void delete(List<String> cartIds) {
+
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartIds);
+
+        if(cartItems.size() != cartIds.size()) {
+            throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
+
+        // verify the user is the owner of the cart
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(cartItems.stream().anyMatch(cartItem -> !cartItem.getUser().getEmail().equals(email))) {
+            throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
+        }
+
+        cartItemRepository.deleteAll(cartItems);
     }
 
 

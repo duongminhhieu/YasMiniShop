@@ -2,6 +2,8 @@ package com.learning.yasminishop.rating;
 
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
+import com.learning.yasminishop.common.exception.AppException;
+import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.rating.dto.request.RatingRequest;
 import com.learning.yasminishop.rating.dto.response.RatingResponse;
 import jakarta.validation.Valid;
@@ -36,6 +38,10 @@ public class RatingController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer itemsPerPage
     ) {
+        if(page < 1 || itemsPerPage < 1) {
+            throw new AppException(ErrorCode.INVALID_PAGEABLE);
+        }
+
         Pageable pageable = PageRequest.of(page - 1, itemsPerPage);
 
         var ratings = ratingService.getRatings(productId, pageable);
