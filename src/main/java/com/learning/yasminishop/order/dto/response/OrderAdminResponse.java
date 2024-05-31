@@ -12,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderResponse {
-
+public class OrderAdminResponse {
     String id;
 
     Integer totalQuantity;
@@ -22,9 +21,14 @@ public class OrderResponse {
 
     EOrderStatus status;
 
+    UserOrderResponse user;
+
     OrderAddressResponse orderAddress;
 
     List<OrderItemResponse> orderItems;
 
+    String createdBy;
     String createdDate;
+    String lastModifiedBy;
+    String lastModifiedDate;
 }

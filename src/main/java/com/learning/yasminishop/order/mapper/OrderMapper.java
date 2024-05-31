@@ -7,6 +7,7 @@ import com.learning.yasminishop.common.entity.OrderItem;
 import com.learning.yasminishop.order.dto.request.OrderAddressRequest;
 import com.learning.yasminishop.order.dto.request.OrderRequest;
 import com.learning.yasminishop.order.dto.response.OrderAddressResponse;
+import com.learning.yasminishop.order.dto.response.OrderAdminResponse;
 import com.learning.yasminishop.order.dto.response.OrderItemResponse;
 import com.learning.yasminishop.order.dto.response.OrderResponse;
 import org.mapstruct.Mapper;
@@ -20,6 +21,7 @@ public interface OrderMapper {
     @Mapping(target = "id", ignore = true)
     OrderItem toOrderItem(CartItem cartItem);
 
+    OrderAdminResponse toOrderAdminResponse(Order order);
     OrderResponse toOrderResponse(Order order);
     OrderItemResponse toOrderItemResponse(OrderItem orderItem);
     OrderAddressResponse toOrderAddressResponse(OrderAddress orderAddress);

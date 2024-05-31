@@ -1,6 +1,7 @@
 package com.learning.yasminishop.order;
 
 import com.learning.yasminishop.cart.CartItemRepository;
+import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.common.entity.CartItem;
 import com.learning.yasminishop.common.entity.Order;
 import com.learning.yasminishop.common.entity.OrderItem;
@@ -8,12 +9,17 @@ import com.learning.yasminishop.common.entity.User;
 import com.learning.yasminishop.common.enumeration.EOrderStatus;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
+import com.learning.yasminishop.order.dto.filter.OrderFilter;
 import com.learning.yasminishop.order.dto.request.OrderRequest;
+import com.learning.yasminishop.order.dto.response.OrderAdminResponse;
 import com.learning.yasminishop.order.dto.response.OrderResponse;
 import com.learning.yasminishop.order.mapper.OrderMapper;
 import com.learning.yasminishop.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,8 +53,15 @@ public class OrderService {
         // get the cart items of the user
         List<CartItem> cartItems = cartItemRepository.findAllByUserOrderByLastModifiedDateDesc(user);
         Set<String> cartItemRequestIds = orderRequest.getCartItemIds();
-        for (CartItem cartItem : cartItems) {
-            if (!cartItemRequestIds.contains(cartItem.getId())) {
+
+        // Extract IDs from cartItems
+        Set<String> cartItemIds = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toSet());
+
+        // Check if all cartItemRequestIds are in cartItemIds
+        for (String requestId : cartItemRequestIds) {
+            if (!cartItemIds.contains(requestId)) {
                 throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
             }
         }
@@ -62,7 +75,7 @@ public class OrderService {
     }
 
 
-    @Transactional
+
     @PreAuthorize("hasRole('USER')")
     public List<OrderResponse> getAllOrderByUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -72,6 +85,33 @@ public class OrderService {
                 .stream()
                 .map(orderMapper::toOrderResponse)
                 .toList();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PaginationResponse<OrderAdminResponse> getAllOrders(OrderFilter orderFilter, Pageable pageable) {
+
+        Page<Order> orders = orderRepository.findAll(
+                Specification.where(OrderSpecifications.hasStatus(orderFilter.getStatus()))
+                , pageable);
+
+        return PaginationResponse.<OrderAdminResponse>builder()
+                .page(pageable.getPageNumber() + 1)
+                .total(orders.getTotalElements())
+                .itemsPerPage(pageable.getPageSize())
+                .data(orders.map(orderMapper::toOrderAdminResponse).toList())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public OrderResponse getOrderById(String id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        Order order = orderRepository.findByIdAndUser(id, user).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+
+        return orderMapper.toOrderResponse(order);
     }
 
 
