@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, String>, JpaSpecificationExecutor<Category> {
     boolean existsBySlug(String slug);
     List<Category> findAllByIsAvailable(Boolean isAvailable);
+    Optional<Category> findBySlug(String slug);
 }

@@ -53,6 +53,12 @@ public class CategoryService {
                 .toList();
     }
 
+    public CategoryResponse getBySlug(String slug) {
+        Category category = categoryRepository.findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        return categoryMapper.toCategoryResponse(category);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryAdminResponse getCategory(String id) {
         Category category = categoryRepository.findById(id)

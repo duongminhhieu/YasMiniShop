@@ -33,6 +33,7 @@ public enum ErrorCode {
     CATEGORY_USED_IN_PRODUCT(1019, "Category is used in product", HttpStatus.BAD_REQUEST),
     PRODUCT_STOCK_NOT_ENOUGH(1021, "Product stock is not enough", HttpStatus.BAD_REQUEST),
     CART_ITEM_NOT_FOUND(1022, "Cart item not found", HttpStatus.NOT_FOUND),
+    ORDER_NOT_FOUND(1023, "Order not found", HttpStatus.NOT_FOUND),
 
 
     // Constraint violation

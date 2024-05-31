@@ -46,6 +46,15 @@ public class CategoryController {
                 .build();
     }
 
+    @GetMapping("/slug/{slug}")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<CategoryResponse> getCategoryBySlug(@PathVariable String slug) {
+        CategoryResponse categoryResponse = categoryService.getBySlug(slug);
+        return APIResponse.<CategoryResponse>builder()
+                .result(categoryResponse)
+                .build();
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public APIResponse<CategoryAdminResponse> getCategory(@PathVariable String id) {
