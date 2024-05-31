@@ -8,7 +8,7 @@ import com.learning.yasminishop.common.entity.Product;
 import com.learning.yasminishop.common.entity.Storage;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
-import com.learning.yasminishop.product.dto.payload.ProductFilter;
+import com.learning.yasminishop.product.dto.filter.ProductFilter;
 import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;

@@ -3,7 +3,7 @@ package com.learning.yasminishop.product;
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.common.utility.PageSortUtility;
-import com.learning.yasminishop.product.dto.payload.ProductFilter;
+import com.learning.yasminishop.product.dto.filter.ProductFilter;
 import com.learning.yasminishop.product.dto.request.ProductIds;
 import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;

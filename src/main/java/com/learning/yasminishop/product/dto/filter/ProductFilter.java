@@ -1,4 +1,4 @@
-package com.learning.yasminishop.product.dto.payload;
+package com.learning.yasminishop.product.dto.filter;
 
 import com.learning.yasminishop.common.validator.FieldNotNull.FieldNotNullConstraint;
 import lombok.*;
