@@ -3,6 +3,8 @@ package com.learning.yasminishop.common.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "t_product_attribute")
 @Getter
@@ -17,8 +19,7 @@ public class ProductAttribute {
     private String id;
 
     private String name;
-    private String value;
 
-    @ManyToOne
-    private Product product;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductAttributeValue> values;
 }

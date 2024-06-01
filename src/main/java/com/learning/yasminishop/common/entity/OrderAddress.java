@@ -25,24 +25,4 @@ public class OrderAddress {
 
     @Column(columnDefinition = "TEXT")
     private String addressLine2;
-
-    @Column(columnDefinition = "TEXT")
-    private String city;
-
-    private String zipCode;
-
-    private Long districtId;
-
-    @Column(columnDefinition = "TEXT")
-    private String districtName;
-
-    private Long stateOrProvinceId;
-
-    @Column(columnDefinition = "TEXT")
-    private String stateOrProvinceName;
-
-    private Long countryId;
-
-    @Column(columnDefinition = "TEXT")
-    private String countryName;
 }

@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_product")
+@Table(name = "t_product", indexes = {
+        @Index(name = "idx_product_name", columnList = "name")
+})
 @Getter
 @Setter
 @Builder
@@ -42,8 +44,13 @@ public class Product extends AuditEntity<String>{
     @ColumnDefault("false")
     private Boolean isAvailable;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private String thumbnail;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductAttribute> attributes;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Rating> ratings;
 
     @ManyToMany
     private Set<Category> categories;

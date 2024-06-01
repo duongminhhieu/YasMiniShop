@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -34,14 +35,24 @@ public class ProductRequest {
     @FieldNotEmptyConstraint(field = "sku", message = "FIELD_NOT_EMPTY")
     String sku;
 
+    @FieldNotEmptyConstraint(field = "isFeatured", message = "FIELD_NOT_EMPTY")
+    Boolean isFeatured;
+
     @FieldNotNullConstraint(field = "quantity", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
     Long quantity;
 
-    @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
-    Boolean isFeatured;
+    @FieldNotNullConstraint(field = "isAvailable", message = "FIELD_NOT_NULL")
+    Boolean isAvailable;
+
+    @FieldNotNullConstraint(field = "attributes", message = "FIELD_NOT_NULL")
+    List<ProductAttributeRequest> attributes;
 
     @FieldNotNullConstraint(field = "categoryIds", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "categoryIds", message = "FIELD_NOT_EMPTY")
     Set<String> categoryIds;
+
+    @FieldNotNullConstraint(field = "imageIds", message = "FIELD_NOT_NULL")
+    @FieldNotEmptyConstraint(field = "imageIds", message = "FIELD_NOT_EMPTY")
+    Set<String> imageIds;
 }

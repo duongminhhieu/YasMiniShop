@@ -27,5 +27,4 @@ public class CartItem extends AuditEntity<String>{
 
     @ManyToOne
     private User user;
-
 }

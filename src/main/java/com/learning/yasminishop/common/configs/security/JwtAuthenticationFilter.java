@@ -54,6 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 var user = userRepository.findByEmail(userEmail)
                         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                if(Boolean.FALSE.equals(user.getIsActive())) throw new AppException(ErrorCode.UNAUTHENTICATED);
+
                 List<String> scopes = jwtService.getAuthorities(user);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

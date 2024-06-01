@@ -12,6 +12,7 @@ import com.learning.yasminishop.storage.dto.response.StorageResponse;
 import com.learning.yasminishop.storage.mapper.StorageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ public class StorageService {
 
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public StorageResponse saveFile(MultipartFile file, String folder) {
         try {
             String name = UUID.randomUUID().toString().concat(firebaseUtility.getExtension(Objects.requireNonNull(file.getOriginalFilename())));

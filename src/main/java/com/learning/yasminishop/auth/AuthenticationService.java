@@ -5,6 +5,7 @@ import com.learning.yasminishop.auth.dto.request.LogoutRequest;
 import com.learning.yasminishop.auth.dto.request.RefreshRequest;
 import com.learning.yasminishop.auth.dto.request.RegisterRequest;
 import com.learning.yasminishop.auth.dto.response.AuthenticationResponse;
+import com.learning.yasminishop.auth.dto.response.TokenResponse;
 import com.learning.yasminishop.common.configs.security.JwtService;
 import com.learning.yasminishop.common.constant.PredefinedRole;
 import com.learning.yasminishop.common.entity.InvalidToken;
@@ -42,7 +43,8 @@ public class AuthenticationService {
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
 
-        if (userRepository.existsByEmail(registerRequest.getEmail())) throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        if (userRepository.existsByEmail(registerRequest.getEmail()))
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
 
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(PredefinedRole.USER_ROLE)
@@ -51,14 +53,17 @@ public class AuthenticationService {
         User user = userMapper.toUser(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRoles(roles);
+        user.setIsActive(true);
 
         userRepository.save(user);
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+
+        var tokens = TokenResponse.builder()
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
+                .build();
 
         return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .tokens(tokens)
                 .build();
     }
 
@@ -67,18 +72,25 @@ public class AuthenticationService {
     ) {
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_OR_PASSWORD_INCORRECT));
 
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.EMAIL_OR_PASSWORD_INCORRECT);
         }
 
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        // check if user is active
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+        }
+
+        var tokens = TokenResponse.builder()
+                .accessToken(jwtService.generateAccessToken(user))
+                .refreshToken(jwtService.generateRefreshToken(user))
+                .build();
 
         return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .user(userMapper.toUserResponse(user))
+                .tokens(tokens)
                 .build();
     }
 
@@ -100,12 +112,13 @@ public class AuthenticationService {
             invalidTokenRepository.save(invalidToken);
 
             // Generate new access token and refresh token
-            var accessToken = jwtService.generateAccessToken(user);
-            var newRefreshToken = jwtService.generateRefreshToken(user);
+            var tokens = TokenResponse.builder()
+                    .accessToken(jwtService.generateAccessToken(user))
+                    .refreshToken(jwtService.generateRefreshToken(user))
+                    .build();
 
             return AuthenticationResponse.builder()
-                    .accessToken(accessToken)
-                    .refreshToken(newRefreshToken)
+                    .tokens(tokens)
                     .build();
         } else {
             throw new AppException(ErrorCode.INVALID_TOKEN);

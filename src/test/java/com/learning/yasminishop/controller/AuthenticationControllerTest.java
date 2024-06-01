@@ -7,6 +7,7 @@ import com.learning.yasminishop.auth.dto.request.LogoutRequest;
 import com.learning.yasminishop.auth.dto.request.RefreshRequest;
 import com.learning.yasminishop.auth.dto.request.RegisterRequest;
 import com.learning.yasminishop.auth.dto.response.AuthenticationResponse;
+import com.learning.yasminishop.auth.dto.response.TokenResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,11 @@ class AuthenticationControllerTest {
     @BeforeEach
     void setUp() {
 
+        TokenResponse tokenResponse = TokenResponse.builder()
+                .accessToken("accessToken")
+                .refreshToken("refreshToken")
+                .build();
+
         authenticationRequest = AuthenticationRequest.builder()
                 .email("duongminhhieu@gmail.com")
                 .password("123456")
@@ -58,8 +64,7 @@ class AuthenticationControllerTest {
                 .build();
 
         authenticationResponse = AuthenticationResponse.builder()
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
+                .tokens(tokenResponse)
                 .build();
 
         refreshRequest = RefreshRequest.builder()
@@ -87,8 +92,8 @@ class AuthenticationControllerTest {
                         .content(registerRequestJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.refresh_token").value("refreshToken"));
+                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
     }
 
@@ -124,8 +129,8 @@ class AuthenticationControllerTest {
                         .content(authenticationRequestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.refresh_token").value("refreshToken"));
+                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
     }
 
@@ -208,8 +213,8 @@ class AuthenticationControllerTest {
                         .content(refreshRequestJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.refresh_token").value("refreshToken"));
+                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
     }
 
@@ -226,7 +231,7 @@ class AuthenticationControllerTest {
                         .content(refreshRequestJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"token\" must not be null"));
+                .andExpect(jsonPath("message").value("\"refreshToken\" must not be null"));
     }
 
     @Test

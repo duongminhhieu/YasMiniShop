@@ -31,4 +31,5 @@ public class Category extends AuditEntity<String> {
 
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products;
+
 }

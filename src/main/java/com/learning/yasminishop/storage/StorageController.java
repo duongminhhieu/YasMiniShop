@@ -5,10 +5,8 @@ import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.storage.dto.response.StorageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -20,7 +18,8 @@ public class StorageController {
 
 
     @PostMapping
-    public APIResponse<StorageResponse> saveFile(@RequestParam("file") MultipartFile file) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public APIResponse<StorageResponse> saveProductFile(@RequestParam("file") MultipartFile file) {
         log.info("Saving file: {}", file.getOriginalFilename());
         StorageResponse storageResponse = storageService.saveFile(file, StorageFolder.PRODUCTS);
         return APIResponse.<StorageResponse>builder()

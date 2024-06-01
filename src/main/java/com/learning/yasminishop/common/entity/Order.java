@@ -1,10 +1,10 @@
 package com.learning.yasminishop.common.entity;
 
+import com.learning.yasminishop.common.enumeration.EOrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -20,24 +20,17 @@ public class Order extends AuditEntity<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String orderTrackingNumber;
+    private Integer totalQuantity;
 
-    private int totalQuantity;
+    private BigDecimal totalPrice;
 
-    private String status;
-
-    private LocalDateTime orderDate;
-
-    private LocalDate shippingDate;
-
-    private String shippingMethod;
-
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private EOrderStatus status;
 
     @ManyToOne
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderAddress orderAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
