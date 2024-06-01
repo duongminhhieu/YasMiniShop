@@ -1,6 +1,6 @@
 package com.learning.yasminishop.statistic.dto.response;
 
-import com.learning.yasminishop.order.dto.response.OrderResponse;
+import com.learning.yasminishop.order.dto.response.OrderAdminResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -26,5 +26,5 @@ public class StatisticResponse {
 
     List<ProductStatisticResponse> topProducts;
 
-    List<OrderResponse> latestOrders;
+    List<OrderAdminResponse> latestOrders;
 }
