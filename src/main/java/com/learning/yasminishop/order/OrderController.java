@@ -69,4 +69,22 @@ public class OrderController {
                 .build();
     }
 
+    @GetMapping("/{id}/admin")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<OrderAdminResponse> getOrderByIdForAdmin(@PathVariable String id) {
+        OrderAdminResponse orderResponse = orderService.getOrderByIdForAdmin(id);
+        return APIResponse.<OrderAdminResponse>builder()
+                .result(orderResponse)
+                .build();
+    }
+
+    @PatchMapping("/{id}/status")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<String> updateOrderStatus(@PathVariable String id, @RequestParam String status) {
+        orderService.updateOrderStatus(id, status);
+        return APIResponse.<String>builder()
+                .message("Order status updated successfully")
+                .build();
+    }
+
 }

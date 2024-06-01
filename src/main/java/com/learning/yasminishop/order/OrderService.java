@@ -114,6 +114,24 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderAdminResponse getOrderByIdForAdmin(String id) {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        return orderMapper.toOrderAdminResponse(order);
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateOrderStatus(String id, String status) {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+
+        order.setStatus(EOrderStatus.valueOf(status));
+        orderRepository.save(order);
+    }
 
     private Order createAOrder(OrderRequest orderRequest, User user, List<CartItem> cartItemsToOrder) {
         Order order = orderMapper.toOrder(orderRequest);
