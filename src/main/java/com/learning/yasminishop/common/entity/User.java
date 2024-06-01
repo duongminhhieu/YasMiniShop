@@ -24,7 +24,7 @@ import java.util.Set;
                 @NamedSubgraph(name = "roles.permissions",
                         attributeNodes = @NamedAttributeNode("permissions"))
         })
-public class User extends AuditEntity<String>{
+public class User extends AuditEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -40,6 +40,9 @@ public class User extends AuditEntity<String>{
     private String email;
 
     private String password;
+
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isActive;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;

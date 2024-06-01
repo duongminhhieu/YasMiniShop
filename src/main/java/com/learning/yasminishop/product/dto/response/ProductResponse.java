@@ -1,6 +1,7 @@
 package com.learning.yasminishop.product.dto.response;
 
 import com.learning.yasminishop.category.dto.response.CategoryResponse;
+import com.learning.yasminishop.storage.dto.response.StorageResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,9 +18,17 @@ public class ProductResponse {
     String id;
     String name;
     String description;
-    String slug;
     BigDecimal price;
-    Long quantity;
+    String slug;
+    String sku;
     Boolean isFeatured;
+    Long quantity;
+
+    Float averageRating;
+    Boolean isAvailable;
+    String thumbnail;
+
+    Set<ProductAttributeResponse> attributes;
     Set<CategoryResponse> categories;
+    Set<StorageResponse> images;
 }

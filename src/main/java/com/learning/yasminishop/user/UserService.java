@@ -1,14 +1,18 @@
 package com.learning.yasminishop.user;
 
+import com.learning.yasminishop.common.dto.PaginationResponse;
 import com.learning.yasminishop.common.entity.User;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
 import com.learning.yasminishop.role.RoleRepository;
 import com.learning.yasminishop.user.dto.request.UserUpdateRequest;
+import com.learning.yasminishop.user.dto.response.UserAdminResponse;
 import com.learning.yasminishop.user.dto.response.UserResponse;
 import com.learning.yasminishop.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,13 +42,28 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toUserResponse)
-                .toList();
+    public PaginationResponse<UserAdminResponse> getAllUsers(Pageable pageable) {
+
+        Page<User> users = userRepository.findAll(pageable);
+
+        return PaginationResponse.<UserAdminResponse>builder()
+                .page(pageable.getPageNumber() + 1)
+                .total(users.getTotalElements())
+                .itemsPerPage(pageable.getPageSize())
+                .data(users.map(userMapper::toUserAdminResponse).toList())
+                .build();
     }
 
-    // @PostAuthorize("returnObject.email == authentication.name")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public UserAdminResponse toggleActive(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        user.setIsActive(user.getIsActive() == null || !user.getIsActive());
+        return userMapper.toUserAdminResponse(userRepository.save(user));
+    }
+
     @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
     @Transactional
     public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest) {

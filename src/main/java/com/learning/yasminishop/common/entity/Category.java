@@ -18,12 +18,16 @@ public class Category extends AuditEntity<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true)
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    private Boolean isAvailable;
 
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products;

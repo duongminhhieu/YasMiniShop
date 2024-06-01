@@ -10,6 +10,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +44,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Object> handleNoResourceFoundException() {
+        ErrorCode errorCode = ErrorCode.RESOURCE_NOT_FOUND;
+        var apiResponse = APIResponse.builder()
+                .internalCode(errorCode.getInternalCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
+
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleJwtException() {
         ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
+        var apiResponse = APIResponse.builder()
+                .internalCode(errorCode.getInternalCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    ResponseEntity<Object> handlingMaxUploadSizeExceededException() {
+        ErrorCode errorCode = ErrorCode.FILE_TOO_LARGE;
         var apiResponse = APIResponse.builder()
                 .internalCode(errorCode.getInternalCode())
                 .message(errorCode.getMessage())

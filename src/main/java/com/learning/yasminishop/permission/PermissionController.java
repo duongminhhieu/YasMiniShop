@@ -31,6 +31,7 @@ public class PermissionController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<List<PermissionResponse>> getAll() {
         List<PermissionResponse> permissionResponses = permissionService.getALlPermissions();
 
@@ -40,6 +41,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{permission}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<Void> delete(@PathVariable String permission) {
         permissionService.deletePermission(permission);
 

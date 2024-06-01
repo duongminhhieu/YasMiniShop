@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +27,20 @@ public class SecurityConfiguration {
             "/auth/**",
             "/demo/**",
             "/swagger-ui/**",
-            "/api-docs/**"
+            "/api-docs/**",
+            "/categories",
+            "/categories/{slug}",
+            "/products",
+            "/products/{slug}",
+            "/rating"
+    };
+
+    private static final String[] ALLOWED_METHODS = {
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+    };
+
+    private static final String[] ALLOWED_ORIGINS = {
+            "http://localhost:5173",
     };
 
     @Bean
@@ -32,6 +48,13 @@ public class SecurityConfiguration {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(List.of(ALLOWED_ORIGINS)); // Allow any origin
+                    corsConfiguration.setAllowedMethods(List.of(ALLOWED_METHODS));
+                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    return corsConfiguration;
+                }))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
@@ -47,7 +70,6 @@ public class SecurityConfiguration {
                                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }

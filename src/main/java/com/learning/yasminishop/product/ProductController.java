@@ -2,13 +2,16 @@ package com.learning.yasminishop.product;
 
 import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.common.dto.PaginationResponse;
-import com.learning.yasminishop.product.dto.payload.FilterProductPayload;
-import com.learning.yasminishop.product.dto.request.ProductCreation;
+import com.learning.yasminishop.common.utility.PageSortUtility;
+import com.learning.yasminishop.product.dto.filter.ProductFilter;
+import com.learning.yasminishop.product.dto.request.ProductIds;
+import com.learning.yasminishop.product.dto.request.ProductRequest;
 import com.learning.yasminishop.product.dto.response.ProductAdminResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,19 +23,20 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final PageSortUtility pageSortUtility;
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreation productCreation) {
-        log.info("Creating product: {}", productCreation);
-        ProductResponse productResponse = productService.create(productCreation);
-        return APIResponse.<ProductResponse>builder()
+    public APIResponse<ProductAdminResponse> createProduct(@Valid @RequestBody ProductRequest productCreation) {
+        ProductAdminResponse productResponse = productService.create(productCreation);
+        return APIResponse.<ProductAdminResponse>builder()
                 .result(productResponse)
                 .build();
     }
 
     @GetMapping("/{slug}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<ProductResponse> getBySlug(@PathVariable String slug) {
         log.info("Getting product by slug: {}", slug);
         ProductResponse productResponse = productService.getBySlug(slug);
@@ -42,6 +46,7 @@ public class ProductController {
     }
 
     @GetMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public APIResponse<ProductAdminResponse> getById(@PathVariable String id) {
         log.info("Getting product by id: {}", id);
         ProductAdminResponse productResponse = productService.getById(id);
@@ -50,22 +55,66 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping
-    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(@Valid @RequestBody FilterProductPayload filterProductPayload) {
+    @GetMapping("/admin")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(
+            @Valid @ModelAttribute ProductFilter productFilter) {
 
-        var paginationResponse = productService.getAllProductsPaginationForAdmin(filterProductPayload);
+        Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),
+                productFilter.getItemsPerPage(),
+                productFilter.getSortBy(),
+                productFilter.getOrderBy());
+        PaginationResponse<ProductAdminResponse> products = productService.getAllProductsForAdmin(productFilter, pageable);
 
         return APIResponse.<PaginationResponse<ProductAdminResponse>>builder()
-                .result(paginationResponse)
+                .result(products)
                 .build();
     }
 
-    @GetMapping("/featured")
-    public APIResponse<PaginationResponse<ProductResponse>> getFeaturedProducts(@Valid @RequestBody FilterProductPayload filterProductPayload) {
-        log.info("Getting featured products with filter: {}", filterProductPayload);
-        var paginationResponse = productService.getFeaturedProducts(filterProductPayload);
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<PaginationResponse<ProductResponse>> getAll(
+            @Valid @ModelAttribute ProductFilter productFilter
+    ) {
+
+        Pageable pageable = pageSortUtility.createPageable(productFilter.getPage(),
+                productFilter.getItemsPerPage(),
+                productFilter.getSortBy(),
+                productFilter.getOrderBy());
+
+        PaginationResponse<ProductResponse> products = productService.getAllProducts(productFilter, pageable);
+
         return APIResponse.<PaginationResponse<ProductResponse>>builder()
-                .result(paginationResponse)
+                .result(products)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<ProductAdminResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest productUpdate) {
+        log.info("Updating product with id: {}", id);
+        ProductAdminResponse productResponse = productService.update(id, productUpdate);
+        return APIResponse.<ProductAdminResponse>builder()
+                .result(productResponse)
+                .build();
+    }
+
+    @PatchMapping("/toggle-availability")
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<String> toggleAvailability(@RequestBody ProductIds productIds) {
+        productService.toggleAvailability(productIds.getIds());
+
+        return APIResponse.<String>builder()
+                .message("Products availability toggled successfully")
+                .build();
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public APIResponse<String> deleteProducts(@RequestBody ProductIds productIds) {
+        productService.delete(productIds.getIds());
+        return APIResponse.<String>builder()
+                .message("Category deleted successfully")
                 .build();
     }
 
