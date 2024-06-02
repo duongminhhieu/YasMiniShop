@@ -58,3 +58,60 @@ Yas Mini is an e-commerce platform that allows public users, customers, and admi
 
 # Database Modeling
 ![rookie_phase1_db - public](https://github.com/duongminhhieu/YasMiniShop/assets/76527212/4df44922-26dc-47d6-b1d9-d63b0f44c2b5)
+
+# Setting Up and Running at Local
+
+## Configuration
+
+Include setup steps for Firebase authentication, PostgreSQL database connection, and any other necessary configurations.
+
+1. Set up Firebase:
+
+    - Create a Firebase project in the Firebase Console.
+    - Configure Firebase Authentication and download the service account JSON file.
+
+2. Set up PostgreSQL:
+
+    - Install PostgreSQL on your system.
+    - Create a new PostgreSQL database for your application.
+    
+3. Config **application.yml** file to run in the local environment:
+
+    - In **application.yml** file. Let change the **json-file** (path to your credentials file) and **storage-bucket**
+   ```bash
+      firebase:
+        json-file: this is your credentials file (.json)
+        storage-bucket: yasmini.appspot.com (this is your storage-bucket)
+   ```
+   - After that, change **url**, **username** and **password** of your database.
+   ```bash
+     datasource:
+        url: this is your url
+        username: this is your username
+        password: this is your password
+   ```
+## Run
+1. Build the Project
+```bash
+    ./mvnw clean install  
+```
+2. Run the Application
+```bash
+    ./mvnw spring-boot:run
+```
+
+# Contact
+* Skype: live:duongminhhieu2082002
+* Please ping me if you can't run the app.
+
+# References
+1. [JPA & JWT (Hoang Nguyen)] (https://github.com/hoangnd-dev/rookies-java)
+2. [Springboot Demo (Phu Le)] (https://github.com/phulecse2420/demo)
+3. [Devteria] (https://github.com/devteria/identity-service.git)
+4. [Yas real] (https://github.com/nashtech-garage/yas)
+5. NashTech Slide
+6. GitHub Copilot
+
+
+
+
