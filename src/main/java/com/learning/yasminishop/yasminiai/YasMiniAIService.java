@@ -62,7 +62,7 @@ public class YasMiniAIService {
         }
     }
 
-   // @PreAuthorize("hasRole('USER')")
+   @PreAuthorize("hasRole('USER')")
     public List<ProductResponse> findCarByImage(MultipartFile file){
         try {
             var prompt = "Extract the name car to a list keyword and output them in JSON. If you don't find any information about the car, please output the list empty.\nExample response: [\"rolls\", \"royce\", \"wraith\"]";
@@ -74,11 +74,10 @@ public class YasMiniAIService {
             );
 
             String jsonContent = ResponseHandler.getText(content);
+            log.info("Extracted keywords from image: {}", jsonContent);
             List<String> keywords = convertJsonToList(jsonContent).stream()
                     .map(String::toLowerCase)
                     .toList();
-
-            log.info(keywords.toString());
 
             Set<Product> results = new HashSet<>();
             for (String keyword : keywords) {
@@ -108,5 +107,4 @@ public class YasMiniAIService {
     private String extractJsonFromMarkdown(String markdown) {
         return markdown.replace("```json\n", "").replace("\n```", "");
     }
-
 }
