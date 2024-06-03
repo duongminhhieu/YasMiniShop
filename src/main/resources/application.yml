@@ -89,7 +89,7 @@ application:
       username: ${ADMIN_USERNAME}
       password: ${ADMIN_PASSWORD}
   firebase:
-    json-file: ${FIREBASE_JSON_FILE}
+    json-file: ${FIREBASE_JSON_FILE_PATH}
     storage-bucket: ${FIREBASE_STORAGE_BUCKET}
 
 springdoc:
@@ -133,7 +133,7 @@ application:
       username: ${ADMIN_USERNAME}
       password: ${ADMIN_PASSWORD}
   firebase:
-    json-file: ${FIREBASE_JSON_FILE}
+    json-file: ${FIREBASE_JSON_FILE_PATH}
     storage-bucket: ${FIREBASE_STORAGE_BUCKET}
 
 springdoc:
