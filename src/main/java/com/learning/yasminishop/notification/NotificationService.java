@@ -69,7 +69,7 @@ public class NotificationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        List<Notification> notifications = notificationRepository.findAllByUserOrderByCreatedByDesc(user);
+        List<Notification> notifications = notificationRepository.findAllByUserOrderByCreatedDateDesc(user);
         return notifications
                 .stream()
                 .map(notificationMapper::toNotificationResponse)

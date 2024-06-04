@@ -22,8 +22,5 @@ public class NotificationResponse {
     String link;
     Boolean isRead;
 
-    String createdBy;
     LocalDateTime createdDate;
-    String lastModifiedBy;
-    LocalDateTime lastModifiedDate;
 }

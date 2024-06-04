@@ -176,6 +176,7 @@ public class OrderService {
                 .content("Your order status has been updated to " + order.getStatus())
                 .isRead(false)
                 .thumbnail(orderItem.getProduct().getThumbnail())
+                .link("/order/" + order.getId())
                 .build();
 
         notificationService.createNotification(notification);
