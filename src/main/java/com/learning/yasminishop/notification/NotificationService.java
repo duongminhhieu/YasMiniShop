@@ -47,10 +47,6 @@ public class NotificationService {
         emitters.put(email, emitter);
     }
 
-    public void removeEmitter(String email) {
-        emitters.remove(email);
-    }
-
     public void sendNotification(String clientId, NotificationResponse notificationResponse) {
         SseEmitter emitter = emitters.get(clientId);
         if (emitter != null) {
