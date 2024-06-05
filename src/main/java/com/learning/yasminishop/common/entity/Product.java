@@ -55,7 +55,13 @@ public class Product extends AuditEntity<String>{
     @ManyToMany
     private Set<Category> categories;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Storage> images;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<CartItem> cartItems;
 
 }
