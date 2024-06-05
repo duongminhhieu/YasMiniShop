@@ -34,6 +34,7 @@ public enum ErrorCode {
     PRODUCT_STOCK_NOT_ENOUGH(1021, "Product stock is not enough", HttpStatus.BAD_REQUEST),
     CART_ITEM_NOT_FOUND(1022, "Cart item not found", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND(1023, "Order not found", HttpStatus.NOT_FOUND),
+    GENERATIVE_AI_ERROR(1024, "Error in generative AI", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     // Constraint violation
