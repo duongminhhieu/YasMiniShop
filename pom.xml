@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.learning</groupId>
-    <artifactId>SpringSecurity</artifactId>
+    <artifactId>YasMiniShop</artifactId>
     <version>1.0.0</version>
-    <name>SpringSecurity</name>
-    <description>SpringSecurity</description>
+    <name>YasMini</name>
+    <description>YasMini CarShop</description>
     <properties>
         <java.version>21</java.version>
         <projectlombok-lombok.version>1.18.30</projectlombok-lombok.version>
@@ -198,10 +198,9 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <exclude>**/common/**</exclude>
                         <exclude>**/dto/**</exclude>
-                        <exclude>**/entity/**</exclude>
                         <exclude>**/mapper/**</exclude>
-                        <exclude>**/configs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
