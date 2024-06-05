@@ -35,6 +35,8 @@ public enum ErrorCode {
     CART_ITEM_NOT_FOUND(1022, "Cart item not found", HttpStatus.NOT_FOUND),
     ORDER_NOT_FOUND(1023, "Order not found", HttpStatus.NOT_FOUND),
     GENERATIVE_AI_ERROR(1024, "Error in generative AI", HttpStatus.INTERNAL_SERVER_ERROR),
+    PRODUCT_IN_ORDER(1025, "Product is in order", HttpStatus.BAD_REQUEST),
+    PRODUCT_IN_CART(1026, "Product is in cart", HttpStatus.BAD_REQUEST),
 
 
     // Constraint violation
