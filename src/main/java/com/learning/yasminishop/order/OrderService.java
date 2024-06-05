@@ -51,7 +51,7 @@ public class OrderService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         // get the cart items of the user
-        List<CartItem> cartItems = cartItemRepository.findAllByUserOrderByLastModifiedDateDesc(user);
+        List<CartItem> cartItems = cartItemRepository.findAllByUserAndProductIsAvailable(user, true);
         Set<String> cartItemRequestIds = orderRequest.getCartItemIds();
 
         // Extract IDs from cartItems
