@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.learning</groupId>
-    <artifactId>SpringSecurity</artifactId>
+    <artifactId>YasMiniShop</artifactId>
     <version>1.0.0</version>
-    <name>SpringSecurity</name>
-    <description>SpringSecurity</description>
+    <name>YasMini</name>
+    <description>YasMini CarShop</description>
     <properties>
         <java.version>21</java.version>
         <projectlombok-lombok.version>1.18.30</projectlombok-lombok.version>
@@ -25,6 +25,7 @@
         <jacoco.version>0.8.12</jacoco.version>
         <spring-cloud-gcp.version>5.1.2</spring-cloud-gcp.version>
         <firebase-admin.version>9.2.0</firebase-admin.version>
+        <google-cloud-bom.version>26.32.0</google-cloud-bom.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -35,6 +36,15 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>libraries-bom</artifactId>
+                <version>${google-cloud-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -104,6 +114,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-vertexai</artifactId>
         </dependency>
 
         <dependency>
@@ -183,16 +198,15 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <exclude>**/common/**</exclude>
                         <exclude>**/dto/**</exclude>
-                        <exclude>**/entity/**</exclude>
                         <exclude>**/mapper/**</exclude>
-                        <exclude>**/configs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
         </plugins>
         <resources>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>

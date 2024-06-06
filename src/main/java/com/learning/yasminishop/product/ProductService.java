@@ -42,8 +42,7 @@ public class ProductService {
 
     public PaginationResponse<ProductResponse> getAllProducts(
             ProductFilter productFilter,
-            Pageable pageable)
-    {
+            Pageable pageable) {
 
         // check if the categoryIds are valid
         List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
@@ -123,8 +122,7 @@ public class ProductService {
     @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<ProductAdminResponse> getAllProductsForAdmin(
             ProductFilter productFilter,
-            Pageable pageable)
-    {
+            Pageable pageable) {
 
         // check if the categoryIds are valid
         List<Category> categories = categoryRepository.findAllById(List.of(productFilter.getCategoryIds()));
@@ -195,8 +193,7 @@ public class ProductService {
 
         productMapper.updateProduct(product, productUpdate);
         product.setCategories(new HashSet<>(categories));
-        product.getImages().clear();
-        product.getImages().addAll(images); // update images
+        product.setImages(new HashSet<>(images)); // update images
         product.setThumbnail(images.getFirst().getUrl());
 
         return productMapper.toProductAdminResponse(productRepository.save(product));
@@ -211,6 +208,18 @@ public class ProductService {
         if (products.size() != ids.size()) {
             throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+
+        // check if the product is in any order, cart
+        for (Product product : products) {
+
+            if (!product.getOrderItems().isEmpty()) {
+                throw new AppException(ErrorCode.PRODUCT_IN_ORDER);
+            }
+            if (!product.getCartItems().isEmpty()) {
+                throw new AppException(ErrorCode.PRODUCT_IN_CART);
+            }
+        }
+
         productRepository.deleteAll(products);
     }
 

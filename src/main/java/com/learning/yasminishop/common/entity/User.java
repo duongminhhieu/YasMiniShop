@@ -47,4 +47,7 @@ public class User extends AuditEntity<String> {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notifications;
+
 }

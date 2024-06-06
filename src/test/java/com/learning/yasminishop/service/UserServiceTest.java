@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,8 +49,6 @@ class UserServiceTest {
     private User user;
     private UserUpdateRequest userUpdateRequest;
 
-
-
     @BeforeEach
     void setUp() {
 
@@ -78,133 +77,141 @@ class UserServiceTest {
                 .build();
 
 
-
-    }
-
-    @Test
-    @WithMockUser(username = "duongminhhieu@gmail.com")
-    void getMyInfo_validRequest_success() {
-        // Given
-
-        when(userRepository.findByEmail(anyString()))
-                .thenReturn(Optional.of(user));
-
-        // When
-        var userResponse = userService.getMyInfo();
-
-        // Then
-        assertThat(userResponse)
-                .isNotNull()
-                .hasFieldOrPropertyWithValue("id", "abc-123")
-                .hasFieldOrPropertyWithValue("email", "duongminhhieu@gmail.com")
-                .hasFieldOrPropertyWithValue("firstName", "Hieu")
-                .hasFieldOrPropertyWithValue("lastName", "Duong")
-                .hasFieldOrPropertyWithValue("dob", LocalDate.of(1999, 1, 1));
-    }
-
-    @Test
-    @WithMockUser(username = "abc@gmail.com")
-    void getMyInfo_userNotFound_error() {
-        // Given
-        when(userRepository.findByEmail(anyString()))
-                .thenReturn(Optional.empty());
-
-        // When
-        var exception = assertThrows(AppException.class, () -> userService.getMyInfo());
-
-        // Then
-        assertThat(exception.getErrorCode().getInternalCode())
-                .isEqualTo(1006);
-        assertThat(exception.getErrorCode().getMessage())
-                .isEqualTo("User not found");
     }
 
 
+    @Nested
+    class HappyCase {
+        @Test
+        @WithMockUser(username = "duongminhhieu@gmail.com")
+        void getMyInfo_validRequest_success() {
+            // Given
 
-    @Test
-    @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
-    void updateUser_validRequest_success() {
-        // Given
-        when(userRepository.findById(anyString()))
-                .thenReturn(Optional.of(user));
+            when(userRepository.findByEmail(anyString()))
+                    .thenReturn(Optional.of(user));
 
-        when(userRepository.save(user))
-                .thenReturn(user);
+            // When
+            var userResponse = userService.getMyInfo();
 
-        // When
-        var userResponse = userService.updateUser("abc-123", userUpdateRequest);
+            // Then
+            assertThat(userResponse)
+                    .isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "abc-123")
+                    .hasFieldOrPropertyWithValue("email", "duongminhhieu@gmail.com")
+                    .hasFieldOrPropertyWithValue("firstName", "Hieu")
+                    .hasFieldOrPropertyWithValue("lastName", "Duong")
+                    .hasFieldOrPropertyWithValue("dob", LocalDate.of(1999, 1, 1));
+        }
 
-        // Then
-        assertThat(userResponse)
-                .isNotNull()
-                .hasFieldOrPropertyWithValue("id", "abc-123")
-                .hasFieldOrPropertyWithValue("firstName", "Hieu")
-                .hasFieldOrPropertyWithValue("lastName", "Duong")
+        @Test
+        @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
+        void updateUser_validRequest_success() {
+            // Given
+            when(userRepository.findById(anyString()))
+                    .thenReturn(Optional.of(user));
 
-        ;
-        assertThat(userResponse.getRoles())
-                .containsExactlyInAnyOrder(
-                        RoleResponse.builder()
-                                .name("USER")
-                                .description("User role")
-                                .permissions(Set.of())
-                                .build(),
-                        RoleResponse.builder()
-                                .name("ADMIN")
-                                .description("Admin role")
-                                .permissions(Set.of())
-                                .build()
-                );
+            when(userRepository.save(user))
+                    .thenReturn(user);
 
-    }
+            // When
+            var userResponse = userService.updateUser("abc-123", userUpdateRequest);
 
-    @Test
-    @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
-    void updateUser_notFoundUser_error() {
-        // Given
-        when(userRepository.findById(anyString()))
-                .thenReturn(Optional.empty());
+            // Then
+            assertThat(userResponse)
+                    .isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "abc-123")
+                    .hasFieldOrPropertyWithValue("firstName", "Hieu")
+                    .hasFieldOrPropertyWithValue("lastName", "Duong")
 
-        // When
-       var exception = assertThrows(AppException.class, () -> userService.updateUser("abc-123", userUpdateRequest));
+            ;
+            assertThat(userResponse.getRoles())
+                    .containsExactlyInAnyOrder(
+                            RoleResponse.builder()
+                                    .name("USER")
+                                    .description("User role")
+                                    .permissions(Set.of())
+                                    .build(),
+                            RoleResponse.builder()
+                                    .name("ADMIN")
+                                    .description("Admin role")
+                                    .permissions(Set.of())
+                                    .build()
+                    );
 
-        // Then
-        assertThat(exception.getErrorCode().getInternalCode())
-                .isEqualTo(1006);
+        }
 
-        assertThat(exception.getErrorCode().getMessage())
-                .isEqualTo("User not found");
-    }
-
-    @Test
-    @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
-    void deleteUser_valid_success() {
-        // Given
-       when(userRepository.existsById(anyString()))
+        @Test
+        @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
+        void deleteUser_valid_success() {
+            // Given
+            when(userRepository.existsById(anyString()))
                     .thenReturn(true);
-        // When
-        userService.deleteUser("abc-123");
-        // Then
-       verify(userRepository, times(1)).deleteById("abc-123");
+            // When
+            userService.deleteUser("abc-123");
+            // Then
+            verify(userRepository, times(1)).deleteById("abc-123");
+        }
+
+
+        @Test
+        @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
+        void getUserById_valid_success() {
+            // Given
+            when(userRepository.findById(anyString()))
+                    .thenReturn(Optional.of(user));
+            // When
+            var response = userService.getUserById("abc-123");
+            // Then
+            assertThat(response)
+                    .isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "abc-123")
+                    .hasFieldOrPropertyWithValue("email", "duongminhhieu@gmail.com")
+                    .hasFieldOrPropertyWithValue("firstName", "Hieu")
+                    .hasFieldOrPropertyWithValue("lastName", "Duong")
+                    .hasFieldOrPropertyWithValue("dob", LocalDate.of(1999, 1, 1));
+
+        }
+
     }
 
-    @Test
-    @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
-    void getUserById_valid_success() {
-        // Given
-        when(userRepository.findById(anyString()))
-                .thenReturn(Optional.of(user));
-        // When
-        var response = userService.getUserById("abc-123");
-        // Then
-        assertThat(response)
-                .isNotNull()
-                .hasFieldOrPropertyWithValue("id", "abc-123")
-                .hasFieldOrPropertyWithValue("email", "duongminhhieu@gmail.com")
-                .hasFieldOrPropertyWithValue("firstName", "Hieu")
-                .hasFieldOrPropertyWithValue("lastName", "Duong")
-                .hasFieldOrPropertyWithValue("dob", LocalDate.of(1999, 1, 1));
+    @Nested
+    class UnHappyCase {
+        @Test
+        @WithMockUser(username = "abc@gmail.com")
+        void getMyInfo_userNotFound_error() {
+            // Given
+            when(userRepository.findByEmail(anyString()))
+                    .thenReturn(Optional.empty());
+
+            // When
+            var exception = assertThrows(AppException.class, () -> userService.getMyInfo());
+
+            // Then
+            assertThat(exception.getErrorCode().getInternalCode())
+                    .isEqualTo(1006);
+            assertThat(exception.getErrorCode().getMessage())
+                    .isEqualTo("User not found");
+        }
+
+        @Test
+        @WithMockUser(username = "admin@spring.com", roles = {"ADMIN"})
+        void updateUser_notFoundUser_error() {
+            // Given
+            when(userRepository.findById(anyString()))
+                    .thenReturn(Optional.empty());
+
+            // When
+            var exception = assertThrows(AppException.class, () -> userService.updateUser("abc-123", userUpdateRequest));
+
+            // Then
+            assertThat(exception.getErrorCode().getInternalCode())
+                    .isEqualTo(1006);
+
+            assertThat(exception.getErrorCode().getMessage())
+                    .isEqualTo("User not found");
+        }
 
     }
+
 
 }

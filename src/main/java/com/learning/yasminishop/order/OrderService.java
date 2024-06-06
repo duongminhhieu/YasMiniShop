@@ -2,13 +2,11 @@ package com.learning.yasminishop.order;
 
 import com.learning.yasminishop.cart.CartItemRepository;
 import com.learning.yasminishop.common.dto.PaginationResponse;
-import com.learning.yasminishop.common.entity.CartItem;
-import com.learning.yasminishop.common.entity.Order;
-import com.learning.yasminishop.common.entity.OrderItem;
-import com.learning.yasminishop.common.entity.User;
+import com.learning.yasminishop.common.entity.*;
 import com.learning.yasminishop.common.enumeration.EOrderStatus;
 import com.learning.yasminishop.common.exception.AppException;
 import com.learning.yasminishop.common.exception.ErrorCode;
+import com.learning.yasminishop.notification.NotificationService;
 import com.learning.yasminishop.order.dto.filter.OrderFilter;
 import com.learning.yasminishop.order.dto.request.OrderRequest;
 import com.learning.yasminishop.order.dto.response.OrderAdminResponse;
@@ -39,6 +37,8 @@ public class OrderService {
     private final UserRepository userRepository;
     private final CartItemRepository cartItemRepository;
 
+    private final NotificationService notificationService;
+
     private final OrderMapper orderMapper;
 
 
@@ -51,7 +51,7 @@ public class OrderService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         // get the cart items of the user
-        List<CartItem> cartItems = cartItemRepository.findAllByUserOrderByLastModifiedDateDesc(user);
+        List<CartItem> cartItems = cartItemRepository.findAllByUserAndProductIsAvailable(user, true);
         Set<String> cartItemRequestIds = orderRequest.getCartItemIds();
 
         // Extract IDs from cartItems
@@ -73,7 +73,6 @@ public class OrderService {
 
         return orderMapper.toOrderResponse(orderRepository.save(order));
     }
-
 
 
     @PreAuthorize("hasRole('USER')")
@@ -131,6 +130,8 @@ public class OrderService {
 
         order.setStatus(EOrderStatus.valueOf(status));
         orderRepository.save(order);
+
+        sendNotification(order);
     }
 
     private Order createAOrder(OrderRequest orderRequest, User user, List<CartItem> cartItemsToOrder) {
@@ -167,5 +168,18 @@ public class OrderService {
         return order;
     }
 
+    private void sendNotification(Order order) {
+        OrderItem orderItem = order.getOrderItems().stream().findFirst().orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Notification notification = Notification.builder()
+                .user(order.getUser())
+                .title("Your order status has been updated")
+                .content("Your order status has been updated to " + order.getStatus())
+                .isRead(false)
+                .thumbnail(orderItem.getProduct().getThumbnail())
+                .link("/order/" + order.getId())
+                .build();
+
+        notificationService.createNotification(notification);
+    }
 
 }
