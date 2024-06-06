@@ -70,7 +70,7 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
 
-        Set<String> cartItemIds = Set.of("cart-1", "cart-2");
+        Set<String> cartItemIds = Set.of("cart-1");
 
         OrderAddressRequest orderAddressRequest = OrderAddressRequest.builder()
                 .contactName("Hieu Duong")
