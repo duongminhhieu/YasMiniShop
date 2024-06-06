@@ -8,6 +8,7 @@ import com.learning.yasminishop.category.dto.response.CategoryResponse;
 import com.learning.yasminishop.common.entity.Category;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,108 +68,115 @@ class CategoryServiceTest {
 
     }
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void createCategory_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.existsBySlug(categoryCreation.getSlug())).thenReturn(false);
-        when(categoryRepository.save(any(Category.class))).thenReturn(category);
+    @Nested
+    class HappyCase {
 
-        // WHEN
-        CategoryResponse response = categoryService.create(categoryCreation);
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void createCategory_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.existsBySlug(categoryCreation.getSlug())).thenReturn(false);
+            when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("name", "Category 1")
-                .hasFieldOrPropertyWithValue("description", "Category 1 description")
-                .hasFieldOrPropertyWithValue("slug", "category-1");
-    }
+            // WHEN
+            CategoryResponse response = categoryService.create(categoryCreation);
 
-    @Test
-    void getAllCategories_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findAllByIsAvailable(true)).thenReturn(List.of(category));
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("name", "Category 1")
+                    .hasFieldOrPropertyWithValue("description", "Category 1 description")
+                    .hasFieldOrPropertyWithValue("slug", "category-1");
+        }
 
-        // WHEN
-        List<CategoryResponse> response = categoryService.getAllCategories();
+        @Test
+        void getAllCategories_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findAllByIsAvailable(true)).thenReturn(List.of(category));
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasSize(1)
-                .first()
-                .hasFieldOrPropertyWithValue("name", "Category 1")
-                .hasFieldOrPropertyWithValue("description", "Category 1 description")
-                .hasFieldOrPropertyWithValue("slug", "category-1");
-    }
+            // WHEN
+            List<CategoryResponse> response = categoryService.getAllCategories();
 
-    @Test
-    void getBySlug_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findBySlug("category-1")).thenReturn(Optional.of(category));
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasSize(1)
+                    .first()
+                    .hasFieldOrPropertyWithValue("name", "Category 1")
+                    .hasFieldOrPropertyWithValue("description", "Category 1 description")
+                    .hasFieldOrPropertyWithValue("slug", "category-1");
+        }
 
-        // WHEN
-        CategoryResponse response = categoryService.getBySlug("category-1");
+        @Test
+        void getBySlug_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findBySlug("category-1")).thenReturn(Optional.of(category));
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("name", "Category 1")
-                .hasFieldOrPropertyWithValue("description", "Category 1 description")
-                .hasFieldOrPropertyWithValue("slug", "category-1");
-    }
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void getCategory_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findById("cate1")).thenReturn(Optional.of(category));
+            // WHEN
+            CategoryResponse response = categoryService.getBySlug("category-1");
 
-        // WHEN
-        var response = categoryService.getCategory("cate1");
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("name", "Category 1")
+                    .hasFieldOrPropertyWithValue("description", "Category 1 description")
+                    .hasFieldOrPropertyWithValue("slug", "category-1");
+        }
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("name", "Category 1")
-                .hasFieldOrPropertyWithValue("description", "Category 1 description")
-                .hasFieldOrPropertyWithValue("slug", "category-1");
-    }
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void getCategory_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findById("cate1")).thenReturn(Optional.of(category));
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void delete_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findAllById(List.of("cate1"))).thenReturn(List.of(category));
+            // WHEN
+            var response = categoryService.getCategory("cate1");
 
-        // WHEN
-        categoryService.delete(List.of("cate1"));
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("name", "Category 1")
+                    .hasFieldOrPropertyWithValue("description", "Category 1 description")
+                    .hasFieldOrPropertyWithValue("slug", "category-1");
+        }
 
-        // THEN
-        verify(categoryRepository).deleteAll(List.of(category));
-    }
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void delete_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findAllById(List.of("cate1"))).thenReturn(List.of(category));
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void toggleAvailability_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findAllById(List.of("cate1"))).thenReturn(List.of(category));
+            // WHEN
+            categoryService.delete(List.of("cate1"));
 
-        // WHEN
-        categoryService.toggleAvailability(List.of("cate1"));
+            // THEN
+            verify(categoryRepository).deleteAll(List.of(category));
+        }
 
-        // THEN
-        verify(categoryRepository).saveAll(List.of(category));
-    }
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void toggleAvailability_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findAllById(List.of("cate1"))).thenReturn(List.of(category));
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void update_validRequest_success() {
-        // GIVEN
-        when(categoryRepository.findById("cate1")).thenReturn(Optional.of(category));
-        when(categoryRepository.save(any(Category.class))).thenReturn(category);
+            // WHEN
+            categoryService.toggleAvailability(List.of("cate1"));
 
-        // WHEN
-        var response = categoryService.update("cate1", categoryUpdate);
+            // THEN
+            verify(categoryRepository).saveAll(List.of(category));
+        }
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("name", "Category update");
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void update_validRequest_success() {
+            // GIVEN
+            when(categoryRepository.findById("cate1")).thenReturn(Optional.of(category));
+            when(categoryRepository.save(any(Category.class))).thenReturn(category);
+
+            // WHEN
+            var response = categoryService.update("cate1", categoryUpdate);
+
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("name", "Category update");
+        }
     }
 }
+
+

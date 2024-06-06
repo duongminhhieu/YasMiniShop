@@ -10,6 +10,7 @@ import com.learning.yasminishop.auth.dto.response.AuthenticationResponse;
 import com.learning.yasminishop.auth.dto.response.TokenResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -77,192 +78,200 @@ class AuthenticationControllerTest {
 
     }
 
-    @Test
-    void register_validRequest_success() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String registerRequestJson = objectMapper.writeValueAsString(registerRequest);
+    @Nested
+    class HappyCase {
+        @Test
+        void register_validRequest_success() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            String registerRequestJson = objectMapper.writeValueAsString(registerRequest);
 
-        when(authenticationService.register(any(RegisterRequest.class)))
-                .thenReturn(authenticationResponse);
+            when(authenticationService.register(any(RegisterRequest.class)))
+                    .thenReturn(authenticationResponse);
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(registerRequestJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(registerRequestJson))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("internalCode").value(1000))
+                    .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                    .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
-    }
+        }
 
-    @Test
-    void register_invalidEmail_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        registerRequest.setEmail("invalidEmail");
-        String registerRequestJson = objectMapper.writeValueAsString(registerRequest);
+        @Test
+        void authenticate_validRequest_success() throws Exception {
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(registerRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2002))
-                .andExpect(jsonPath("message").value("Invalid email"));
-    }
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
 
-    @Test
-    void authenticate_validRequest_success() throws Exception {
+            when(authenticationService.authenticate(any(AuthenticationRequest.class)))
+                    .thenReturn(authenticationResponse);
 
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(authenticationRequestJson))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("internalCode").value(1000))
+                    .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                    .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
-        when(authenticationService.authenticate(any(AuthenticationRequest.class)))
-                .thenReturn(authenticationResponse);
+        }
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(authenticationRequestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
+        @Test
+        void refresh_validRequest_success() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            String refreshRequestJson = objectMapper.writeValueAsString(refreshRequest);
 
-    }
+            when(authenticationService.refresh(any(RefreshRequest.class)))
+                    .thenReturn(authenticationResponse);
 
-    @Test
-    void authenticate_invalidEmail_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        authenticationRequest.setEmail("invalidEmail");
-        String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(refreshRequestJson))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("internalCode").value(1000))
+                    .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
+                    .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(authenticationRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2002))
-                .andExpect(jsonPath("message").value("Invalid email"));
-    }
+        }
 
-    @Test
-    void authenticate_invalidPassword_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        authenticationRequest.setPassword("123");
-        String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+        @Test
+        void logout_validRequest_success() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(authenticationRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2001))
-                .andExpect(jsonPath("message").value("Password must be at least 6 characters"));
-    }
-
-    @Test
-    void authenticate_nullPassword_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        authenticationRequest.setPassword(null);
-        String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(authenticationRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"password\" must not be null"));
-    }
-
-    @Test
-    void authenticate_nullEmail_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        authenticationRequest.setEmail(null);
-        String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(authenticationRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"email\" must not be null"));
-    }
-
-    @Test
-    void refresh_validRequest_success() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String refreshRequestJson = objectMapper.writeValueAsString(refreshRequest);
-
-        when(authenticationService.refresh(any(RefreshRequest.class)))
-                .thenReturn(authenticationResponse);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshRequestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result.tokens.access_token").value("accessToken"))
-                .andExpect(jsonPath("result.tokens.refresh_token").value("refreshToken"));
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(logoutRequestJson))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("internalCode").value(1000))
+                    .andExpect(jsonPath("result").value("Logout successful"));
+        }
 
     }
 
-    @Test
-    void refresh_nullToken_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        refreshRequest.setRefreshToken(null);
-        String refreshRequestJson = objectMapper.writeValueAsString(refreshRequest);
+    @Nested
+    class UnHappyCase {
+        @Test
+        void register_invalidEmail_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            registerRequest.setEmail("invalidEmail");
+            String registerRequestJson = objectMapper.writeValueAsString(registerRequest);
 
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(refreshRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"refreshToken\" must not be null"));
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(registerRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2002))
+                    .andExpect(jsonPath("message").value("Invalid email"));
+        }
+
+        @Test
+        void authenticate_invalidEmail_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            authenticationRequest.setEmail("invalidEmail");
+            String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(authenticationRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2002))
+                    .andExpect(jsonPath("message").value("Invalid email"));
+        }
+
+        @Test
+        void authenticate_invalidPassword_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            authenticationRequest.setPassword("123");
+            String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(authenticationRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2001))
+                    .andExpect(jsonPath("message").value("Password must be at least 6 characters"));
+        }
+
+        @Test
+        void authenticate_nullPassword_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            authenticationRequest.setPassword(null);
+            String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(authenticationRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2004))
+                    .andExpect(jsonPath("message").value("\"password\" must not be null"));
+        }
+
+        @Test
+        void authenticate_nullEmail_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            authenticationRequest.setEmail(null);
+            String authenticationRequestJson = objectMapper.writeValueAsString(authenticationRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/authenticate")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(authenticationRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2004))
+                    .andExpect(jsonPath("message").value("\"email\" must not be null"));
+        }
+
+        @Test
+        void refresh_nullToken_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            refreshRequest.setRefreshToken(null);
+            String refreshRequestJson = objectMapper.writeValueAsString(refreshRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/refresh")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(refreshRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2004))
+                    .andExpect(jsonPath("message").value("\"refreshToken\" must not be null"));
+        }
+
+        @Test
+        void logout_nullToken_fail() throws Exception {
+            // GIVEN
+            ObjectMapper objectMapper = new ObjectMapper();
+            logoutRequest.setToken(null);
+            String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
+
+            // WHEN THEN
+            mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(logoutRequestJson))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("internalCode").value(2004))
+                    .andExpect(jsonPath("message").value("\"token\" must not be null"));
+        }
     }
 
-    @Test
-    void logout_validRequest_success() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(logoutRequestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("internalCode").value(1000))
-                .andExpect(jsonPath("result").value("Logout successful"));
-    }
-
-    @Test
-    void logout_nullToken_fail() throws Exception {
-        // GIVEN
-        ObjectMapper objectMapper = new ObjectMapper();
-        logoutRequest.setToken(null);
-        String logoutRequestJson = objectMapper.writeValueAsString(logoutRequest);
-
-        // WHEN THEN
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(logoutRequestJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("internalCode").value(2004))
-                .andExpect(jsonPath("message").value("\"token\" must not be null"));
-    }
 
 }

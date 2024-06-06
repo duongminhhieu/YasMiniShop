@@ -8,6 +8,7 @@ import com.learning.yasminishop.permission.dto.request.PermissionRequest;
 import com.learning.yasminishop.permission.dto.response.PermissionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,50 +51,51 @@ class PermissionServiceTest {
 
     }
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void createPermission_validRequest_success() {
-        // given
-        when(permissionRepository.save(any(Permission.class))).thenReturn(permission);
+    @Nested
+    class HappyCase {
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void createPermission_validRequest_success() {
+            // given
+            when(permissionRepository.save(any(Permission.class))).thenReturn(permission);
 
-        // when
-        PermissionResponse response = permissionService.createPermission(permissionRequest);
+            // when
+            PermissionResponse response = permissionService.createPermission(permissionRequest);
 
-        // then
-        assertThat(response).isNotNull();
-        assertThat(response.getName()).isEqualTo("READ");
-        assertThat(response.getDescription()).isEqualTo("Read permission");
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.getName()).isEqualTo("READ");
+            assertThat(response.getDescription()).isEqualTo("Read permission");
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void getAllPermissions_validRequest_success() {
+            // given
+            when(permissionRepository.findAll()).thenReturn(List.of(permission));
+
+            // when
+            List<PermissionResponse> response = permissionService.getALlPermissions();
+
+            // then
+            assertThat(response).isNotNull()
+                    .isNotEmpty()
+                    .hasSize(1);
+
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void deletePermission_validRequest_success() {
+            // given
+            String permissionName = "READ";
+            doNothing().when(permissionRepository).deleteById(permissionName);
+
+            // when
+            permissionService.deletePermission(permissionName);
+
+            // then
+            verify(permissionRepository, times(1)).deleteById(permissionName);
+        }
     }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void getAllPermissions_validRequest_success() {
-        // given
-        when(permissionRepository.findAll()).thenReturn(List.of(permission));
-
-        // when
-        List<PermissionResponse> response = permissionService.getALlPermissions();
-
-        // then
-        assertThat(response).isNotNull()
-                .isNotEmpty()
-                .hasSize(1);
-
-    }
-
- @Test
-@WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-void deletePermission_validRequest_success() {
-    // given
-    String permissionName = "READ";
-    doNothing().when(permissionRepository).deleteById(permissionName);
-
-    // when
-    permissionService.deletePermission(permissionName);
-
-    // then
-    verify(permissionRepository, times(1)).deleteById(permissionName);
-}
-
-
 }

@@ -60,7 +60,6 @@ class CategoryControllerTest {
 
     }
 
-
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void createCategory_validRequest_success() throws Exception {
