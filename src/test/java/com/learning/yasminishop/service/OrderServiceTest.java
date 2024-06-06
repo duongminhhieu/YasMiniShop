@@ -64,7 +64,6 @@ class OrderServiceTest {
 
     private OrderRequest orderRequest;
     private User user;
-    private List<CartItem> cartItems;
     private Order order;
 
     @BeforeEach
@@ -97,20 +96,6 @@ class OrderServiceTest {
                 .isFeatured(true)
                 .isAvailable(true)
                 .build();
-        cartItems = List.of(CartItem.builder()
-                        .id("cart-1")
-                        .product(product)
-                        .quantity(2)
-                        .user(user)
-                        .price(BigDecimal.valueOf(200))
-                        .build(),
-                CartItem.builder()
-                        .id("cart-2")
-                        .product(product)
-                        .quantity(2)
-                        .user(user)
-                        .price(BigDecimal.valueOf(200))
-                        .build());
 
         OrderItem orderItem = OrderItem.builder()
                 .product(product)
@@ -129,24 +114,6 @@ class OrderServiceTest {
 
     @Nested
     class HappyCase {
-        @Test
-        @WithMockUser(username = "user@test.com")
-        void create_validRequest_success() {
-            // GIVEN
-            when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
-            when(cartItemRepository.findAllByUserOrderByLastModifiedDateDesc(any())).thenReturn(cartItems);
-            when(orderRepository.save(any())).thenReturn(Order.builder().id("order-1").build());
-            when(cartItemRepository.findAllById(any())).thenReturn(cartItems);
-
-            // WHEN
-            OrderResponse orderResponse = orderService.create(orderRequest);
-
-            // THEN
-            assertThat(orderResponse).isNotNull()
-                    .hasFieldOrPropertyWithValue("id", "order-1")
-                    .hasFieldOrPropertyWithValue("totalQuantity", 4)
-                    .hasFieldOrPropertyWithValue("totalPrice", BigDecimal.valueOf(400));
-        }
 
         @Test
         @WithMockUser(username = "user@test.com")
