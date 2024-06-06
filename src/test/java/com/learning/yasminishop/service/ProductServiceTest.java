@@ -16,6 +16,7 @@ import com.learning.yasminishop.storage.StorageRepository;
 import com.learning.yasminishop.storage.dto.response.StorageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -214,192 +215,195 @@ class ProductServiceTest {
 
     }
 
+    @Nested
+    class HappyCase {
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void createProduct_validRequest_success() {
+            // GIVEN
+            when(productRepository.existsBySlug(any())).thenReturn(false);
+            when(productRepository.existsBySku(any())).thenReturn(false);
+            when(categoryRepository.findAllById(Set.of("category1", "category2"))).thenReturn(List.of(category1, category2));
+            when(storageRepository.findAllById(Set.of("image1", "image2"))).thenReturn(List.of(image1, image2));
+            when(productMapper.toProduct(any())).thenReturn(product);
+            when(productRepository.save(product)).thenReturn(product);
+            when(productMapper.toProductAdminResponse(product)).thenReturn(productAdminResponse);
 
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void createProduct_validRequest_success() {
-        // GIVEN
-        when(productRepository.existsBySlug(any())).thenReturn(false);
-        when(productRepository.existsBySku(any())).thenReturn(false);
-        when(categoryRepository.findAllById(Set.of("category1", "category2"))).thenReturn(List.of(category1, category2));
-        when(storageRepository.findAllById(Set.of("image1", "image2"))).thenReturn(List.of(image1, image2));
-        when(productMapper.toProduct(any())).thenReturn(product);
-        when(productRepository.save(product)).thenReturn(product);
-        when(productMapper.toProductAdminResponse(product)).thenReturn(productAdminResponse);
+            // WHEN
+            ProductAdminResponse response = productService.create(productCreation);
 
-        // WHEN
-        ProductAdminResponse response = productService.create(productCreation);
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "product-1");
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("id", "product-1");
+            verify(categoryRepository).findAllById(Set.of("category1", "category2"));
+            verify(storageRepository).findAllById(Set.of("image1", "image2"));
+            verify(productRepository).save(product);
+        }
 
-        verify(categoryRepository).findAllById(Set.of("category1", "category2"));
-        verify(storageRepository).findAllById(Set.of("image1", "image2"));
-        verify(productRepository).save(product);
+        @Test
+        void getBySlug_validSlug_success() {
+            // GIVEN
+            when(productRepository.findBySlug("product-1")).thenReturn(Optional.of(product));
+            when(productMapper.toProductResponse(any())).thenReturn(productResponse);
+
+            // WHEN
+            ProductResponse response = productService.getBySlug("product-1");
+
+            // THEN
+            assertThat(response).isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "product-1");
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void getById_validId_success() {
+            // GIVEN
+            when(productRepository.findById(any())).thenReturn(Optional.of(product));
+            when(productMapper.toProductAdminResponse(any())).thenReturn(productAdminResponse);
+
+            // WHEN
+            ProductAdminResponse productAdminResponse1 = productService.getById("product-1");
+
+            // THEN
+            assertThat(productAdminResponse1).isNotNull()
+                    .hasFieldOrPropertyWithValue("id", "product-1");
+
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void getAllProductsForAdmin_validRequest_success() {
+            // GIVEN
+
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<Product> productPage = new PageImpl<>(List.of(product));
+
+
+            when(categoryRepository.findAllById(anyList())).thenReturn(List.of(category1, category2));
+            when(productRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(productPage);
+            when(productMapper.toProductAdminResponse(any(Product.class))).thenReturn(productAdminResponse);
+
+            // WHEN
+            PaginationResponse<ProductAdminResponse> response = productService.getAllProductsForAdmin(productFilter, pageable);
+
+            // THEN
+            assertThat(response).isNotNull();
+            assertThat(response.getData().getFirst().getId()).isEqualTo("product-1");
+
+            verify(categoryRepository).findAllById(anyList());
+            verify(productRepository).findAll(any(Specification.class), eq(pageable));
+            verify(productMapper, times(1)).toProductAdminResponse(any(Product.class));
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void toggleAvailability_validRequest_success() {
+            // GIVEN
+            List<String> ids = List.of("product-1", "product-2");
+
+            Product product1 = new Product();
+            product1.setId("product-1");
+            product1.setIsAvailable(true);
+
+            Product product2 = new Product();
+            product2.setId("product-2");
+            product2.setIsAvailable(false);
+
+            List<Product> products = List.of(product1, product2);
+
+            when(productRepository.findAllById(ids)).thenReturn(products);
+
+            // WHEN
+            productService.toggleAvailability(ids);
+
+            // THEN
+            verify(productRepository).findAllById(ids);
+            verify(productRepository).saveAll(products);
+
+            // Check that the availability of the products has been toggled
+            assertThat(product1.getIsAvailable()).isFalse();
+            assertThat(product2.getIsAvailable()).isTrue();
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void update_validRequest_success() {
+            // GIVEN
+            String id = "product-1";
+
+            when(productRepository.findById(id)).thenReturn(Optional.of(product));
+            when(categoryRepository.existsBySlug(productUpdate.getSlug())).thenReturn(false);
+            when(categoryRepository.existsBySlug(productUpdate.getSku())).thenReturn(false);
+            when(categoryRepository.findAllById(anySet())).thenReturn(categories);
+            when(storageRepository.findAllById(anySet())).thenReturn(images);
+            when(productRepository.save(any(Product.class))).thenReturn(product);
+            when(productMapper.toProductAdminResponse(any(Product.class))).thenReturn(productAdminResponse);
+
+            // WHEN
+            ProductAdminResponse response = productService.update(id, productUpdate);
+
+            // THEN
+            assertThat(response).isNotNull();
+            assertThat(response.getId()).isEqualTo("product-1");
+
+            verify(productRepository).findById(id);
+            verify(categoryRepository).findAllById(anySet());
+            verify(storageRepository).findAllById(anySet());
+            verify(productRepository).save(any(Product.class));
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void delete_allProductIdsExistAndNoneInOrderOrCart_success() {
+            // GIVEN
+            List<String> ids = List.of("product-1");
+            product.setOrderItems(Set.of());
+            product.setCartItems(Set.of());
+            List<Product> products = List.of(product);
+
+            when(productRepository.findAllById(ids)).thenReturn(products);
+
+            // WHEN
+            productService.delete(ids);
+
+            // THEN
+            verify(productRepository).findAllById(ids);
+            verify(productRepository).deleteAll(products);
+        }
     }
 
-    @Test
-    void getBySlug_validSlug_success() {
-        // GIVEN
-        when(productRepository.findBySlug("product-1")).thenReturn(Optional.of(product));
-        when(productMapper.toProductResponse(any())).thenReturn(productResponse);
+    @Nested
+    class UnhappyCase {
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void delete_someProductIdsDoNotExist_throwsException() {
+            // GIVEN
+            List<String> ids = List.of("product-1", "product-2");
+            Product product1 = new Product();
+            product1.setId("product-1");
+            List<Product> products = List.of(product1);
 
-        // WHEN
-        ProductResponse response = productService.getBySlug("product-1");
+            when(productRepository.findAllById(ids)).thenReturn(products);
 
-        // THEN
-        assertThat(response).isNotNull()
-                .hasFieldOrPropertyWithValue("id", "product-1");
+            // THEN
+            assertThrows(AppException.class, () -> productService.delete(ids));
+        }
+
+        @Test
+        @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
+        void delete_productInOrderOrCart_throwsException() {
+            // GIVEN
+            List<String> ids = List.of("product-1");
+            Product product1 = new Product();
+            product1.setId("product-1");
+            product1.setOrderItems(Set.of(new OrderItem())); // product is in an order
+            List<Product> products = List.of(product1);
+
+            when(productRepository.findAllById(ids)).thenReturn(products);
+
+            // THEN
+            assertThrows(AppException.class, () -> productService.delete(ids));
+        }
     }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void getById_validId_success() {
-        // GIVEN
-        when(productRepository.findById(any())).thenReturn(Optional.of(product));
-        when(productMapper.toProductAdminResponse(any())).thenReturn(productAdminResponse);
-
-        // WHEN
-        ProductAdminResponse productAdminResponse1 = productService.getById("product-1");
-
-        // THEN
-        assertThat(productAdminResponse1).isNotNull()
-                .hasFieldOrPropertyWithValue("id", "product-1");
-
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void getAllProductsForAdmin_validRequest_success() {
-        // GIVEN
-
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Product> productPage = new PageImpl<>(List.of(product));
-
-
-        when(categoryRepository.findAllById(anyList())).thenReturn(List.of(category1, category2));
-        when(productRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(productPage);
-        when(productMapper.toProductAdminResponse(any(Product.class))).thenReturn(productAdminResponse);
-
-        // WHEN
-        PaginationResponse<ProductAdminResponse> response = productService.getAllProductsForAdmin(productFilter, pageable);
-
-        // THEN
-        assertThat(response).isNotNull();
-        assertThat(response.getData().getFirst().getId()).isEqualTo("product-1");
-
-        verify(categoryRepository).findAllById(anyList());
-        verify(productRepository).findAll(any(Specification.class), eq(pageable));
-        verify(productMapper, times(1)).toProductAdminResponse(any(Product.class));
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void toggleAvailability_validRequest_success() {
-        // GIVEN
-        List<String> ids = List.of("product-1", "product-2");
-
-        Product product1 = new Product();
-        product1.setId("product-1");
-        product1.setIsAvailable(true);
-
-        Product product2 = new Product();
-        product2.setId("product-2");
-        product2.setIsAvailable(false);
-
-        List<Product> products = List.of(product1, product2);
-
-        when(productRepository.findAllById(ids)).thenReturn(products);
-
-        // WHEN
-        productService.toggleAvailability(ids);
-
-        // THEN
-        verify(productRepository).findAllById(ids);
-        verify(productRepository).saveAll(products);
-
-        // Check that the availability of the products has been toggled
-        assertThat(product1.getIsAvailable()).isFalse();
-        assertThat(product2.getIsAvailable()).isTrue();
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void update_validRequest_success() {
-        // GIVEN
-        String id = "product-1";
-
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
-        when(categoryRepository.existsBySlug(productUpdate.getSlug())).thenReturn(false);
-        when(categoryRepository.existsBySlug(productUpdate.getSku())).thenReturn(false);
-        when(categoryRepository.findAllById(anySet())).thenReturn(categories);
-        when(storageRepository.findAllById(anySet())).thenReturn(images);
-        when(productRepository.save(any(Product.class))).thenReturn(product);
-        when(productMapper.toProductAdminResponse(any(Product.class))).thenReturn(productAdminResponse);
-
-        // WHEN
-        ProductAdminResponse response = productService.update(id, productUpdate);
-
-        // THEN
-        assertThat(response).isNotNull();
-        assertThat(response.getId()).isEqualTo("product-1");
-
-        verify(productRepository).findById(id);
-        verify(categoryRepository).findAllById(anySet());
-        verify(storageRepository).findAllById(anySet());
-        verify(productRepository).save(any(Product.class));
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void delete_allProductIdsExistAndNoneInOrderOrCart_success() {
-        // GIVEN
-        List<String> ids = List.of("product-1");
-        product.setOrderItems(Set.of());
-        product.setCartItems(Set.of());
-        List<Product> products = List.of(product);
-
-        when(productRepository.findAllById(ids)).thenReturn(products);
-
-        // WHEN
-        productService.delete(ids);
-
-        // THEN
-        verify(productRepository).findAllById(ids);
-        verify(productRepository).deleteAll(products);
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void delete_someProductIdsDoNotExist_throwsException() {
-        // GIVEN
-        List<String> ids = List.of("product-1", "product-2");
-        Product product1 = new Product();
-        product1.setId("product-1");
-        List<Product> products = List.of(product1);
-
-        when(productRepository.findAllById(ids)).thenReturn(products);
-
-        // THEN
-        assertThrows(AppException.class, () -> productService.delete(ids));
-    }
-
-    @Test
-    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
-    void delete_productInOrderOrCart_throwsException() {
-        // GIVEN
-        List<String> ids = List.of("product-1");
-        Product product1 = new Product();
-        product1.setId("product-1");
-        product1.setOrderItems(Set.of(new OrderItem())); // product is in an order
-        List<Product> products = List.of(product1);
-
-        when(productRepository.findAllById(ids)).thenReturn(products);
-
-        // THEN
-        assertThrows(AppException.class, () -> productService.delete(ids));
-    }
-
-
 }
