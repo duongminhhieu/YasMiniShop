@@ -29,7 +29,7 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/api-docs/**",
             "/categories",
-            "/categories/{slug}",
+            "/categories/slug/{slug}",
             "/products",
             "/products/{slug}",
             "/rating",
@@ -41,7 +41,6 @@ public class SecurityConfiguration {
     };
 
     private static final String[] ALLOWED_ORIGINS = {
-            "http://10.200.2.95:3000",
             "http://localhost:5173",
     };
 
