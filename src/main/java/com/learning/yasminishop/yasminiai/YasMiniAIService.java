@@ -91,7 +91,7 @@ public class YasMiniAIService {
 
         } catch (Exception e) {
             log.error("Error finding car by image", e);
-            throw new AppException(ErrorCode.GENERATIVE_AI_ERROR);
+            return List.of();
         }
     }
 

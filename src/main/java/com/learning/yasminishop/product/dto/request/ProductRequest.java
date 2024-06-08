@@ -2,6 +2,7 @@ package com.learning.yasminishop.product.dto.request;
 
 import com.learning.yasminishop.common.validator.FieldNotEmpty.FieldNotEmptyConstraint;
 import com.learning.yasminishop.common.validator.FieldNotNull.FieldNotNullConstraint;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -40,6 +41,7 @@ public class ProductRequest {
 
     @FieldNotNullConstraint(field = "quantity", message = "FIELD_NOT_NULL")
     @FieldNotEmptyConstraint(field = "quantity", message = "FIELD_NOT_EMPTY")
+    @Min(value = 1, message = "INVALID_QUANTITY")
     Long quantity;
 
     @FieldNotNullConstraint(field = "isAvailable", message = "FIELD_NOT_NULL")
