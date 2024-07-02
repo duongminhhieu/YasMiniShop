@@ -13,7 +13,6 @@ import com.learning.yasminishop.product.ProductRepository;
 import com.learning.yasminishop.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,6 @@ public class CartItemService {
     private final UserRepository userRepository;
     private final CartItemMapper cartItemMapper;
 
-    @PreAuthorize("hasRole('USER')")
     @Transactional
     public CartItemResponse create(CartItemRequest cartItemRequest) {
 
@@ -61,7 +59,6 @@ public class CartItemService {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
     public List<CartItemResponse> getAll() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -73,7 +70,6 @@ public class CartItemService {
                 .toList();
     }
 
-    @PreAuthorize("hasRole('USER')")
     @Transactional
     public CartItemResponse update(String cartId, CartItemUpdate cartItemUpdate) {
 
@@ -97,7 +93,6 @@ public class CartItemService {
         return cartItemMapper.toCartResponse(cartItem);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @Transactional
     public void delete(List<String> cartIds) {
 
@@ -116,7 +111,6 @@ public class CartItemService {
         cartItemRepository.deleteAll(cartItems);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @Transactional
     public List<CartItemResponse> getCartByIds(List<String> cartIds) {
         List<CartItem> cartItems = cartItemRepository.findAllById(cartIds);

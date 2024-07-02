@@ -41,7 +41,6 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<UserAdminResponse> getAllUsers(Pageable pageable) {
 
         Page<User> users = userRepository.findAll(pageable);
@@ -54,7 +53,6 @@ public class UserService {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public UserAdminResponse toggleActive(String userId) {
         User user = userRepository.findById(userId)
@@ -64,7 +62,6 @@ public class UserService {
         return userMapper.toUserAdminResponse(userRepository.save(user));
     }
 
-    @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
     @Transactional
     public UserResponse updateUser(String userId, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userId)
@@ -87,7 +84,6 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));

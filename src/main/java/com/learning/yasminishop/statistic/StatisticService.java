@@ -14,7 +14,6 @@ import com.learning.yasminishop.statistic.mapper.StatisticMapper;
 import com.learning.yasminishop.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,6 @@ public class StatisticService {
     private final StatisticMapper statisticMapper;
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public StatisticResponse getStatistics() {
 
         Long totalActiveCustomers = userRepository.countByRoles_NameAndIsActive(PredefinedRole.USER_ROLE, true);

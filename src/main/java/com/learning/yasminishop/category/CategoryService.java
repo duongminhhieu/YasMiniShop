@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +30,6 @@ public class CategoryService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse create(CategoryCreation categoryCreation) {
 
         if (categoryRepository.existsBySlug(categoryCreation.getSlug())) {
@@ -59,7 +57,6 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(category);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryAdminResponse getCategory(String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -68,7 +65,6 @@ public class CategoryService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(List<String> ids) {
 
         List<Category> categories = categoryRepository.findAllById(ids);
@@ -85,7 +81,6 @@ public class CategoryService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public void toggleAvailability(List<String> ids) {
         List<Category> categories = categoryRepository.findAllById(ids);
 
@@ -107,7 +102,6 @@ public class CategoryService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse update(String id, CategoryUpdate categoryUpdate) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -123,7 +117,6 @@ public class CategoryService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<CategoryAdminResponse> getAllCategoriesAdmin(String name, Boolean isAvailable, Pageable pageable) {
 
         Page<Category> categories = categoryRepository.findAll(

@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<CategoryResponse> createCategory(@Valid @RequestBody CategoryCreation categoryCreation) {
         CategoryResponse categoryResponse = categoryService.create(categoryCreation);
         return APIResponse.<CategoryResponse>builder()
@@ -57,6 +59,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<CategoryAdminResponse> getCategory(@PathVariable String id) {
         CategoryAdminResponse categoryAdminResponse = categoryService.getCategory(id);
         return APIResponse.<CategoryAdminResponse>builder()
@@ -66,6 +69,7 @@ public class CategoryController {
 
     @PatchMapping("/toggle-availability")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<String> toggleAvailability(@RequestBody CategoryIds categoryIds) {
         categoryService.toggleAvailability(categoryIds.getIds());
         return APIResponse.<String>builder()
@@ -75,6 +79,7 @@ public class CategoryController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<String> deleteCategories(@RequestBody CategoryIds categoryIds) {
         categoryService.delete(categoryIds.getIds());
         return APIResponse.<String>builder()
@@ -85,6 +90,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<CategoryResponse> updateCategory(@NotNull @NotEmpty @PathVariable String id, @Valid @RequestBody CategoryUpdate categoryUpdate) {
         CategoryResponse categoryResponse = categoryService.update(id, categoryUpdate);
         return APIResponse.<CategoryResponse>builder()
@@ -94,6 +100,7 @@ public class CategoryController {
 
     @GetMapping("/admin")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<PaginationResponse<CategoryAdminResponse>> getAllCategoriesForAdmin(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Boolean isAvailable,

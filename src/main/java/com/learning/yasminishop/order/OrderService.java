@@ -43,7 +43,6 @@ public class OrderService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('USER')")
     public OrderResponse create(OrderRequest orderRequest) {
 
         // get the user
@@ -75,7 +74,6 @@ public class OrderService {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
     public List<OrderResponse> getAllOrderByUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -86,7 +84,6 @@ public class OrderService {
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<OrderAdminResponse> getAllOrders(OrderFilter orderFilter, Pageable pageable) {
 
         Page<Order> orders = orderRepository.findAll(
@@ -113,7 +110,6 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public OrderAdminResponse getOrderByIdForAdmin(String id) {
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
@@ -122,7 +118,6 @@ public class OrderService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public void updateOrderStatus(String id, String status) {
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
