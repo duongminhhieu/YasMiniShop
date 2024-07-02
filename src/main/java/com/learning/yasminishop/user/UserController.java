@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<PaginationResponse<UserAdminResponse>> getAllUsers(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer itemsPerPage
@@ -53,6 +55,7 @@ public class UserController {
 
     @PatchMapping("/{userId}/toggle-active")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<UserAdminResponse> toggleActive(@PathVariable String userId){
         UserAdminResponse userResponse = userService.toggleActive(userId);
 
@@ -74,6 +77,7 @@ public class UserController {
 
     @PutMapping("{userId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('UPDATE_DATA') or hasRole('ADMIN')")
     public APIResponse<UserResponse> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest userUpdateRequest){
         UserResponse userResponse = userService.updateUser(userId, userUpdateRequest);
 
@@ -84,6 +88,7 @@ public class UserController {
 
     @GetMapping("{userId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<UserResponse> getUser(@PathVariable String userId){
         UserResponse userResponse = userService.getUserById(userId);
 

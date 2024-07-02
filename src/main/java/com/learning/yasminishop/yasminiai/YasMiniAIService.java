@@ -14,7 +14,6 @@ import com.learning.yasminishop.product.dto.response.ProductResponse;
 import com.learning.yasminishop.product.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +36,6 @@ public class YasMiniAIService {
     private final ProductMapper productMapper;
 
 
-    @PreAuthorize("hasRole('USER')")
     public String generateText(String prompt){
         try {
             GenerateContentResponse generateContentResponse = chatSession.sendMessage(prompt);
@@ -48,7 +46,6 @@ public class YasMiniAIService {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
     public List<String> generateTextWithHistory(String prompt){
         try {
             this.chatSession.sendMessage(prompt);
@@ -62,7 +59,6 @@ public class YasMiniAIService {
         }
     }
 
-   @PreAuthorize("hasRole('USER')")
     public List<ProductResponse> findCarByImage(MultipartFile file){
         try {
             var prompt = "Extract the name car to a list keyword and output them in JSON. If you don't find any information about the car, please output the list empty.\nExample response: [\"rolls\", \"royce\", \"wraith\"]";

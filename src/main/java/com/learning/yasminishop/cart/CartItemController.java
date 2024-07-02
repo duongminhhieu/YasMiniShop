@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CartItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<CartItemResponse> createCart(@Valid @RequestBody CartItemRequest cartItemRequest) {
         CartItemResponse cartItemResponse = cartItemService.create(cartItemRequest);
         return APIResponse.<CartItemResponse>builder()
@@ -32,6 +34,7 @@ public class CartItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<List<CartItemResponse>> getAllCarts() {
         List<CartItemResponse> cartItemResponses = cartItemService.getAll();
 
@@ -42,6 +45,7 @@ public class CartItemController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<CartItemResponse> updateCart(@PathVariable String id, @Valid @RequestBody CartItemUpdate cartItemUpdate) {
         CartItemResponse cartItemResponses = cartItemService.update(id, cartItemUpdate);
 
@@ -52,6 +56,7 @@ public class CartItemController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<String> deleteCart(@Valid @RequestBody CartItemIds cartItemIds) {
         cartItemService.delete(cartItemIds.getIds());
 
@@ -62,6 +67,7 @@ public class CartItemController {
 
     @GetMapping("/get-by-ids")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<List<CartItemResponse>> getCartItemsByIds(@RequestParam List<String> ids) {
 
         List<CartItemResponse> cartItemResponses = cartItemService.getCartByIds(ids);

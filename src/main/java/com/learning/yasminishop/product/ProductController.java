@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,6 +29,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<ProductAdminResponse> createProduct(@Valid @RequestBody ProductRequest productCreation) {
         ProductAdminResponse productResponse = productService.create(productCreation);
         return APIResponse.<ProductAdminResponse>builder()
@@ -47,6 +49,7 @@ public class ProductController {
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<ProductAdminResponse> getById(@PathVariable String id) {
         log.info("Getting product by id: {}", id);
         ProductAdminResponse productResponse = productService.getById(id);
@@ -57,6 +60,7 @@ public class ProductController {
 
     @GetMapping("/admin")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<PaginationResponse<ProductAdminResponse>> getAllForAdmin(
             @Valid @ModelAttribute ProductFilter productFilter) {
 
@@ -91,6 +95,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<ProductAdminResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest productUpdate) {
         log.info("Updating product with id: {}", id);
         ProductAdminResponse productResponse = productService.update(id, productUpdate);
@@ -101,6 +106,7 @@ public class ProductController {
 
     @PatchMapping("/toggle-availability")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<String> toggleAvailability(@RequestBody ProductIds productIds) {
         productService.toggleAvailability(productIds.getIds());
 
@@ -111,6 +117,7 @@ public class ProductController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<String> deleteProducts(@RequestBody ProductIds productIds) {
         productService.delete(productIds.getIds());
         return APIResponse.<String>builder()

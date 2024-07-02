@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,7 +69,6 @@ public class ProductService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public ProductAdminResponse create(ProductRequest productCreation) {
 
         if (productRepository.existsBySlug(productCreation.getSlug())) {
@@ -111,7 +109,6 @@ public class ProductService {
         return productMapper.toProductResponse(product);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ProductAdminResponse getById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -119,7 +116,6 @@ public class ProductService {
         return productMapper.toProductAdminResponse(product);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PaginationResponse<ProductAdminResponse> getAllProductsForAdmin(
             ProductFilter productFilter,
             Pageable pageable) {
@@ -148,7 +144,6 @@ public class ProductService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public void toggleAvailability(List<String> ids) {
         List<Product> products = productRepository.findAllById(ids);
 
@@ -165,7 +160,6 @@ public class ProductService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public ProductAdminResponse update(String id, ProductRequest productUpdate) {
 
         Product product = productRepository.findById(id)
@@ -201,7 +195,6 @@ public class ProductService {
 
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public void delete(List<String> ids) {
 
         List<Product> products = productRepository.findAllById(ids);

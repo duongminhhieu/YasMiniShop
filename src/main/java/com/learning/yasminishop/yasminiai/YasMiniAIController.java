@@ -4,6 +4,7 @@ import com.learning.yasminishop.common.dto.APIResponse;
 import com.learning.yasminishop.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ public class YasMiniAIController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<List<ProductResponse>> findCar(@RequestParam("file") MultipartFile file) {
 
         var response = yasMiniAIService.findCarByImage(file);
@@ -29,6 +31,7 @@ public class YasMiniAIController {
 
 
     @GetMapping("/{text}")
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<String> chat(@PathVariable String text) {
        String chatResponse = yasMiniAIService.generateText(text);
        return APIResponse.<String>builder()
@@ -37,6 +40,7 @@ public class YasMiniAIController {
     }
 
     @GetMapping("history/{text}")
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<List<String>> getChatHistory(@PathVariable String text) {
 
         var response = yasMiniAIService.generateTextWithHistory(text);

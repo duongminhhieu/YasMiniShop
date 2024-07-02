@@ -150,7 +150,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void getAllUsers_validRequest_success() throws Exception {
         // GIVEN
 
@@ -286,7 +286,7 @@ class UserControllerTest {
 
 
     @Test
-    @WithMockUser(username = "duongminhhieu@gmail.com", authorities = {"UPDATE_DATA"})
+    @WithMockUser(username = "admin@local.com", roles = {"ADMIN"})
     void getUser_validRequest_success() throws Exception {
         // GIVEN
         when(userService.getUserById("abc-123")).thenReturn(userResponse);

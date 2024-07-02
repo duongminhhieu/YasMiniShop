@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.create(orderRequest);
         return APIResponse.<OrderResponse>builder()
@@ -37,6 +39,7 @@ public class OrderController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
     public APIResponse<List<OrderResponse>> getAllOrders() {
         List<OrderResponse> orderResponse = orderService.getAllOrderByUser();
         return APIResponse.<List<OrderResponse>>builder()
@@ -55,6 +58,7 @@ public class OrderController {
 
     @GetMapping("/admin")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<PaginationResponse<OrderAdminResponse>> getAllOrdersForAdmin(@Valid @ModelAttribute OrderFilter orderFilter) {
 
         Pageable pageable = pageSortUtility.createPageable(orderFilter.getPage(),
@@ -71,6 +75,7 @@ public class OrderController {
 
     @GetMapping("/{id}/admin")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<OrderAdminResponse> getOrderByIdForAdmin(@PathVariable String id) {
         OrderAdminResponse orderResponse = orderService.getOrderByIdForAdmin(id);
         return APIResponse.<OrderAdminResponse>builder()
@@ -80,6 +85,7 @@ public class OrderController {
 
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public APIResponse<String> updateOrderStatus(@PathVariable String id, @RequestParam String status) {
         orderService.updateOrderStatus(id, status);
         return APIResponse.<String>builder()
