@@ -48,7 +48,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/rookie_phase1_db
     username: postgres
-    password: minhhieu
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
