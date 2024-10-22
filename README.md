@@ -1,6 +1,6 @@
 # YASmini: Yet Another Shop Mini
 
-YASmini is a pet project aimed to practice building a typical Spring Boot application in Java
+YASmini is a pet project aimed at practicing building a typical Spring Boot application in Java
 
 <div style="text-align: center;">
     <img width="315" alt="Screenshot 2024-06-02 at 23 47 57" src="https://github.com/duongminhhieu/YasMiniShop/assets/76527212/936dabf5-2935-4335-95ec-cae392da309d">
