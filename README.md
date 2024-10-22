@@ -9,6 +9,7 @@ YASmini is a pet project aimed at practicing building a typical Spring Boot appl
 
 [![Development CI-CD](https://github.com/duongminhhieu/SpringSecurity/actions/workflows/development-cicd.yml/badge.svg)](https://github.com/duongminhhieu/SpringSecurity/actions/workflows/development-cicd.yml)
 [![Production CI-CD](https://github.com/duongminhhieu/SpringSecurity/actions/workflows/production-cicd.yml/badge.svg)](https://github.com/duongminhhieu/SpringSecurity/actions/workflows/production-cicd.yml)
+[![Test Coverage](https://img.shields.io/badge/Code-Coverage-green)](https://duongminhhieu.github.io/YasMiniShop/)
 
 # Technologies
 - Java 21
