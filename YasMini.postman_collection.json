@@ -1,0 +1,1724 @@
+{
+	"info": {
+		"_postman_id": "8774e7bb-b636-4664-ba51-dc62bf77a902",
+		"name": "YasMini",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20701831"
+	},
+	"item": [
+		{
+			"name": "User Copy",
+			"item": [
+				{
+					"name": "get my info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}users/me",
+							"host": [
+								"{{base_url}}users"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserByID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}api/v1/users/me",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}users?page&itemsPerPage",
+							"host": [
+								"{{base_url}}users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "itemsPerPage",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}api/v1/users/0bf04f60-2692-4150-9107-3338d0ff6462",
+							"host": [
+								"{{base_url}}api"
+							],
+							"path": [
+								"v1",
+								"users",
+								"0bf04f60-2692-4150-9107-3338d0ff6462"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiZHVvbmdtaW5oaGlldTIwODIwMDJAZ21haWwuY29tIiwiaWF0IjoxNzE1Mzk5OTM1LCJleHAiOjE3MTU0MDM1MzUsImp0aSI6ImYyZTNhMjY1LTRmNTMtNDJiYS04YzM1LTIzMTIzNGNiMjkyMSJ9.qJNPk-XLhxwGbh680TlABrkditPBzWCCACWsXiujEPk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Hieu1\",\n    \"lastName\": \"Duong\",\n    \"password\": \"123456\",\n    \"dob\": \"2002-08-20\",\n    \"roles\": [\n        \"USER\"    \n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/a89a34bd-c3cf-4563-b371-88d06ff135f2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"a89a34bd-c3cf-4563-b371-88d06ff135f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggle -active",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}users/5c50f1c8-0b5e-4b7c-bec6-bb438595263f/toggle-active",
+							"host": [
+								"{{base_url}}users"
+							],
+							"path": [
+								"5c50f1c8-0b5e-4b7c-bec6-bb438595263f",
+								"toggle-active"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Iphone 12\",\n    \"description\": \"Iphone VIp pro2\",\n    \"price\": 1000,\n    \"slug\": \"iphone-123d2\",\n    \"sku\": \"IPd1233\",\n    \"isFeatured\": true,\n    \"quantity\": 100,\n    \"isAvailable\": true,\n    \"attributes\": [\n        {\n            \"name\": \"Mau sac\",\n            \"values\": [\n                \"Do\",\n                \"Tim\"\n            ]\n        }\n    ],\n    \"categoryIds\": [\n        \"5824ae50-7a8a-4221-a4a3-b105916ae231\"\n    ],\n    \"imageIds\": [\n        \"756b2296-8a29-43de-b71c-975d03205aee\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}products",
+							"host": [
+								"{{base_url}}products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product by slug",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}products/iphone-22",
+							"host": [
+								"{{base_url}}products"
+							],
+							"path": [
+								"iphone-22"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}products/d4e99a3a-7fed-4fb6-83ff-f447d8bbfd9e",
+							"host": [
+								"{{base_url}}products"
+							],
+							"path": [
+								"d4e99a3a-7fed-4fb6-83ff-f447d8bbfd9e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product by id - AdminRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}products/id/b40e12ad-dd2b-4b9f-ae42-fea1a7e4d3eb",
+							"host": [
+								"{{base_url}}products"
+							],
+							"path": [
+								"id",
+								"b40e12ad-dd2b-4b9f-ae42-fea1a7e4d3eb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all product -admin role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}products/admin?name=&isAvailable=TRUE&isFeatured=TRUE&categoryIds=&minPrice&maxPrice&minRating&orderBy=quantity,price&sortBy=asc&page=1&itemsPerPage=10",
+							"host": [
+								"{{base_url}}products"
+							],
+							"path": [
+								"admin"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "isAvailable",
+									"value": "TRUE"
+								},
+								{
+									"key": "isFeatured",
+									"value": "TRUE"
+								},
+								{
+									"key": "categoryIds",
+									"value": ""
+								},
+								{
+									"key": "minPrice",
+									"value": null
+								},
+								{
+									"key": "maxPrice",
+									"value": null
+								},
+								{
+									"key": "minRating",
+									"value": null
+								},
+								{
+									"key": "orderBy",
+									"value": "quantity,price"
+								},
+								{
+									"key": "sortBy",
+									"value": "asc"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "itemsPerPage",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}products?name=&isAvailable=TRUE&isFeatured=TRUE&categoryIds=&minPrice&maxPrice&minRating&orderBy=quantity,price&sortBy=asc&page=1&itemsPerPage=10",
+							"host": [
+								"{{base_url}}products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "isAvailable",
+									"value": "TRUE"
+								},
+								{
+									"key": "isFeatured",
+									"value": "TRUE"
+								},
+								{
+									"key": "categoryIds",
+									"value": ""
+								},
+								{
+									"key": "minPrice",
+									"value": null
+								},
+								{
+									"key": "maxPrice",
+									"value": null
+								},
+								{
+									"key": "minRating",
+									"value": null
+								},
+								{
+									"key": "orderBy",
+									"value": "quantity,price"
+								},
+								{
+									"key": "sortBy",
+									"value": "asc"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "itemsPerPage",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Iphone 12\",\n    \"description\": \"Iphone VIp pro2\",\n    \"price\": 1000,\n    \"slug\": \"iphone-123d2\",\n    \"sku\": \"IPd1233\",\n    \"isFeatured\": true,\n    \"quantity\": 100,\n    \"isAvailable\": true,\n    \"attributes\": [\n        {\n            \"name\": \"Mau sac\",\n            \"values\": [\n                \"Do\",\n                \"Tim\"\n            ]\n        }\n    ],\n    \"categoryIds\": [\n        \"5824ae50-7a8a-4221-a4a3-b105916ae231\"\n    ],\n    \"imageIds\": [\n        \"756b2296-8a29-43de-b71c-975d03205aee\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}products/77c599f7-3fcb-4823-8f7f-2d289a4e0c88",
+							"host": [
+								"{{base_url}}products"
+							],
+							"path": [
+								"77c599f7-3fcb-4823-8f7f-2d289a4e0c88"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Hieu\",\n    \"lastName\": \"Duong\",\n    \"email\": \"duongminhhieu3082002@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}auth/register",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();",
+									"pm.environment.set('accsess_token', res.result.tokens.access_token);",
+									"pm.environment.set('refresh_token', res.result.tokens.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//     \"email\": \"hieu@gmail.com\",\n//     \"password\": \"12345678\"\n// }\n\n{\n    \"email\": \"admin@local.com\",\n    \"password\": \"test1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}auth/authenticate",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{accsess_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}auth/logout",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();",
+									"pm.environment.set('accsess_token', res.result.tokens.access_token);",
+									"pm.environment.set('refresh_token', res.result.tokens.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}auth/refresh",
+							"host": [
+								"{{base_url}}auth"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hello Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}demo/hello",
+							"host": [
+								"{{base_url}}demo"
+							],
+							"path": [
+								"hello"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePermission Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"UPDATE_DATA\",\n    \"description\": \"Update data\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}permissions",
+							"host": [
+								"{{base_url}}permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Role Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"USER\",\n    \"description\": \"USER Role\",\n    \"permissions\": [\n        \"UPDATE_DATA\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/v1/roles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPermissions Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}permissions",
+							"host": [
+								"{{base_url}}permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllRole Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}roles",
+							"host": [
+								"{{base_url}}roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete permission Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiZHVvbmdtaW5oaGlldTIwODIwMDJAZ21haWwuY29tIiwiaWF0IjoxNzE1MDcwNTgwLCJleHAiOjE3MTUwNzQxODAsImp0aSI6ImE1ODhiZDY3LTQ3NTItNDg0Zi05OTI4LTMxMWNmOGMyM2JiZiJ9.E6UxCspXecdOuqTBD3KQ27Qdp49s-zWBhA7oJGdYFko",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}permissions/USER",
+							"host": [
+								"{{base_url}}permissions"
+							],
+							"path": [
+								"USER"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete role Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoiZHVvbmdtaW5oaGlldTIwODIwMDJAZ21haWwuY29tIiwiaWF0IjoxNzE1MTMzNzc3LCJleHAiOjE3MTUxMzczNzcsImp0aSI6ImE0OTJiZjM5LWUyNDgtNGFkMi04NzRjLWZiYmY1NTFlNWE0NiJ9.Gvvv3qqiRMIDSdfoxdSCaPypKU2Ix708d-6YnV4pLAU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}roles/MANAGER",
+							"host": [
+								"{{base_url}}roles"
+							],
+							"path": [
+								"MANAGER"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "create Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Quần Áo\",\n    \"slug\": \"ao-quan\",\n    \"description\": \"Áo quần rất xịn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}categories",
+							"host": [
+								"{{base_url}}categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Điện thoại\",\n    \"slug\": \"dtdd\",\n    \"description\": \"no description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}categories",
+							"host": [
+								"{{base_url}}categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get info category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}categories/abc",
+							"host": [
+								"{{base_url}}categories"
+							],
+							"path": [
+								"abc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}categories/admin",
+							"host": [
+								"{{base_url}}categories"
+							],
+							"path": [
+								"admin"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "th",
+									"disabled": true
+								},
+								{
+									"key": "isAvailable",
+									"value": "FALSE",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "itemsPerPage",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detele category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \"abc\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}categories",
+							"host": [
+								"{{base_url}}categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggle-availability",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \"abc\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}categories/toggle-availability",
+							"host": [
+								"{{base_url}}categories"
+							],
+							"path": [
+								"toggle-availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Áo quần 2\",\n    \"slug\": \"ao-quan\",\n    \"description\": \"Áo quần xịn 2\",\n    \"isAvailable\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}categories/b3046afc-cde2-4470-8f5f-fa10f179c8f7",
+							"host": [
+								"{{base_url}}categories"
+							],
+							"path": [
+								"b3046afc-cde2-4470-8f5f-fa10f179c8f7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Storage",
+			"item": [
+				{
+					"name": "upload file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [
+										"/Users/mac/Desktop/rookie_phase1_db - public.png",
+										"/Users/mac/Desktop/Screenshot 2024-04-26 at 22.01.26.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}storage",
+							"host": [
+								"{{base_url}}storage"
+							],
+							"query": [
+								{
+									"key": "file",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rating",
+			"item": [
+				{
+					"name": "Create Rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"888a4f29-2f42-4025-8f32-89084ccceada\",\n    \"star\": 5,\n    \"comment\": \"San pham phai noi la tuyen voi luonnn\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}rating",
+							"host": [
+								"{{base_url}}rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get ratings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}rating?page&itemsPerPage&productId=888a4f29-2f42-4025-8f32-89084ccceada",
+							"host": [
+								"{{base_url}}rating"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "itemsPerPage",
+									"value": null
+								},
+								{
+									"key": "productId",
+									"value": "888a4f29-2f42-4025-8f32-89084ccceada"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "create Cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"a28c8e5e-f7c6-4f96-be2a-e4d2cf75dc3e\",\n    \"quantity\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}carts",
+							"host": [
+								"{{base_url}}carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}carts/4f490e45-258d-4098-9c92-6be7b3a7f804",
+							"host": [
+								"{{base_url}}carts"
+							],
+							"path": [
+								"4f490e45-258d-4098-9c92-6be7b3a7f804"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}carts",
+							"host": [
+								"{{base_url}}carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCarts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}carts",
+							"host": [
+								"{{base_url}}carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by ids",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}carts/get-by-ids?ids=abc,abc",
+							"host": [
+								"{{base_url}}carts"
+							],
+							"path": [
+								"get-by-ids"
+							],
+							"query": [
+								{
+									"key": "ids",
+									"value": "abc,abc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "create order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cartItemIds\": [\n        \"72f74e6e-d19c-4370-9ce2-23eebc7b2e33\",\n        \"c7ba5059-16bf-4447-ba78-3498a59f455b\"\n    ],\n    \"orderAddress\": {\n        \"contactName\": \"Hieu Duong\",\n        \"phone\": \"0935366008\",\n        \"addressLine1\": \"Binh Son, Quang Ngai\",\n        \"addressLine2\": \"Binh Son Quang Ngai\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}orders",
+							"host": [
+								"{{base_url}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all order by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}orders",
+							"host": [
+								"{{base_url}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}orders/abc",
+							"host": [
+								"{{base_url}}orders"
+							],
+							"path": [
+								"abc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all order admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}orders/admin?status=PENDING",
+							"host": [
+								"{{base_url}}orders"
+							],
+							"path": [
+								"admin"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING"
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "itemsPerPage",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}orders/abc/status?status=DELIVERED",
+							"host": [
+								"{{base_url}}orders"
+							],
+							"path": [
+								"abc",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "DELIVERED"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistic",
+			"item": [
+				{
+					"name": "statistic",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}statistics",
+							"host": [
+								"{{base_url}}statistics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Yas Mini AI",
+			"item": [
+				{
+					"name": "image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/mac/Workspace/NashTech Rookie/DataCarShop/Roll Royce/Spectre/spectrespectrerightfrontthreequarter (1).jpeg"
+								},
+								{
+									"key": "question",
+									"value": "what is this?",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}ai",
+							"host": [
+								"{{base_url}}ai"
+							],
+							"query": [
+								{
+									"key": "file",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "chat",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}ai/hello",
+							"host": [
+								"{{base_url}}ai"
+							],
+							"path": [
+								"hello"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "history chat",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}ai/history/hello",
+							"host": [
+								"{{base_url}}ai"
+							],
+							"path": [
+								"history",
+								"hello"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accsess_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}notifications",
+							"host": [
+								"{{base_url}}notifications"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
