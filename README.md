@@ -100,9 +100,11 @@ Include setup steps for Firebase authentication, PostgreSQL database connection,
 ```bash
     ./mvnw spring-boot:run
 ```
+## Postman Collection
+- refer: https://github.com/duongminhhieu/YasMiniShop/blob/master/YasMini.postman_collection.json
 
 # Contact
-* Skype: live:duongminhhieu2082002
+* Email: duongminhhieu2082002@gmail.com
 * Please ping me if you can't run the app.
 
 # References
